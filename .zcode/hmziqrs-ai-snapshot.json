@@ -1,13 +1,13 @@
 {
   "schemaVersion": 2,
   "inventoryComplete": true,
-  "readiness": "partial",
+  "readiness": "complete",
   "sourceRepo": "hmziqrs/ai",
   "sourceUrl": "https://github.com/hmziqrs/ai",
   "sourceCommit": "3aafa0edd69027d582fb8cbb04f799bac3a91caf",
   "sourceShortCommit": "3aafa0e",
   "sourceDirty": false,
-  "installedAt": "2026-11-06T19:57:40Z",
+  "installedAt": "2026-11-06T19:58:31Z",
   "detectedStacks": [
     "nsh",
     "rust",
@@ -360,18 +360,6 @@
             "sha256": "ed8e37bdea822fa1a195bf8cd3bdfd565fa6a32bffb937671ce6a3c4d69f8fd8"
           }
         ]
-      },
-      {
-        "name": "modules",
-        "status": "missing",
-        "managed": false,
-        "reason": "Referenced by nsh/SKILL.md"
-      },
-      {
-        "name": "elements",
-        "status": "missing",
-        "managed": false,
-        "reason": "Referenced by nsh-design-guides/SKILL.md"
       }
     ]
   }
