@@ -113,6 +113,16 @@ You have full access to this machine. Use it. A headless pass alone never finish
 - The computer-use, ios-simulator and android-emulator plugins, the `mobile-mcp` server, `mobilecli`, the `mobile-automation` and `open-computer-use` skills for live capture, and `agent-browser` for the web.
 - Save evidence as PNGs and logs under `docs/evidence/<area>/`, and look at every PNG you save. A screenshot nobody looked at proves nothing.
 
+## This machine is shared right now
+
+Other agents are building `nsh-starter`, `nsh-firebase`, `nsh-http` and `nsh-auth` on this Mac at the same time, one per repository. Do not interfere with them.
+
+- Stay inside this repository. Reading `~/fo/.refs`, `~/fo/nsh-query` and `~/fo/nsh-form` is fine. Never write to another repository.
+- Use your own devices, named after this repository: `xcrun simctl create <repo> "<a current iPhone>"` and refer to it by UDID, and `avdmanager create avd -n <repo> ...` for your own AVD, with your own `-port`, and `adb -s <serial>` on every call. Never run `xcrun simctl shutdown all`, `xcrun simctl erase all`, `adb kill-server`, `killall`, or anything that stops a process you did not start.
+- Pick your own ports for dev servers and local servers with `--port 0` or a free port. Never kill whatever holds a port.
+- Prefer capture that does not take over the screen: `xcrun simctl io <udid> screenshot`, `adb -s <serial> exec-out screencap -p`, `nsh test --target ... ` with `app.screenshot(path)`. Use whole-screen computer-use only when nothing else can do the step, and keep it short.
+- If a build is slow because the machine is busy, wait. Do not lower a check because of it.
+
 ## Facts that bite on 0.4.0
 
 Each of these was hit by a real run. Trust them over the docs.
