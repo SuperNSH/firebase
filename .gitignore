@@ -1,0 +1,14 @@
+target/
+.nsh/
+node_modules/
+.DS_Store
+*.secret
+.firebase/
+*-debug.log
+firebase-debug.log*
+ui-debug.log*
+database-debug.log*
+google-services.json
+GoogleService-Info.plist
+!**/fixtures/google-services.json
+!**/fixtures/GoogleService-Info.plist
