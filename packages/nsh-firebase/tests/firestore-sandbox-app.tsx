@@ -12,7 +12,7 @@ function failed(error: unknown): string {
 }
 
 function show(snapshot: DocSnapshot): string {
-  const data = snapshot.exists ? JSON.stringify(snapshot.data) : "absent";
+  const data = snapshot.exists ? JSON.stringify(snapshot.data) : "none";
   return `exists=${snapshot.exists} data=${data}`;
 }
 

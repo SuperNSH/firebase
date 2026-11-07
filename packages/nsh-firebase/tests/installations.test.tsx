@@ -199,7 +199,9 @@ describe("installations", () => {
       network: routes({ status: 0, body: "", error: "the connection was reset" }),
     });
     await offline.press("id:get-id");
-    await offline.waitFor("text:id: core/network: the connection was reset");
+    await offline.waitFor(
+      "text:id: core/network: Network request failed: the connection was reset",
+    );
   });
 
   test("the native tier routes through the firebase.installations.* handlers", async () => {

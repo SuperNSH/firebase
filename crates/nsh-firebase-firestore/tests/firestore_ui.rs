@@ -359,7 +359,7 @@ fn request_body(body: &HttpBody) -> String {
 fn line_of(app: &Headless, prefix: &str) -> String {
     let texts = app.screen().texts();
     let found = texts.iter().find(|text| text.starts_with(prefix));
-    found.unwrap().to_owned()
+    found.unwrap().to_owned().to_string()
 }
 
 #[test]

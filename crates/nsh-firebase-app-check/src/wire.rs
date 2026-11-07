@@ -10,7 +10,7 @@ use nsh_core::platform::HttpRequest;
 use nsh_firebase_core::{FirebaseError, join_url};
 use serde_json::{Value as JsonValue, json};
 
-use crate::error::{INVALID_RESPONSE, invalid_response};
+use crate::error::invalid_response;
 
 /// The REST reference's service endpoint (the client SDKs use the
 /// `content-` frontend variant; both serve the same paths).
@@ -103,6 +103,7 @@ pub(crate) fn parse_ttl_ms(ttl: &str) -> Option<u64> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::error::INVALID_RESPONSE;
     use nsh_core::platform::HttpBody;
 
     const BASE: &str = "https://firebaseappcheck.googleapis.com/v1";
