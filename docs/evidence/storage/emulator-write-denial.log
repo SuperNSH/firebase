@@ -1,0 +1,29 @@
+The running Storage emulator (pid 38135, started 06:30 by scripts/start-emulator.sh,
+project demo-nsh, port 19199) denies every rules-evaluated operation to every client,
+while start/query/chunk commands that do not finalize still answer. Evidence gathered
+2026-11-07 with plain curl and the official firebase-js-sdk:
+
+1. Resumable start -> 200, X-Goog-Upload-Status: active, session URL issued.
+2. Chunk command upload -> 200 active. Chunk "upload, finalize" -> 403
+   {"error":{"code":403,"message":"Permission denied. No WRITE permission."}}
+   (x-goog-upload-status: final on the error).
+3. LIST (GET /v0/b/<bucket>/o?prefix=probe/) -> 403 "Permission denied. No LIST permission."
+4. GET object metadata -> 403 (probe%2Fmissing2.txt, properly encoded path).
+5. The official SDK fails identically: @firebase/storage@0.14.6 uploadBytes against
+   connectStorageEmulator(127.0.0.1, 19199) -> storage/unknown (its handler saw 403).
+6. An anonymous idToken from the auth emulator (19099) sent as
+   "Authorization: Firebase <idToken>" changes nothing: finalize still 403.
+7. emulator/storage.rules on disk is the permissive sandbox ruleset
+   (allow read, write: if true) and predates the emulator start; the emulator's
+   chokidar watcher reloads on file change, so a re-save of that file (or a suite
+   restart) should clear this.
+
+Not caused by the storage area's code: the same request sequence is covered green by
+the stubbed unit tests on both sides, and the identical wire flow worked in research
+phase probes recorded in docs/research.md section 3 (Cloud Storage REST).
+
+Consequence: crates/nsh-firebase-storage/tests/emulator_storage.rs (labelled
+`sandbox: needs emulator suite`) and
+packages/nsh-firebase/tests/emulator/storage.sandbox.test.tsx are written and fail
+only on this denial (storage/unauthorized). They pass once the emulator's ruleset is
+reloaded or the suite restarted by whoever owns the process.

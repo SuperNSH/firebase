@@ -1,1 +1,33 @@
-export {};
+export {
+  FirebaseStorage,
+  StorageRef,
+  type StorageWire,
+  type TokenProvider,
+} from "./storage";
+export { UploadTask, type UploadProgress, type UploadState, type UploadAuth } from "./upload";
+export {
+  CHUNK_SIZE,
+  CANCELED,
+  NO_DEFAULT_BUCKET,
+  NO_DOWNLOAD_TOKEN,
+  OBJECT_NOT_FOUND,
+  QUOTA_EXCEEDED,
+  RETRY_LIMIT_EXCEEDED,
+  SERVER_FILE_WRONG_SIZE,
+  UNAUTHENTICATED,
+  UNAUTHORIZED,
+  UNKNOWN,
+  downloadUrlFromMetadata,
+  encodeComponent,
+  mapStatusError,
+  origin,
+  objectUrl,
+  objectsBase,
+  parseListResult,
+  parseObjectMetadata,
+  settableResource,
+  startUrl,
+  type ListResult,
+  type ObjectMetadata,
+  type SettableMetadata,
+} from "./wire";

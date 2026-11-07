@@ -1,6 +1,6 @@
 [package]
 name = "nsh-firebase-storage"
-description = "Firebase storage for Native Shell Rust apps (stub; its area replaces this crate)"
+description = "Firebase Cloud Storage for Native Shell Rust apps: resumable uploads with progress, download, download URLs, metadata, list and delete over the pure-tier fetch transport"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,10 @@ repository.workspace = true
 authors.workspace = true
 
 [dependencies]
+nsh-core = { workspace = true }
+nsh-firebase-core = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+nsh-engine = { workspace = true }
+nsh-testing = { workspace = true }
