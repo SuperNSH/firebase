@@ -1,0 +1,29 @@
+# Clones the public sibling libraries beside the checkout so demo-rs's
+# relative path deps (../../../nsh-query/...) and the demo's node_modules
+# links resolve. The same relative layout works on a dev machine where
+# ~/fo/nsh-query sits beside ~/fo/nsh-firebase.
+name: Clone sibling libraries
+inputs:
+  with-demo-links:
+    description: "Also create examples/demo/node_modules links"
+    required: false
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        cd "$GITHUB_WORKSPACE/.."
+        [ -d nsh-query ] || git clone -q --depth 1 https://github.com/SuperNSH/nsh-query.git nsh-query
+        [ -d nsh-form ] || git clone -q --depth 1 https://github.com/SuperNSH/nsh-form.git nsh-form
+        ls -d nsh-query/crates/nsh-query nsh-form/crates/nsh-form
+    - shell: bash
+      if: inputs.with-demo-links == 'true'
+      run: |
+        cd examples/demo
+        mkdir -p node_modules
+        # Symlink targets resolve from node_modules/, hence the three ../.
+        ln -sfn ../../../packages/nsh-firebase node_modules/nsh-firebase
+        ln -sfn ../../../nsh-query/packages/nsh-query node_modules/nsh-query
+        ln -sfn ../../../nsh-form/packages/nsh-form node_modules/nsh-form
+        test -f node_modules/nsh-firebase/package.json
