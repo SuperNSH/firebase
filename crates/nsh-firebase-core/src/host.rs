@@ -16,8 +16,14 @@ pub type HostCallFuture = Pin<Box<dyn Future<Output = Result<JsonValue, Firebase
 
 /// The tier facade the products call. Handler names follow the
 /// `firebase.*` scheme the app declares under `capabilities.host`
-/// (`firebase.auth.getUser`, `firebase.messaging.onToken`).
+/// (`firebase.auth.getUser`, `firebase.messaging.token`).
 pub trait FirebaseHost: Send + Sync {
+    /// Whether this host answers at all: the pure tier's is false, and a
+    /// product that cannot degrade (messaging) gates on it instead of
+    /// leaving its listeners silent.
+    fn available(&self) -> bool {
+        true
+    }
     /// Calls the native handler `name` with `args`.
     fn call(&self, name: &str, args: JsonValue) -> HostCallFuture;
     /// Fire-and-forget post of `args` to `name` (an analytics push). The
@@ -65,6 +71,10 @@ impl FirebaseHost for NativeHost {
 pub struct PureHost;
 
 impl FirebaseHost for PureHost {
+    fn available(&self) -> bool {
+        false
+    }
+
     fn call(&self, name: &str, _args: JsonValue) -> HostCallFuture {
         let name = name.to_owned();
         Box::pin(async move {

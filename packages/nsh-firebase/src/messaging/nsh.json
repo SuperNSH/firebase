@@ -1,0 +1,6 @@
+{
+  "name": "nsh-firebase messaging tests",
+  "capabilities": {
+    "host": ["firebase.*"]
+  }
+}
