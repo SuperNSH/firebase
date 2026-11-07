@@ -1,6 +1,6 @@
 [package]
 name = "nsh-firebase-analytics"
-description = "Firebase analytics for Native Shell Rust apps (stub; its area replaces this crate)"
+description = "Firebase analytics for Native Shell Rust apps: events, user properties, screen views, consent, a clock-driven batching queue and pluggable transports"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,12 @@ repository.workspace = true
 authors.workspace = true
 
 [dependencies]
+nsh-core = { workspace = true }
+nsh-firebase-core = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+nsh-core = { workspace = true }
+nsh-engine = { workspace = true }
+nsh-testing = { workspace = true }
+tokio = { version = "1", features = ["rt", "macros"] }
