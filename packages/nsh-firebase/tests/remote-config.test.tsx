@@ -28,6 +28,8 @@ describe("remote-config", () => {
     await app.waitFor("text:defaults: {}");
     await app.press("id:set-defaults");
     await app.waitFor("text:defaults set");
+    // The defaults line renders on a read, so read back after setting.
+    await app.press("id:read-defaults");
     await app.waitFor(`text:${PURE_DEFAULTS_LINE}`);
     await app.press("id:read-values");
     await app.waitFor(`text:${VALUES_AFTER_DEFAULTS}`);

@@ -229,6 +229,12 @@ export function FirestoreExerciseApp() {
   return (
     <View class="flex-1 gap-2 bg-background p-4">
       <Text testID="state">{line()}</Text>
+      {button("sb-set", "sb set", sandboxSet)}
+      {button("sb-get", "sb get", sandboxGet)}
+      {button("sb-add", "sb add", sandboxAdd)}
+      {button("sb-query", "sb query", sandboxQuery)}
+      {button("sb-delete", "sb delete", sandboxDelete)}
+      {button("sb-get-gone", "sb get gone", sandboxGetGone)}
       {button("set", "set", set)}
       {button("merge", "merge", merge)}
       {button("get", "get", get)}
@@ -247,12 +253,6 @@ export function FirestoreExerciseApp() {
       {button("merge-empty", "merge empty", mergeEmpty)}
       {button("query-in", "query in", queryInScalar)}
       {button("query-bad-op", "query bad op", queryBadOp)}
-      {button("sb-set", "sb set", sandboxSet)}
-      {button("sb-get", "sb get", sandboxGet)}
-      {button("sb-add", "sb add", sandboxAdd)}
-      {button("sb-query", "sb query", sandboxQuery)}
-      {button("sb-delete", "sb delete", sandboxDelete)}
-      {button("sb-get-gone", "sb get gone", sandboxGetGone)}
     </View>
   );
 }

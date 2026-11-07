@@ -202,7 +202,7 @@ impl NativeAppCheck {
             .and_then(JsonValue::as_str)
             .filter(|token| !token.is_empty())
             .ok_or_else(|| {
-                invalid_response(&format!("`{NATIVE_GET_TOKEN}` answered without a token"))
+                invalid_response(format!("`{NATIVE_GET_TOKEN}` answered without a token"))
             })?
             .to_owned();
         Ok(AppCheckToken {
