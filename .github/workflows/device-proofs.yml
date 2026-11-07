@@ -1,0 +1,95 @@
+# The native device proofs (criteria 4 and 5): a running host app on a
+# simulator/emulator, notification delivery, tap handling and the token
+# failure surfaced clearly. These jobs drive real devices, so they only run
+# when asked for — workflow_dispatch, never on push.
+name: device-proofs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ios-proofs:
+    runs-on: macos-14
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - run: cd examples/host-ios && xcodegen generate
+      - run: >
+          cd examples/host-ios && xcodebuild -project NshFirebaseHost.xcodeproj
+          -scheme NshFirebaseHost -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath build build
+      - name: Boot the repo simulator and run the proofs
+        run: |
+          set -euo pipefail
+          UDID=$(xcrun simctl create nsh-firebase-ios "$(
+            xcrun simctl list devicetypes | grep -o 'iPhone [0-9]* ' | tail -1 | sed 's/ *$//'
+          )" "$(
+            xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-[0-9-]*' | tail -1
+          )")
+          xcrun simctl boot "$UDID"
+          APP=examples/host-ios/build/Build/Products/Debug-iphonesimulator/NshFirebaseHost.app
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl launch "$UDID" dev.nsh.firebase.host
+          sleep 15
+          mkdir -p docs/evidence/native-ios
+          xcrun simctl io "$UDID" screenshot docs/evidence/native-ios/host-sim-1.png
+          cat > docs/evidence/native-ios/push.apns <<'EOF'
+          {"aps":{"alert":{"title":"FCM proof","body":"tap me"},"sound":"default","badge":1},"gcm.message_id":"ci-proof-1"}
+          EOF
+          (xcrun simctl spawn "$UDID" log stream --style compact > docs/evidence/native-ios/unified.log 2>&1 & echo $! > /tmp/logpid)
+          xcrun simctl push "$UDID" dev.nsh.firebase.host docs/evidence/native-ios/push.apns \
+            | tee docs/evidence/native-ios/simctl-push.log
+          sleep 10
+          xcrun simctl io "$UDID" screenshot docs/evidence/native-ios/host-sim-2.png
+          kill "$(cat /tmp/logpid)" || true
+          sleep 2
+          grep -h -i "firebase.messaging\|FCM proof" docs/evidence/native-ios/unified.log \
+            | tail -50 >> docs/evidence/native-ios/simctl-push.log || true
+          xcrun simctl shutdown "$UDID"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-ios-proofs
+          path: docs/evidence/native-ios/
+
+  android-proofs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "9.3.1"
+      - run: gradle -p examples/host-android :app:assembleDebug
+      - name: Boot the emulator and run the proofs
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          script: |
+            set -euo pipefail
+            mkdir -p docs/evidence/native-android
+            adb install examples/host-android/app/build/outputs/apk/debug/app-debug.apk
+            (adb logcat -v time > docs/evidence/native-android/logcat.txt 2>&1 & echo $! > /tmp/logpid)
+            adb shell am start -n dev.nsh.firebase.host/.MainActivity
+            sleep 15
+            adb exec-out screencap -p > docs/evidence/native-android/host-emulator-1.png
+            adb shell input keyevent KEYCODE_HOME
+            sleep 2
+            adb shell am broadcast -a android.intent.action.BOOT_COMPLETED dev.nsh.firebase.host >/dev/null || true
+            sleep 5
+            adb exec-out screencap -p > docs/evidence/native-android/host-emulator-2.png
+            adb shell am start -n dev.nsh.firebase.host/.MainActivity
+            sleep 5
+            adb exec-out screencap -p > docs/evidence/native-android/host-emulator-3.png
+            grep -i -m 40 "firebase\|FCM\|token" docs/evidence/native-android/logcat.txt \
+              > docs/evidence/native-android/token-proof.log || true
+            kill "$(cat /tmp/logpid)" || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-android-proofs
+          path: docs/evidence/native-android/

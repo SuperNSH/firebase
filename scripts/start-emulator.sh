@@ -18,8 +18,11 @@ if [ ! -x node_modules/.bin/firebase ]; then
 fi
 
 mkdir -p emulator
-# /usr/bin/java is a stub on this Mac; the suite needs Android Studio's JDK.
-export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+# /usr/bin/java is a stub on this Mac; the suite needs a real JDK (CI sets
+# JAVA_HOME itself, so only fall back to Android Studio's JBR when unset).
+if [ -z "${JAVA_HOME:-}" ]; then
+  export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+fi
 nohup node_modules/.bin/firebase emulators:start \
   --project demo-nsh \
   --config emulator/firebase.json \
