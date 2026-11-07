@@ -196,6 +196,7 @@ pub fn collection_url(base: &str, path: &str) -> Result<String, FirebaseError> {
 /// carried canonically, unencoded) and the native handler's args
 /// (`{collectionPath, where?, orderBy?, limit?}`). One plan so both
 /// tiers validate identically.
+#[derive(Debug)]
 pub struct QueryPlan {
     pub url: String,
     pub body: JsonValue,

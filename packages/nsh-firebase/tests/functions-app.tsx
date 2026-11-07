@@ -24,7 +24,12 @@ function render(error: {
   nativeCode?: string | null;
   details?: unknown;
 }): string {
-  const base = `${error.code}${error.nativeCode ? ` (${error.nativeCode})` : ""}: ${error.message}`;
+  // The callable wire's message already leads with its code; the
+    // render shows it once.
+    const message = error.message.startsWith(`${error.code}: `)
+      ? error.message.slice(error.code.length + 2)
+      : error.message;
+    const base = `${error.code}${error.nativeCode ? ` (${error.nativeCode})` : ""}: ${message}`;
   return error.details === undefined || error.details === null
     ? base
     : `${base} details=${JSON.stringify(error.details)}`;

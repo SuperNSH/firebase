@@ -157,7 +157,7 @@ fn FunctionsApp() -> impl IntoElement {
                 .on_press(move || {
                     run(
                         line_add,
-                        functions_add,
+                        functions_add.clone(),
                         "add",
                         serde_json::json!({ "a": 1, "b": 2 }),
                     )
