@@ -1,0 +1,47 @@
+# Storage emulator 403 'No WRITE permission' - root cause and fix (core owns emulator/)
+# Date: 2026-11-07. Suite pid: 57037 (restarted 12:27 by scripts/start-emulator.sh).
+
+# Symptom (docs/evidence/storage/emulator-write-denial.log): every rules-evaluated
+# Storage operation (finalize, LIST, GET metadata) answered 403 for all clients.
+
+# Diagnosis: not a config problem. emulator/storage.rules was permissive and the
+# chokidar reload DID fire ('Change detected, updating rules for Cloud Storage...',
+# emulator.log line 28; PUT /internal/setRules also returned 'Rules updated successfully').
+# The cloud-storage-rules-runtime jar itself was denying every evaluation.
+
+# Isolated by driving the jar directly (JAVA_HOME=Android Studio JBR, Java 21):
+#   load_ruleset ok -> verify permit:false for:
+#     rules_version='2' + match /b/{bucket}/o + if true            -> permit:false
+#     rules_version='2' + match /b/{bucket}/o + if request.time!=null -> permit:false
+#     unconditional allow read, write (any version) on that shape    -> permit:false
+#     rules_version='2' + match /{allPaths=**}            -> permit:true
+#     rules_version='2' + match /b/{bucket}/o/{allPaths=**} + if true -> permit:true
+#   => cloud-storage-rules-runtime v1.1.3 on this machine answers permit:false for any
+#   ruleset whose final match block is exactly /b/{bucket}/o, regardless of version or
+#   condition. A bucket-scoped recursive glob evaluates correctly.
+
+# Fix (emulator/storage.rules): match /b/{bucket}/o/{allPaths=**} with allow read, write: if true.
+# Reloaded by the emulator's watcher ('Change detected...' in emulator/emulator.log).
+
+# Proof: full round trip on 127.0.0.1:19199 after the fix:
+#   1) resumable start            -> 200 (session URL issued)
+#   2) chunk upload, finalize     -> 200 {\"name\":\"probe/core-check.txt\",\"bucket\":\"demo-nsh.firebasestorage.app\",\"size\":\"15\",...}
+#   3) GET o/probe%2Fcore-check.txt?alt=media -> 200 'hello from core'
+#   4) LIST ?prefix=probe/        -> 200 with the item
+#   5) directory-prefix list ?prefix=sandbox%2Fstorage-crate%2F&delimiter=/ -> 200 with the item
+
+# Storage area's labelled sandbox tests after the fix (documented runner commands):
+#   cargo test -p nsh-firebase-storage --test emulator_storage -- --ignored
+#     -> still FAILS, no longer on 403: summary 'sandbox ok size=76 url-token=true
+#        listed=false deleted-gone=storage/object-not-found'. Upload+finalize, download
+#        URL, byte round trip and delete all succeed now. The remaining assertion is
+#        their list step: their list() prefixes the ref's FULL path plus '/', so
+#        prefix 'sandbox/storage-crate/fixture.txt/' never matches the object named
+#        'sandbox/storage-crate/fixture.txt' (verified by curl: 200 with empty items;
+#        the directory prefix returns the item). Their file to fix.
+#   nsh test tests/emulator/storage.sandbox.test.tsx
+#     -> still FAILS, no longer on 403: on screen 'st: sandbox ok size=36 roundtrip=true
+#        token=true' (round trip incl. download and delete succeeded), but the test
+#        expects progress '38/38 done' while their own fixture is 36 bytes
+#        ('nsh-firebase storage sandbox fixture'); emulator and app agree size=36.
+#        Their stale expectation to fix.

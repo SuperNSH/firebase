@@ -140,6 +140,25 @@ replace wholesale.
   (native-ios, native-android, demo, perfmon, analytics evidence belong to
   their areas and do not exist yet; `docs/evidence/core/access-denied.log`
   is present).
+- Storage emulator 403 follow-up (2026-11-07): the running suite denied
+  every rules-evaluated Storage operation (403 "No WRITE permission") to
+  every client. Not a config problem — the permissive rules loaded and
+  hot-reloaded fine; the cloud-storage-rules-runtime jar itself answered
+  `permit:false` for any ruleset whose match block is exactly
+  `/b/{bucket}/o`, even `if true` (isolated by driving the jar's stdin
+  protocol directly; see docs/evidence/core/storage-rules-fix.log). Fixed
+  in emulator/storage.rules with the bucket-scoped recursive glob
+  `match /b/{bucket}/o/{allPaths=**}`, which this runtime evaluates
+  correctly; suite restarted via scripts/start-emulator.sh (pid in
+  emulator/emulator.pid). Proven by a raw round trip: resumable start 200,
+  finalize 200 with metadata, GET ?alt=media 200 returning the bytes, list
+  200 with the item. The storage area's labelled sandbox tests were run
+  through the documented commands afterwards: both now pass every
+  rules-evaluated operation but still fail on assertions in their own
+  files (Rust: their list() prefixes the ref's full path plus "/", so the
+  object is never in its own listing; TS: they expect progress "38/38
+  done" while their fixture is 36 bytes) — for the storage area to fix,
+  details in docs/evidence/core/storage-rules-fix.log.
 
 ## Not verified
 

@@ -1,8 +1,11 @@
-// Sandbox-only rules for the demo-nsh emulators: everything is readable
-// and writable locally. Never ship these to a real project.
+// Sandbox-only: everything is readable and writable locally; never ship
+// these to a real project.
+// The {allPaths=**} tail is load-bearing: cloud-storage-rules-runtime
+// v1.1.3 on this machine's Java 21 answers permit:false for a plain
+// `match /b/{bucket}/o` even when the condition is `if true`.
 rules_version = '2';
 service firebase.storage {
-  match /b/{bucket}/o {
+  match /b/{bucket}/o/{allPaths=**} {
     allow read, write: if true;
   }
 }
