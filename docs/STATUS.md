@@ -238,8 +238,39 @@ equivalent in TypeScript (`nsh-firebase/<area>` subpath) and Rust
 native-tier-only and the pure tier rejects with `core/unavailable`;
 analytics is a batched Measurement Protocol/collector queue, not the
 native pipeline; perf traces are local aggregates with a pluggable
-transport (no console); RTDB listeners are SSE, not the SDK socket; no
-Firestore in the core scope — the stretch products are stubs that say so.
+transport (no console); RTDB listeners are SSE, not the SDK socket;
+Firestore and the other former stretch products are implemented (below)
+with their remaining tier limits stated honestly.
+
+## The whole stack (user direction, 2026-11-08) — IMPLEMENTED, CI-verified at unit level
+
+After the initial build the user directed the whole Firebase stack: the
+six former stretch products are no longer stubs. Each ships a pure tier
+(Rust crate + TSX subpath, wire shapes verified by reading the
+firebase-js-sdk compiled layers and the official REST references) and —
+where the SDKs provide the product — native wrappers over the real
+libraries: iOS Package.swift adopts the SDK's Firestore trait and links
+all six 13.1.1 products; Android adds the six BoM artifacts
+(firestore 27.1.0, config 24.0.1, crashlytics 21.0.1, installations
+20.0.0, appcheck(+debug) 20.0.0, functions 23.0.0). Both hosts register
+the 19 stretch handlers with identical wire shapes. Honest tier rows:
+Firestore pure tier has no realtime over REST; Remote Config's fetch is
+OAuth-gated (defaults + template parse ship; fetchAndActivate refuses
+without a transport); Crashlytics' pure tier is a clearly-failing
+facade (no honest pure path); Installations speaks the FIS REST (the
+real endpoint refuses demo- projects; the refusal is the proof);
+App Check ships the debug-token exchange with expiry caching; Functions
+speaks the callable wire against the suite's Functions emulator
+(ping/add served from emulator/functions). CI executes all of it:
+run [42403998509](https://github.com/SuperNSH/firebase/actions/runs/42403998509)
+is green across rust-gate (three OSes), every cross-target check,
+packages, the emulator suite (firestore 18080 + functions 15001 sandbox
+tests included), demo, clean-proof, host-android and host-ios (the
+first macOS compile of all 35 handlers). What CI cannot see: the
+stretch handlers' fake-project rejections on a device (needs a run),
+Realtime-style listeners for Firestore on the pure tier (none exist to
+honestly ship), and Crashlytics/App Check device attestor paths
+(unverified-honest in their status docs).
 
 ### 10. README — PASS
 
