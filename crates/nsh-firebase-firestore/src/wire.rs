@@ -1210,7 +1210,7 @@ mod tests {
     }
 
     #[test]
-    fn encode_segment_is_encodeURIComponent() {
+    fn encode_segment_is_encode_uri_component() {
         assert_eq!(encode_segment("a b?c/d"), "a%20b%3Fc%2Fd");
         assert_eq!(encode_segment("(default)"), "(default)");
         assert_eq!(
