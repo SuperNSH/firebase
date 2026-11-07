@@ -57,9 +57,7 @@ fn SandboxApp() -> impl IntoElement {
                             fs.get_doc("sandbox-fs/one").await
                         };
                         match write.await {
-                            Ok(snapshot) if snapshot.exists => {
-                                set_line.set("set: ok".to_owned())
-                            }
+                            Ok(snapshot) if snapshot.exists => set_line.set("set: ok".to_owned()),
                             Ok(snapshot) => {
                                 set_line.set(format!("set: read back {}", show(&snapshot)))
                             }

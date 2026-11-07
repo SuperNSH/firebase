@@ -46,9 +46,7 @@ pub(crate) fn reply_error(request_name: &str, status: u16, body: &str) -> Fireba
         });
     FirebaseError::new(
         REQUEST_FAILED,
-        parsed.unwrap_or_else(|| {
-            format!("the server replied {status} without an error message")
-        }),
+        parsed.unwrap_or_else(|| format!("the server replied {status} without an error message")),
     )
 }
 

@@ -56,7 +56,9 @@ function routes(
   register: Route | ((request: StubRequest) => Route),
   generate?: (request: StubRequest) => Route,
 ): Record<string, Route | ((request: StubRequest) => Route)> {
-  const table = { [`POST ${REGISTER_URL}`]: register };
+  const table: Record<string, Route | ((request: StubRequest) => Route)> = {
+    [`POST ${REGISTER_URL}`]: register,
+  };
   if (generate) table[`POST ${TOKEN_GLOB}`] = generate;
   return table;
 }

@@ -43,6 +43,7 @@ pub const DATA_LOSS: &str = "functions/data-loss";
 
 /// Where a call goes: the region, and the emulator switch that wins over
 /// production (`{region}-{project}.cloudfunctions.net`).
+#[derive(Clone)]
 pub struct FunctionsConfig {
     pub region: String,
     pub emulator: Option<EmulatorEndpoint>,

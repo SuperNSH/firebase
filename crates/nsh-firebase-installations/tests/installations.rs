@@ -114,7 +114,10 @@ async fn get_token_routes_through_the_host_and_reads_the_token() {
     )]);
     // force_refresh has no meaning across the contract: the call carries
     // no args either way.
-    assert_eq!(installations.get_token(true).await.unwrap(), "native-token-1");
+    assert_eq!(
+        installations.get_token(true).await.unwrap(),
+        "native-token-1"
+    );
     assert_eq!(
         calls(&channel),
         vec![(

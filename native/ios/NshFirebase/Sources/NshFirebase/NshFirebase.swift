@@ -290,7 +290,9 @@ public final class NshFirebase: NSObject, UNUserNotificationCenterDelegate, Mess
                 }
             }
         case "firebase.installations.getToken":
-            Installations.installations().authToken(forcingRefresh: false) { result, error in
+            // authTokenWithCompletion is the forcing-refresh-false form;
+            // the labeled variant does not survive the ObjC importer.
+            Installations.installations().authToken { result, error in
                 if let result {
                     reply(["token": result.authToken], nil)
                 } else {
@@ -514,11 +516,13 @@ public final class NshFirebase: NSObject, UNUserNotificationCenterDelegate, Mess
             else {
                 reply(nil, "firebase.firestore.addDoc needs a collectionPath and a data object"); return
             }
-            db.collection(collectionPath).addDocument(data: docData) { reference, error in
+            // addDocument's completion carries only the error; the
+            // reference comes back synchronously.
+            let reference = db.collection(collectionPath).addDocument(data: docData) { error in
                 if let error {
                     reply(nil, "firebase/firestore: addDoc \(collectionPath) failed: \(error.localizedDescription)")
                 } else {
-                    reply(["id": reference?.documentID ?? ""], nil)
+                    reply(["id": reference.documentID], nil)
                 }
             }
         case "firebase.firestore.deleteDoc":
@@ -594,7 +598,9 @@ public final class NshFirebase: NSObject, UNUserNotificationCenterDelegate, Mess
             guard let map = (data as? [String: Any])?["map"] as? [String: Any] else {
                 reply(nil, "firebase.remote-config.setDefaults needs a map"); return
             }
-            config.setDefaults(map)
+            // setDefaults takes NSString-keyed NSObject values.
+            let nsDefaults = map.mapValues { ($0 as? NSObject) ?? NSString(string: "\($0)") }
+            config.setDefaults(nsDefaults)
             reply([:], nil)
         case "firebase.remote-config.getDefaults":
             var map: [String: Any] = [:]

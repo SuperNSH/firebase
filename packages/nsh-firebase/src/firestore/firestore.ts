@@ -85,7 +85,7 @@ export class Firestore {
       }
       return { exists: true, data: data as Record<string, Json> };
     }
-    const response = await this.send(documentsUrl(path), { method: "GET" });
+    const response = await this.send(this.documentsUrl(path), { method: "GET" });
     if (response.status === 404) return { exists: false, data: null };
     return snapshotFrom(parseBody(ensureOk(response).text));
   }
@@ -105,7 +105,7 @@ export class Firestore {
       await this.call(SET_DOC, args);
       return;
     }
-    let url = documentsUrl(path);
+    let url = this.documentsUrl(path);
     if (mask) url += `?${mergeMaskQuery(mask)}`;
     ensureOk(
       await this.send(url, {
@@ -145,7 +145,7 @@ export class Firestore {
       await this.call(DELETE_DOC, { path });
       return;
     }
-    const response = await this.send(documentsUrl(path), { method: "DELETE" });
+    const response = await this.send(this.documentsUrl(path), { method: "DELETE" });
     if (response.status === 404) return;
     ensureOk(response);
   }

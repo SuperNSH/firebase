@@ -55,22 +55,30 @@ pub(crate) fn exchange_debug_token_request(
     debug_token: &str,
 ) -> HttpRequest {
     let url = exchange_debug_token_url(base, project_id, app_id, api_key);
-    HttpRequest::post(url, json!({ "debug_token": debug_token }).to_string().into_bytes())
-        .header("Content-Type", "application/json")
+    HttpRequest::post(
+        url,
+        json!({ "debug_token": debug_token })
+            .to_string()
+            .into_bytes(),
+    )
+    .header("Content-Type", "application/json")
 }
 
 /// Reads a success reply.
 pub(crate) fn parse_token_reply(body: &str) -> Result<TokenReply, FirebaseError> {
-    let reply: JsonValue = serde_json::from_str(body)
-        .map_err(|_| invalid_response("the reply is not JSON"))?;
+    let reply: JsonValue =
+        serde_json::from_str(body).map_err(|_| invalid_response("the reply is not JSON"))?;
     let token = reply
         .get("token")
         .and_then(JsonValue::as_str)
         .ok_or_else(|| invalid_response("the reply has no token"))?
         .to_owned();
-    let ttl = reply.get("ttl").and_then(JsonValue::as_str).ok_or_else(|| {
-        invalid_response(r#"the reply has no ttl (a Protobuf Duration like "1800s")"#)
-    })?;
+    let ttl = reply
+        .get("ttl")
+        .and_then(JsonValue::as_str)
+        .ok_or_else(|| {
+            invalid_response(r#"the reply has no ttl (a Protobuf Duration like "1800s")"#)
+        })?;
     let ttl_ms = parse_ttl_ms(ttl).ok_or_else(|| {
         invalid_response(r#"the reply has no usable ttl (a Protobuf Duration like "1800s")"#)
     })?;
@@ -81,7 +89,11 @@ pub(crate) fn parse_token_reply(body: &str) -> Result<TokenReply, FirebaseError>
 /// milliseconds, the way the client SDKs do (`^([\d.]+)(s)$`).
 pub(crate) fn parse_ttl_ms(ttl: &str) -> Option<u64> {
     let secs = ttl.strip_suffix('s')?;
-    if secs.is_empty() || !secs.bytes().all(|byte| byte.is_ascii_digit() || byte == b'.') {
+    if secs.is_empty()
+        || !secs
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || byte == b'.')
+    {
         return None;
     }
     let value = secs.parse::<f64>().ok()?;

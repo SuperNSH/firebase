@@ -621,8 +621,10 @@ public final class NshFirebase {
         // The debug provider only produces a token the backend accepts in
         // debug mode; under the fake project the fetch itself still fails.
         if (bool(args, "debug") && !appCheckFactorySet) {
-            FirebaseAppCheck.getInstance()
-                    .setAppCheckProviderFactory(DebugAppCheckProviderFactory.getInstance());
+            // setAppCheckProviderFactory is static on FirebaseAppCheck,
+            // unlike most Firebase entry points.
+            FirebaseAppCheck.setAppCheckProviderFactory(
+                    DebugAppCheckProviderFactory.getInstance());
             appCheckFactorySet = true;
         }
         FirebaseAppCheck.getInstance().getAppCheckToken(false)

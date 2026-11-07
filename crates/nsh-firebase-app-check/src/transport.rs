@@ -118,7 +118,10 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(first.status(), 200);
-        exchange.fail(FirebaseError::new(nsh_firebase_core::error::NETWORK, "down"));
+        exchange.fail(FirebaseError::new(
+            nsh_firebase_core::error::NETWORK,
+            "down",
+        ));
         let error = exchange
             .exchange(HttpRequest::post("http://x", Vec::new()))
             .await

@@ -200,7 +200,7 @@ impl Firestore {
                 let request = HttpRequest::post(url, body.into_bytes())
                     .header("Content-Type", "application/json");
                 let response = ensure_ok(self.send(request).await?)?;
-                Ok(query_doc_from(&parse_body(&response.text())?).id)
+                Ok(query_doc_from(&parse_body(&response.text())?)?.id)
             }
         }
     }
@@ -229,10 +229,7 @@ impl Firestore {
 
     /// Runs the structured query: the collection's documents that match
     /// the where filter, sorted, at most `limit` of them.
-    pub async fn run_query(
-        &self,
-        query: &FirestoreQuery,
-    ) -> Result<Vec<QueryDoc>, FirebaseError> {
+    pub async fn run_query(&self, query: &FirestoreQuery) -> Result<Vec<QueryDoc>, FirebaseError> {
         let plan = wire::run_query_plan(&self.rest_base, &self.project_id, query)?;
         match &self.host {
             Some(host) => {
@@ -364,7 +361,10 @@ mod tests {
         let (firestore, host) = host_with(vec![reply]);
         let snapshot = firestore.get_doc("cities/LA").await.unwrap();
         assert!(snapshot.exists);
-        assert_eq!(snapshot.data, Some(json!({ "done": false, "title": "one" })));
+        assert_eq!(
+            snapshot.data,
+            Some(json!({ "done": false, "title": "one" }))
+        );
         assert_eq!(
             calls_of(&host),
             vec![(
@@ -437,10 +437,7 @@ mod tests {
         );
         // A reply without an id is a broken shape.
         let (firestore, _host) = host_with(vec![json!({})]);
-        let error = firestore
-            .add_doc("cities", &json!({}))
-            .await
-            .unwrap_err();
+        let error = firestore.add_doc("cities", &json!({})).await.unwrap_err();
         assert_eq!(error.code, wire::INVALID_RESPONSE);
     }
 

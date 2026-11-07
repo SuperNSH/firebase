@@ -77,10 +77,7 @@ pub fn invalid_data(message: impl Into<String>) -> FirebaseError {
 
 /// The emulator base for `EMULATOR_PORT` (a host override keeps http).
 pub fn emulator_base(host: Option<&str>) -> String {
-    format!(
-        "http://{}:{EMULATOR_PORT}",
-        host.unwrap_or("127.0.0.1")
-    )
+    format!("http://{}:{EMULATOR_PORT}", host.unwrap_or("127.0.0.1"))
 }
 
 /// Percent-encodes one URL path segment, as `encodeURIComponent` does (the
@@ -317,7 +314,10 @@ pub fn run_query_plan(
     let segments = split_collection_path(&query.collection_path)?;
     let (last, parent) = segments.split_last().expect("an odd path has a last");
     let mut body = serde_json::Map::new();
-    body.insert("parent".to_owned(), json!(canonical_parent(project_id, parent)));
+    body.insert(
+        "parent".to_owned(),
+        json!(canonical_parent(project_id, parent)),
+    );
     let mut structured = serde_json::Map::new();
     structured.insert("from".to_owned(), json!([{ "collectionId": last }]));
     // Key order is load-bearing: the TS side builds the same literal, so
@@ -813,11 +813,26 @@ mod tests {
 
     #[test]
     fn values_encode_to_the_wire_shapes() {
-        assert_eq!(encode_value(&json!("one")).unwrap(), json!({ "stringValue": "one" }));
-        assert_eq!(encode_value(&json!(true)).unwrap(), json!({ "booleanValue": true }));
-        assert_eq!(encode_value(&json!(null)).unwrap(), json!({ "nullValue": "NULL_VALUE" }));
-        assert_eq!(encode_value(&json!(3)).unwrap(), json!({ "integerValue": "3" }));
-        assert_eq!(encode_value(&json!(1.5)).unwrap(), json!({ "doubleValue": 1.5 }));
+        assert_eq!(
+            encode_value(&json!("one")).unwrap(),
+            json!({ "stringValue": "one" })
+        );
+        assert_eq!(
+            encode_value(&json!(true)).unwrap(),
+            json!({ "booleanValue": true })
+        );
+        assert_eq!(
+            encode_value(&json!(null)).unwrap(),
+            json!({ "nullValue": "NULL_VALUE" })
+        );
+        assert_eq!(
+            encode_value(&json!(3)).unwrap(),
+            json!({ "integerValue": "3" })
+        );
+        assert_eq!(
+            encode_value(&json!(1.5)).unwrap(),
+            json!({ "doubleValue": 1.5 })
+        );
         // At the safe-integer boundary and past it: integer, then double.
         assert_eq!(
             encode_value(&json!(9_007_199_254_740_991i64)).unwrap(),
@@ -827,7 +842,10 @@ mod tests {
             encode_value(&json!(9_007_199_254_740_993i64)).unwrap(),
             json!({ "doubleValue": 9_007_199_254_740_992.0 })
         );
-        assert_eq!(encode_value(&json!(-0.0)).unwrap(), json!({ "doubleValue": "-0" }));
+        assert_eq!(
+            encode_value(&json!(-0.0)).unwrap(),
+            json!({ "doubleValue": "-0" })
+        );
         // NaN and the infinities cannot exist in a JsonValue at all (the
         // TypeScript side refuses them as invalid-data, since JSON has no
         // form for them); the wire's spellings only ever appear on decode,
@@ -851,8 +869,7 @@ mod tests {
                 { "stringValue": "a" }, { "integerValue": "2" }, { "nullValue": "NULL_VALUE" },
             ] } })
         );
-        let empty = encoded["mapValue"]["fields"]["meta"]["mapValue"]["fields"]["empty"]
-            .clone();
+        let empty = encoded["mapValue"]["fields"]["meta"]["mapValue"]["fields"]["empty"].clone();
         assert_eq!(empty, json!({ "mapValue": { "fields": {} } }));
         // An empty array keeps its (empty) values list.
         assert_eq!(
@@ -872,16 +889,25 @@ mod tests {
 
     #[test]
     fn values_decode_from_the_wire_shapes() {
-        assert_eq!(decode_value(&json!({ "stringValue": "one" })).unwrap(), json!("one"));
-        assert_eq!(decode_value(&json!({ "booleanValue": false })).unwrap(), json!(false));
-        assert_eq!(decode_value(&json!({ "integerValue": "3" })).unwrap(), json!(3));
-        assert_eq!(decode_value(&json!({ "doubleValue": 1.5 })).unwrap(), json!(1.5));
+        assert_eq!(
+            decode_value(&json!({ "stringValue": "one" })).unwrap(),
+            json!("one")
+        );
+        assert_eq!(
+            decode_value(&json!({ "booleanValue": false })).unwrap(),
+            json!(false)
+        );
+        assert_eq!(
+            decode_value(&json!({ "integerValue": "3" })).unwrap(),
+            json!(3)
+        );
+        assert_eq!(
+            decode_value(&json!({ "doubleValue": 1.5 })).unwrap(),
+            json!(1.5)
+        );
         // Past the safe range the float stands, as TypeScript's Number().
         let big = json!({ "integerValue": "9007199254740993" });
-        assert_eq!(
-            decode_value(&big).unwrap(),
-            json!(9_007_199_254_740_992.0)
-        );
+        assert_eq!(decode_value(&big).unwrap(), json!(9_007_199_254_740_992.0));
         assert_eq!(
             decode_value(&json!({ "nullValue": "NULL_VALUE" })).unwrap(),
             JsonValue::Null
@@ -890,7 +916,10 @@ mod tests {
         assert_eq!(decode_value(&nested).unwrap(), json!({ "a": 1 }));
         // Absent containers decode empty, as the server omits them.
         assert_eq!(decode_value(&json!({ "mapValue": {} })).unwrap(), json!({}));
-        assert_eq!(decode_value(&json!({ "arrayValue": {} })).unwrap(), json!([]));
+        assert_eq!(
+            decode_value(&json!({ "arrayValue": {} })).unwrap(),
+            json!([])
+        );
     }
 
     #[test]
@@ -1096,7 +1125,11 @@ mod tests {
         );
         let dotted = leaf_paths(&json!({ "a.b": 1 })).unwrap_err();
         assert_eq!(dotted.code, INVALID_ARGUMENT);
-        assert!(dotted.message.contains("cannot be addressed by a merge mask"));
+        assert!(
+            dotted
+                .message
+                .contains("cannot be addressed by a merge mask")
+        );
     }
 
     #[test]
@@ -1112,8 +1145,14 @@ mod tests {
         // server shape error.
         assert_eq!(decode_fields(None).unwrap(), json!({}));
         let broken = json!("x");
-        assert_eq!(decode_fields(Some(&broken)).unwrap_err().code, INVALID_RESPONSE);
-        assert_eq!(encode_fields(&json!([1])).unwrap_err().code, INVALID_ARGUMENT);
+        assert_eq!(
+            decode_fields(Some(&broken)).unwrap_err().code,
+            INVALID_RESPONSE
+        );
+        assert_eq!(
+            encode_fields(&json!([1])).unwrap_err().code,
+            INVALID_ARGUMENT
+        );
     }
 
     #[test]
@@ -1163,14 +1202,20 @@ mod tests {
         assert_eq!(docs_from_run_query("[]").unwrap(), Vec::new());
         let object = docs_from_run_query(r#"{"document": {}}"#).unwrap_err();
         assert_eq!(object.code, INVALID_RESPONSE);
-        assert_eq!(docs_from_run_query("not-json").unwrap_err().code, INVALID_RESPONSE);
+        assert_eq!(
+            docs_from_run_query("not-json").unwrap_err().code,
+            INVALID_RESPONSE
+        );
     }
 
     #[test]
     fn encode_segment_is_encodeURIComponent() {
         assert_eq!(encode_segment("a b?c/d"), "a%20b%3Fc%2Fd");
         assert_eq!(encode_segment("(default)"), "(default)");
-        assert_eq!(encode_segment("plain-id_1.txt!~*'()"), "plain-id_1.txt!~*'()");
+        assert_eq!(
+            encode_segment("plain-id_1.txt!~*'()"),
+            "plain-id_1.txt!~*'()"
+        );
         assert_eq!(encode_segment("\u{e9}"), "%C3%A9");
     }
 
@@ -1180,10 +1225,12 @@ mod tests {
         let denied = error_for_response(403, denied_body);
         assert_eq!(denied.code, PERMISSION_DENIED);
         assert_eq!(denied.message, "Missing or insufficient permissions. (403)");
-        let missing_body = r#"{"error": {"code": 404, "message": "no doc", "status": "NOT_FOUND"}}"#;
+        let missing_body =
+            r#"{"error": {"code": 404, "message": "no doc", "status": "NOT_FOUND"}}"#;
         assert_eq!(error_for_response(404, missing_body).code, NOT_FOUND);
         // The body's status stands over the HTTP status.
-        let mismatched_body = r#"{"error": {"code": 400, "message": "bad", "status": "INVALID_ARGUMENT"}}"#;
+        let mismatched_body =
+            r#"{"error": {"code": 400, "message": "bad", "status": "INVALID_ARGUMENT"}}"#;
         let mismatched = error_for_response(500, mismatched_body);
         assert_eq!(mismatched.code, INVALID_ARGUMENT_CODE);
         // An unknown canonical name is unknown, not the status default.

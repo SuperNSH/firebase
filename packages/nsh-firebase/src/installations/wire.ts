@@ -82,6 +82,9 @@ export function tokenRequest(
       ...baseHeaders(apiKey),
       Authorization: `${INTERNAL_AUTH_VERSION} ${refreshToken}`,
     },
+    body: JSON.stringify({
+      installation: { sdkVersion: SDK_VERSION, appId },
+    }),
   };
 }
 

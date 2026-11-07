@@ -14,7 +14,7 @@ export {
   NATIVE_GET,
   OAUTH_MESSAGE,
 } from "./client";
-export type { RemoteConfigClient } from "./client";
+export type { RemoteConfigClient } from "./types";
 export { RC_CODES } from "./codes";
 export { parseRemoteConfigTemplate } from "./template";
 export type {

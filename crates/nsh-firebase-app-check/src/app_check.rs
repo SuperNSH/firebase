@@ -11,7 +11,7 @@ use nsh_firebase_core::{FirebaseApp, FirebaseError, FirebaseHost};
 use serde_json::{Value as JsonValue, json};
 
 use crate::clock::{Clock, SystemClock};
-use crate::error::{invalid_response, needs_attestation, reply_error, INVALID_ARGUMENT};
+use crate::error::{INVALID_ARGUMENT, invalid_response, needs_attestation, reply_error};
 use crate::store::{CachedToken, KeyValueStore, store_key};
 use crate::transport::{Exchange, FetchExchange};
 use crate::wire::{exchange_debug_token_request, parse_token_reply};
@@ -158,8 +158,7 @@ impl AppCheck {
             token: reply.token,
             expires_at_ms,
         };
-        self.store
-            .set(&store_key(&self.app.name), cached.encode());
+        self.store.set(&store_key(&self.app.name), cached.encode());
         let token = AppCheckToken {
             token: cached.token.clone(),
             expires_at_ms: Some(expires_at_ms),
@@ -457,13 +456,19 @@ mod tests {
         assert_eq!(token.expires_at_ms, None);
         assert_eq!(
             host.calls(),
-            vec![("firebase.appCheck.getToken".to_owned(), json!({"debug": true}))]
+            vec![(
+                "firebase.appCheck.getToken".to_owned(),
+                json!({"debug": true})
+            )]
         );
         // debug:false rides the same way: the host picks the provider.
         native.get_token(false).await.unwrap();
         assert_eq!(
             host.calls()[1],
-            ("firebase.appCheck.getToken".to_owned(), json!({"debug": false}))
+            (
+                "firebase.appCheck.getToken".to_owned(),
+                json!({"debug": false})
+            )
         );
     }
 

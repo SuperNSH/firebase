@@ -143,9 +143,7 @@ fn FirestoreApp() -> impl IntoElement {
                         let fs = fs.clone();
                         spawn(async move {
                             match fs.get_doc("ui-nowhere/none").await {
-                                Ok(snapshot) => {
-                                    line.set(format!("missing: {}", show(&snapshot)))
-                                }
+                                Ok(snapshot) => line.set(format!("missing: {}", show(&snapshot))),
                                 Err(error) => line.set(format!("missing: {}", failed(error))),
                             }
                         });
@@ -277,9 +275,7 @@ fn FirestoreApp() -> impl IntoElement {
                         let fs = fs.clone();
                         spawn(async move {
                             match fs.get_doc("ui-todos").await {
-                                Ok(snapshot) => {
-                                    line.set(format!("bad-path: {}", show(&snapshot)))
-                                }
+                                Ok(snapshot) => line.set(format!("bad-path: {}", show(&snapshot))),
                                 Err(error) => line.set(format!("bad-path: {}", failed(error))),
                             }
                         });
@@ -334,9 +330,7 @@ fn FirestoreApp() -> impl IntoElement {
                         let fs = fs.clone();
                         spawn(async move {
                             match fs.get_doc("ui-badjson/x").await {
-                                Ok(snapshot) => {
-                                    line.set(format!("bad-json: {}", show(&snapshot)))
-                                }
+                                Ok(snapshot) => line.set(format!("bad-json: {}", show(&snapshot))),
                                 Err(error) => line.set(format!("bad-json: {}", failed(error))),
                             }
                         });

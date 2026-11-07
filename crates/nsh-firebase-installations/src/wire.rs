@@ -89,7 +89,7 @@ pub fn token_request(
         }
     });
     let mut request = request(
-        format!("{}/authTokens:generate", endpoint(project_id)),
+        format!("{}/{fid}/authTokens:generate", endpoint(project_id)),
         api_key,
         body,
     );
@@ -228,8 +228,7 @@ mod tests {
 
     #[test]
     fn the_token_request_authenticates_with_the_fis_scheme() {
-        let request = token_request(PROJECT, API_KEY, APP_ID, FID, "refresh-1")
-            .unwrap();
+        let request = token_request(PROJECT, API_KEY, APP_ID, FID, "refresh-1").unwrap();
         assert_eq!(
             request.url,
             "https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/c0123456789abcdef-_xyz/authTokens:generate"
@@ -247,8 +246,7 @@ mod tests {
     fn an_empty_api_key_or_app_id_is_refused_before_any_request() {
         let error = register_request(PROJECT, "", APP_ID, FID).unwrap_err();
         assert_eq!(error.code, MISSING_APP_CONFIG);
-        let error = token_request(PROJECT, API_KEY, "", FID, "refresh-1")
-            .unwrap_err();
+        let error = token_request(PROJECT, API_KEY, "", FID, "refresh-1").unwrap_err();
         assert_eq!(error.code, MISSING_APP_CONFIG);
     }
 
@@ -301,6 +299,9 @@ mod tests {
         let bad_reply = r#"{"token":"t","expiresIn":"soon"}"#;
         let bad_expiry = parse_token_reply(bad_reply).unwrap_err();
         assert_eq!(bad_expiry.code, INVALID_RESPONSE);
-        assert_eq!(parse_token_reply("<html>").unwrap_err().code, INVALID_RESPONSE);
+        assert_eq!(
+            parse_token_reply("<html>").unwrap_err().code,
+            INVALID_RESPONSE
+        );
     }
 }

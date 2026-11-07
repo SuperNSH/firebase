@@ -132,7 +132,7 @@ export function RemoteConfigExerciseApp() {
     }
     active
       .getDefaults()
-      .then((defaults) => defaultsLine.set(`defaults: ${JSON.stringify(defaults)}`))
+      .then((defaults: Record<string, string | number | boolean>) => defaultsLine.set(`defaults: ${JSON.stringify(defaults)}`))
       .catch((error: unknown) =>
         defaultsLine.set(`defaults failed: ${toFirebaseError(error).message}`),
       );
@@ -169,7 +169,7 @@ export function RemoteConfigExerciseApp() {
     }
     active
       .fetchAndActivate()
-      .then((result) => {
+      .then((result: { activated: boolean; lastFetchStatus: string }) => {
         fetchLine.set(`fetch: ${JSON.stringify(result)}`);
         statusLine.set(`last fetch: ${active.lastFetchStatus}`);
       })

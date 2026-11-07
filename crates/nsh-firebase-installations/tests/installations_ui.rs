@@ -25,8 +25,7 @@ const T0_SECS: u64 = 1_767_258_000;
 const T0_MS: u64 = T0_SECS * 1000;
 const REGISTER_URL: &str =
     "https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations";
-const TOKEN_GLOB: &str =
-    "POST https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/*/authTokens:generate";
+const TOKEN_GLOB: &str = "POST https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/*/authTokens:generate";
 /// The register reply's token stays valid a week, and a token minted at
 /// the due point expires a week past it.
 const REFRESHED_EXPIRES_MS: u64 = T0_MS + 604_800_000 - 3_600_000 + 604_800_000;
@@ -34,8 +33,7 @@ const REFRESHED_EXPIRES_MS: u64 = T0_MS + 604_800_000 - 3_600_000 + 604_800_000;
 const STORE_KEY: &str = "nsh.firebase.installations.inst-ui";
 /// The demo- project's refusal: the body shape the real service answers a
 /// fake project with.
-const DENIED_BODY: &str =
-    r#"{"error":{"code":403,"message":"Firebase Installations service is disabled for this project","status":"PERMISSION_DENIED"}}"#;
+const DENIED_BODY: &str = r#"{"error":{"code":403,"message":"Firebase Installations service is disabled for this project","status":"PERMISSION_DENIED"}}"#;
 const BACKEND_BODY: &str = r#"{"error":{"code":500,"message":"backend"}}"#;
 
 fn t0() -> SystemTime {
@@ -100,7 +98,11 @@ fn register_route(log: &RequestLog) -> StubRoute {
         snapshot(&log, &request);
         let fid = serde_json::from_str::<JsonValue>(&request_body(&request))
             .ok()
-            .and_then(|body| body.get("fid").and_then(JsonValue::as_str).map(str::to_owned))
+            .and_then(|body| {
+                body.get("fid")
+                    .and_then(JsonValue::as_str)
+                    .map(str::to_owned)
+            })
             .unwrap_or_default();
         let reply_body = json!({
             "name": format!("projects/demo-nsh/installations/{fid}"),
@@ -145,7 +147,11 @@ fn InstallationsApp() -> impl IntoElement {
     let app = initialize_app(FirebaseOptions::demo(), "inst-ui").unwrap();
     let store: Arc<dyn KeyValueStore> = Arc::new(MemoryStore::new());
     let host: Arc<dyn FirebaseHost> = Arc::new(PureHost);
-    let installations = Arc::new(Installations::new(Arc::clone(&app), Arc::clone(&store), host));
+    let installations = Arc::new(Installations::new(
+        Arc::clone(&app),
+        Arc::clone(&store),
+        host,
+    ));
     let line = signal(String::new());
     let restored = signal("restored: never".to_owned());
 
@@ -222,7 +228,12 @@ fn InstallationsApp() -> impl IntoElement {
         .gap_1()
         .child(text(move || line.get()))
         .child(text(move || restored.get()))
-        .child(view().test_id("get-id").on_press(get_id).child(text("get id")))
+        .child(
+            view()
+                .test_id("get-id")
+                .on_press(get_id)
+                .child(text("get id")),
+        )
         .child(
             view()
                 .test_id("get-token")
@@ -292,7 +303,10 @@ fn register_persists_and_get_token_serves_the_cached_token_until_it_is_due() {
     assert_eq!(sent.len(), 1);
     assert_eq!(sent[0].method, "POST");
     assert_eq!(sent[0].url, REGISTER_URL);
-    assert_eq!(header_of(&sent[0], "x-goog-api-key"), "demo-nsh-fake-api-key");
+    assert_eq!(
+        header_of(&sent[0], "x-goog-api-key"),
+        "demo-nsh-fake-api-key"
+    );
     assert_eq!(header_of(&sent[0], "Content-Type"), "application/json");
     assert_eq!(header_of(&sent[0], "Accept"), "application/json");
     let body: JsonValue = serde_json::from_str(&sent[0].body).unwrap();
@@ -327,8 +341,15 @@ fn register_persists_and_get_token_serves_the_cached_token_until_it_is_due() {
     app.wait_for("text:token: auth-token-2").unwrap();
     let sent = requests(&log);
     assert_eq!(sent.len(), 2);
-    assert!(sent[1].url.starts_with(&format!("{REGISTER_URL}/{fid}/authTokens:generate")));
-    assert_eq!(header_of(&sent[1], "Authorization"), "FIS_v2 refresh-token-1");
+    assert!(
+        sent[1]
+            .url
+            .starts_with(&format!("{REGISTER_URL}/{fid}/authTokens:generate"))
+    );
+    assert_eq!(
+        header_of(&sent[1], "Authorization"),
+        "FIS_v2 refresh-token-1"
+    );
     assert_eq!(
         serde_json::from_str::<JsonValue>(&sent[1].body).unwrap(),
         json!({ "installation": { "sdkVersion": "w:0.1.0", "appId": "1:000000000000:web:demo-nsh" } })
@@ -385,8 +406,10 @@ fn a_server_failure_maps_to_internal_error() {
     let mut app = start(Root::of::<InstallationsApp>(), network);
     app.first_render().unwrap();
     app.press("id:get-id").unwrap();
-    app.wait_for("text:id: installations/internal-error: the installations server failed (HTTP 500)")
-        .unwrap();
+    app.wait_for(
+        "text:id: installations/internal-error: the installations server failed (HTTP 500)",
+    )
+    .unwrap();
 }
 
 #[test]

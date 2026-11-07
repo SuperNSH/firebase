@@ -33,11 +33,10 @@ pub mod transport;
 pub mod wire;
 
 pub use crate::{
-    app_check::{AppCheck, AppCheckOptions, AppCheckToken, NativeAppCheck, NATIVE_GET_TOKEN},
+    app_check::{AppCheck, AppCheckOptions, AppCheckToken, NATIVE_GET_TOKEN, NativeAppCheck},
     clock::{Clock, ManualClock, SystemClock},
     error::{
-        EXCHANGE_FAILED, INVALID_ARGUMENT, INVALID_DEBUG_TOKEN, INVALID_RESPONSE,
-        NEEDS_ATTESTATION,
+        EXCHANGE_FAILED, INVALID_ARGUMENT, INVALID_DEBUG_TOKEN, INVALID_RESPONSE, NEEDS_ATTESTATION,
     },
     store::{EngineStore, KeyValueStore, MemoryStore},
     transport::{Exchange, FetchExchange, RecordingExchange},
