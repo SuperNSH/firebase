@@ -15,3 +15,6 @@ GoogleService-Info.plist
 dist/
 emulator/emulator.log
 emulator/emulator.pid
+
+# SwiftPM build artifacts (they contain embedded git checkouts)
+.build/
