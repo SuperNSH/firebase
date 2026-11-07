@@ -376,7 +376,7 @@ mod tests {
             error_for_response(500, Some(&null_details))
                 .unwrap()
                 .details,
-            Some(JsonValue::Null)
+            Some(Box::new(JsonValue::Null))
         );
     }
 

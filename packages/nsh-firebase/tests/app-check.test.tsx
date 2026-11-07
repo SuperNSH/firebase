@@ -74,7 +74,11 @@ describe("app-check", () => {
     expect(sent.length).toBe(1);
     expect(sent[0].method).toBe("POST");
     expect(sent[0].url).toBe(EXCHANGE_URL);
-    expect(sent[0].headers["Content-Type"]).toBe("application/json");
+    // The engine records header names lower-cased.
+    const contentType = Object.keys(sent[0].headers).find(
+      (name) => name.toLowerCase() === "content-type",
+    );
+    expect(sent[0].headers[contentType ?? ""]).toBe("application/json");
     expect(
       Object.keys(sent[0].headers).some((name) => name.toLowerCase() === "x-firebase-appcheck"),
     ).toBe(false);
@@ -220,7 +224,7 @@ describe("app-check", () => {
     await app.press("id:token");
     // The stable code is what the facade owns; the message carries the
     // engine's own failure wording.
-    await app.waitFor("text:/^token: core\\/network .*connection was reset/");
+    await app.waitFor("text:/^token: core\\/network.*connection was reset/");
     expect(app.storage()[STORE_KEY]).toBeUndefined();
   });
 

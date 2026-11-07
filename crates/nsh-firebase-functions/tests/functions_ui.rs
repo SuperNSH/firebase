@@ -148,7 +148,7 @@ fn FunctionsApp() -> impl IntoElement {
         .child(
             view()
                 .test_id("ping")
-                .on_press(move || run(line_ping, functions_ping, "ping", JsonValue::Null))
+                .on_press(move || run(line_ping, functions_ping.clone(), "ping", JsonValue::Null))
                 .child(text("ping")),
         )
         .child(
@@ -170,7 +170,7 @@ fn FunctionsApp() -> impl IntoElement {
                 .on_press(move || {
                     run(
                         line_bad,
-                        functions_bad,
+                        functions_bad.clone(),
                         "add",
                         serde_json::json!({ "a": "x", "b": 2 }),
                     )
@@ -180,25 +180,53 @@ fn FunctionsApp() -> impl IntoElement {
         .child(
             view()
                 .test_id("weird")
-                .on_press(move || run(line_weird, functions_weird, "weird", JsonValue::Null))
+                .on_press(move || {
+                    run(
+                        line_weird,
+                        functions_weird.clone(),
+                        "weird",
+                        JsonValue::Null,
+                    )
+                })
                 .child(text("weird")),
         )
         .child(
             view()
                 .test_id("missing")
-                .on_press(move || run(line_missing, functions_missing, "missing", JsonValue::Null))
+                .on_press(move || {
+                    run(
+                        line_missing,
+                        functions_missing.clone(),
+                        "missing",
+                        JsonValue::Null,
+                    )
+                })
                 .child(text("missing")),
         )
         .child(
             view()
                 .test_id("details")
-                .on_press(move || run(line_details, functions_details, "details", JsonValue::Null))
+                .on_press(move || {
+                    run(
+                        line_details,
+                        functions_details.clone(),
+                        "details",
+                        JsonValue::Null,
+                    )
+                })
                 .child(text("details")),
         )
         .child(
             view()
                 .test_id("legacy")
-                .on_press(move || run(line_legacy, functions_legacy, "legacy", JsonValue::Null))
+                .on_press(move || {
+                    run(
+                        line_legacy,
+                        functions_legacy.clone(),
+                        "legacy",
+                        JsonValue::Null,
+                    )
+                })
                 .child(text("legacy")),
         )
 }
