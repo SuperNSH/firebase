@@ -67,7 +67,7 @@ fn set_data() -> JsonValue {
 fn FirestoreApp() -> impl IntoElement {
     let app = initialize_app(FirebaseOptions::demo(), "fs-ui").unwrap();
     let fs = Firestore::new(&app);
-    let line = signal(String::new());
+    let line = signal("ready".to_owned());
     view()
         .flex_1()
         .gap_1()

@@ -796,11 +796,16 @@ fn client_code_for_status(status: u16) -> &'static str {
 pub fn error_for_response(status: u16, text: &str) -> FirebaseError {
     let body: JsonValue = serde_json::from_str(text).unwrap_or(JsonValue::Null);
     let error = body.get("error");
-    let code = error
+    // A body status always names the code: recognized canonical names
+    // map, an unrecognized one is UNKNOWN; only an absent status falls
+    // back to the HTTP status, like the js-sdk's rpc-status mapping.
+    let code = match error
         .and_then(|error| error.get("status"))
         .and_then(JsonValue::as_str)
-        .and_then(canonical_client_code)
-        .unwrap_or_else(|| client_code_for_status(status));
+    {
+        Some(canonical) => canonical_client_code(canonical).unwrap_or(UNKNOWN),
+        None => client_code_for_status(status),
+    };
     let message = error
         .and_then(|error| error.get("message"))
         .and_then(JsonValue::as_str)
