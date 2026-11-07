@@ -26,12 +26,15 @@ jobs:
       - name: Boot the repo simulator and run the proofs
         run: |
           set -euo pipefail
-          UDID=$(xcrun simctl create nsh-firebase-ios "$(
-            xcrun simctl list devicetypes | grep -o 'iPhone [0-9]* ' | tail -1 | sed 's/ *$//'
-          )" "$(
-            xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-[0-9-]*' | tail -1
-          )")
+          # An iPhone that the newest iOS runtime already supports. A device type
+          # and a runtime picked separately can be incompatible (SimError 403).
+          udid=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          devices = json.load(sys.stdin)['devices']
+          print(next(d['udid'] for runtime, items in sorted(devices.items(), reverse=True) if 'iOS' in runtime for d in items if 'iPhone' in d['name']))")
+          UDID="$udid"
           xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID"
           APP=examples/host-ios/build/Build/Products/Debug-iphonesimulator/NshFirebaseHost.app
           xcrun simctl install "$UDID" "$APP"
           xcrun simctl launch "$UDID" dev.nsh.firebase.host
