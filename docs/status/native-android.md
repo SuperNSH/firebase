@@ -13,7 +13,12 @@ Area: native/android (library module) + examples/host-android (embedding host)
   diff).
 - `native/android`: Gradle library module (`com.android.library`, AGP 9.1.0),
   Firebase BoM **35.1.0** pinned, with version-less `firebase-messaging` (resolves
-  26.0.1), `firebase-analytics` (24.0.0), `firebase-perf` (23.0.1). Compiles
+  26.0.1), `firebase-analytics` (24.0.0), `firebase-perf` (23.0.1), and the
+  six stretch artifacts `firebase-firestore` (27.1.0), `firebase-config`
+  (24.0.1), `firebase-crashlytics` (21.0.1), `firebase-installations`
+  (20.0.0), `firebase-appcheck` and `firebase-appcheck-debug` (20.0.0),
+  `firebase-functions` (23.0.0) — all names and versions read from the BoM
+  pom in the Gradle cache. Compiles
   against `libs/nsh.aar` with `compileOnly` (the host packages the AAR; two
   copies clash at dex time).
 - `NshFirebase.java` installs exactly the contract handlers:
@@ -24,6 +29,16 @@ Area: native/android (library module) + examples/host-android (embedding host)
   SharedPreferences store when the app is not loaded; token refreshes keep
   only the newest; a loaded app without listeners is covered by nsh's own
   event buffer (one shared queue per channel, 256 events in all)).
+- **Stretch handlers** (19 new names, same reply/reject shape as the
+  existing 16 — rejections use a `firebase/<product>: <reason>` code):
+  firestore getDoc/setDoc/addDoc/deleteDoc/runQuery, remote-config
+  setDefaults/getDefaults/fetchAndActivate/get, crashlytics
+  log/setUserId/setCustomKey/recordError/sendUnsentReports/
+  didCrashDuringPreviousExecution, installations getId/getToken,
+  appCheck.getToken (debug provider swapped in on the first `{debug:true}`
+  call, before the first fetch), functions.call. The runQuery wire encoding
+  matches iOS exactly (`where` = `{field, op, value}`, ten ops; `orderBy` =
+  `{field, direction?}`; `limit` number) — table in docs/status/native-ios.md.
   `NshFirebaseMessagingService` handles
   `MESSAGING_EVENT`. show/close/setBadge/permission mirror nsh-main's
   unreleased `Notifications.java` semantics (one channel, same id replaces,
@@ -82,15 +97,74 @@ Area: native/android (library module) + examples/host-android (embedding host)
   topics, `getToken()` returning `Task<String>`) verified with javap against
   the BoM-resolved artifacts and confirmed by the successful compile — three
   of these were wrong on first draft and the compiler caught each.
+- Stretch-handler API checks, split by evidence source:
+  - **javap against the cached BoM artifacts**: firebase-config 24.0.1
+    (`getInstance`, `fetchAndActivate` → `Task<Boolean>`,
+    `setDefaultsAsync(Map<String,Object>)` → `Task<Void>`, `getValue` →
+    `FirebaseRemoteConfigValue` with `asString`/`getSource`,
+    `getInfo().getLastFetchStatus()`, `getAll()`, the
+    `LAST_FETCH_STATUS_*`/`VALUE_SOURCE_*` int constants); firebase-crashlytics
+    21.0.1 (`getInstance`, `log`, `setUserId`, the six `setCustomKey`
+    overloads, `recordException(Throwable)`, `sendUnsentReports`,
+    `didCrashOnPreviousExecution`); firebase-installations 20.0.0
+    (`getId` → `Task<String>`, `getToken(boolean)` →
+    `Task<InstallationTokenResult>`) with `InstallationTokenResult.getToken()`
+    javap'd from the transitive firebase-installations-interop 18.0.0.
+  - **Reference sources by path** (the firestore, app-check and functions
+    artifacts are not in the local Gradle cache, so javap was impossible):
+    firestore — RNFB
+    `packages/firestore/android/src/reactnative/java/io/invertase/firebase/firestore/`
+    `ReactNativeFirebaseFirestoreQuery.java` (`whereEqualTo`,
+    `whereNotEqualTo`, `whereGreaterThan`, `whereGreaterThanOrEqualTo`,
+    `whereLessThan`, `whereLessThanOrEqualTo`, `whereArrayContains`,
+    `whereArrayContainsAny`, `whereIn`, `whereNotIn`,
+    `orderBy(field, Query.Direction)`, `limit`) and
+    `NativeRNFBTurboFirestoreDocument.java` (`set(data, SetOptions.merge())`,
+    plain `set(data)`), `ReactNativeFirebaseFirestoreSerialize.java`
+    (`querySnapshot.getDocuments()`); app-check — FlutterFire
+    `packages/firebase_app_check/firebase_app_check/android/src/main/kotlin/io/flutter/plugins/firebase/appcheck/FirebaseAppCheckPlugin.kt`
+    (`com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory`,
+    `FirebaseAppCheck.getInstance(app).setAppCheckProviderFactory(…)`) and
+    RNFB `packages/app-check/android/.../NativeRNFBTurboAppCheck.java`
+    (`getAppCheckToken(forceRefresh)`, `token.getToken()`); functions — RNFB
+    `packages/functions/android/.../NativeRNFBTurboFunctions.java`
+    (`FirebaseFunctions.getInstance()`, `getHttpsCallable(name)`,
+    `call(data)`, `result.getData()`); crashlytics JS-error recording — RNFB
+    `packages/crashlytics/android/.../NativeRNFBTurboCrashlytics.java`
+    (`recordException` on a named synthetic exception with
+    `setStackTrace(StackTraceElement[])`).
+  - The compile check for the uncached modules (firestore 27.1.0,
+    appcheck 20.0.0, functions 23.0.0) and the new handler code lands in
+    CI's Android host build job (ubuntu).
+- **No manifest additions for the stretch products** (verified, stated in
+  docs/setup-android.md step 3): the cached firebase-crashlytics 21.0.1 AAR's
+  own AndroidManifest self-registers via `ComponentDiscoveryService`
+  meta-data and carries `INTERNET`; RNFB's firestore and remote-config
+  product manifests are empty
+  (`packages/{firestore,remote-config}/android/src/main/AndroidManifest.xml`);
+  App Check's debug provider needs nothing at build time.
 
 ## Not verified
 
+- **The stretch handler code has no local compile behind it** (the build
+  machine is on battery; no build commands allowed): the javap and
+  reference-source evidence above is read-only. The Android host build job
+  on ubuntu is the compiler for this — the seven new BoM artifacts and the
+  19 new handlers compile there first. `native/android` standalone
+  `assembleDebug` passed before the stretch additions
+  (docs/evidence/native-android/gradle.log).
 - Nothing on an emulator (device verifier's job): app launch, FCM token
   request failure surfacing in the app, notification show/press flows, and
   press delivery — `adb shell am start -n dev.nsh.firebase.host/.MainActivity
   --es dev.nsh.firebase.NOTIFICATION <id>` for this module's notifications,
   `--es google.message_id <id>` for the FCM auto-post path. The build proves
   compilation and manifest merging, not pixels.
+- The stretch handlers' rejections under the fake project
+  (installations, remote-config fetchAndActivate, app-check token,
+  functions call) are expected to surface like the FCM token's does, but
+  only an emulator run can show it. Firestore handlers have no wired
+  emulator route (`useEmulator` is not called), so under the fake project
+  they reject against the real backend — the honest sandbox behavior.
 - `NshView.handleNotificationIntent` does not exist on 0.4.0 (verified by
   javap; it is in nsh-main only). `NshFirebase.handleNotificationIntent`
   reflectively calls it when present and otherwise delivers the press itself;

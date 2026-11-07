@@ -20,19 +20,32 @@ import android.util.Log;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.HttpMetric;
 import com.google.firebase.perf.metrics.Trace;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -83,6 +96,8 @@ public final class NshFirebase {
     private static WeakReference<com.longbridge.nsh.NshView> viewRef;
     private static final Handler main = new Handler(Looper.getMainLooper());
     private static final Map<String, Trace> traces = new HashMap<>();
+    /** Set once the App Check provider factory was swapped; it must be in place before the first token fetch. */
+    private static boolean appCheckFactorySet;
     private static Listener listener;
 
     /** Host-side hook (the demo's status line), not part of the app contract. */
@@ -174,6 +189,18 @@ public final class NshFirebase {
                 "firebase.analytics.setConsent",
                 "firebase.perf.startTrace", "firebase.perf.stopTrace",
                 "firebase.perf.recordHttpMetric",
+                "firebase.firestore.getDoc", "firebase.firestore.setDoc",
+                "firebase.firestore.addDoc", "firebase.firestore.deleteDoc",
+                "firebase.firestore.runQuery",
+                "firebase.remote-config.setDefaults", "firebase.remote-config.getDefaults",
+                "firebase.remote-config.fetchAndActivate", "firebase.remote-config.get",
+                "firebase.crashlytics.log", "firebase.crashlytics.setUserId",
+                "firebase.crashlytics.setCustomKey", "firebase.crashlytics.recordError",
+                "firebase.crashlytics.sendUnsentReports",
+                "firebase.crashlytics.didCrashDuringPreviousExecution",
+                "firebase.installations.getId", "firebase.installations.getToken",
+                "firebase.appCheck.getToken",
+                "firebase.functions.call",
         };
         for (String name : names) nsh.handle(name, (data, reply) -> handle(name, data, reply));
     }
@@ -281,6 +308,52 @@ public final class NshFirebase {
                     break;
                 }
                 case "firebase.perf.recordHttpMetric": recordHttpMetric(args, context, reply); break;
+                case "firebase.firestore.getDoc": firestoreGetDoc(args, reply); break;
+                case "firebase.firestore.setDoc": firestoreSetDoc(args, reply); break;
+                case "firebase.firestore.addDoc": firestoreAddDoc(args, reply); break;
+                case "firebase.firestore.deleteDoc": firestoreDeleteDoc(args, reply); break;
+                case "firebase.firestore.runQuery": firestoreRunQuery(args, reply); break;
+                case "firebase.remote-config.setDefaults": remoteConfigSetDefaults(args, reply); break;
+                case "firebase.remote-config.getDefaults": remoteConfigGetDefaults(reply); break;
+                case "firebase.remote-config.fetchAndActivate": remoteConfigFetchAndActivate(reply); break;
+                case "firebase.remote-config.get": remoteConfigGet(args, reply); break;
+                case "firebase.crashlytics.log":
+                    FirebaseCrashlytics.getInstance().log(str(args, "message"));
+                    reply.resolve(Boolean.TRUE);
+                    break;
+                case "firebase.crashlytics.setUserId":
+                    FirebaseCrashlytics.getInstance().setUserId(str(args, "id"));
+                    reply.resolve(Boolean.TRUE);
+                    break;
+                case "firebase.crashlytics.setCustomKey":
+                    crashlyticsSetCustomKey(args);
+                    reply.resolve(Boolean.TRUE);
+                    break;
+                case "firebase.crashlytics.recordError": crashlyticsRecordError(args); reply.resolve(Boolean.TRUE); break;
+                case "firebase.crashlytics.sendUnsentReports":
+                    FirebaseCrashlytics.getInstance().sendUnsentReports();
+                    reply.resolve(Boolean.TRUE);
+                    break;
+                case "firebase.crashlytics.didCrashDuringPreviousExecution":
+                    reply.resolve(map("crashed",
+                            FirebaseCrashlytics.getInstance().didCrashOnPreviousExecution()));
+                    break;
+                case "firebase.installations.getId":
+                    FirebaseInstallations.getInstance().getId()
+                            .addOnSuccessListener(id -> reply.resolve(map("id", id)))
+                            .addOnFailureListener(e -> reply.reject(
+                                    "firebase/installations: getId failed: " + e.getMessage()));
+                    break;
+                case "firebase.installations.getToken":
+                    // The fake project has no backend: this rejection is the
+                    // honest proof the request was made, like the FCM token's.
+                    FirebaseInstallations.getInstance().getToken(false)
+                            .addOnSuccessListener(result -> reply.resolve(map("token", result.getToken())))
+                            .addOnFailureListener(e -> reply.reject(
+                                    "firebase/installations: getToken failed: " + e.getMessage()));
+                    break;
+                case "firebase.appCheck.getToken": appCheckGetToken(args, reply); break;
+                case "firebase.functions.call": functionsCall(args, reply); break;
                 default: reply.reject("firebase/unimplemented: " + name);
             }
         } catch (Exception e) {
@@ -327,6 +400,307 @@ public final class NshFirebase {
         metric.start();
         metric.stop();
         reply.resolve(Boolean.TRUE);
+    }
+
+    // --- Stretch handlers: Firestore, Remote Config, Crashlytics, Installations, App Check, Functions ---
+    //
+    // Every failure resolves through reply.reject with a firebase/<product>:
+    // prefix, and under the fake project anything that reaches Google's
+    // network rejects — that rejection is the sandbox's proof, not a bug.
+
+    private static void firestoreGetDoc(Map<?, ?> args, com.longbridge.nsh.NshHostReply reply) {
+        String path = str(args, "path");
+        if (path.isEmpty()) {
+            reply.reject("firebase/firestore: getDoc needs a path");
+            return;
+        }
+        FirebaseFirestore.getInstance().document(path).get()
+                .addOnSuccessListener(doc -> {
+                    Map<String, Object> out = new HashMap<>();
+                    out.put("exists", doc.exists());
+                    // A missing document resolves (exists:false, data:null);
+                    // it is Firestore's own semantics, not an error.
+                    out.put("data", doc.getData());
+                    reply.resolve(out);
+                })
+                .addOnFailureListener(e -> reply.reject(
+                        "firebase/firestore: getDoc " + path + " failed: " + e.getMessage()));
+    }
+
+    private static void firestoreSetDoc(Map<?, ?> args, com.longbridge.nsh.NshHostReply reply) {
+        String path = str(args, "path");
+        Object data = args == null ? null : args.get("data");
+        if (path.isEmpty() || !(data instanceof Map)) {
+            reply.reject("firebase/firestore: setDoc needs a path and a data object");
+            return;
+        }
+        @SuppressWarnings("unchecked")
+        com.google.android.gms.tasks.Task<Void> task = bool(args, "merge")
+                ? FirebaseFirestore.getInstance().document(path).set((Map<String, Object>) data, SetOptions.merge())
+                : FirebaseFirestore.getInstance().document(path).set((Map<String, Object>) data);
+        task.addOnSuccessListener(v -> reply.resolve(Boolean.TRUE))
+                .addOnFailureListener(e -> reply.reject(
+                        "firebase/firestore: setDoc " + path + " failed: " + e.getMessage()));
+    }
+
+    private static void firestoreAddDoc(Map<?, ?> args, com.longbridge.nsh.NshHostReply reply) {
+        String collectionPath = str(args, "collectionPath");
+        Object data = args == null ? null : args.get("data");
+        if (collectionPath.isEmpty() || !(data instanceof Map)) {
+            reply.reject("firebase/firestore: addDoc needs a collectionPath and a data object");
+            return;
+        }
+        @SuppressWarnings("unchecked")
+        com.google.android.gms.tasks.Task<com.google.firebase.firestore.DocumentReference> task =
+                FirebaseFirestore.getInstance().collection(collectionPath).add((Map<String, Object>) data);
+        task.addOnSuccessListener(ref -> reply.resolve(map("id", ref.getId())))
+                .addOnFailureListener(e -> reply.reject(
+                        "firebase/firestore: addDoc " + collectionPath + " failed: " + e.getMessage()));
+    }
+
+    private static void firestoreDeleteDoc(Map<?, ?> args, com.longbridge.nsh.NshHostReply reply) {
+        String path = str(args, "path");
+        if (path.isEmpty()) {
+            reply.reject("firebase/firestore: deleteDoc needs a path");
+            return;
+        }
+        FirebaseFirestore.getInstance().document(path).delete()
+                .addOnSuccessListener(v -> reply.resolve(Boolean.TRUE))
+                .addOnFailureListener(e -> reply.reject(
+                        "firebase/firestore: deleteDoc " + path + " failed: " + e.getMessage()));
+    }
+
+    /**
+     * `where` is one condition: `{field, op, value}` with an op of `==`, `!=`,
+     * `<`, `<=`, `>`, `>=`, `array-contains`, `in`, `not-in` or
+     * `array-contains-any`; `orderBy` is `{field, direction?}` with
+     * `asc`/`desc`; `limit` is a number.
+     */
+    private static void firestoreRunQuery(Map<?, ?> args, com.longbridge.nsh.NshHostReply reply) {
+        String collectionPath = str(args, "collectionPath");
+        if (collectionPath.isEmpty()) {
+            reply.reject("firebase/firestore: runQuery needs a collectionPath");
+            return;
+        }
+        Query query = FirebaseFirestore.getInstance().collection(collectionPath);
+        Map<?, ?> cond = mapArg(args, "where");
+        if (cond != null) {
+            String field = str(cond, "field");
+            String op = str(cond, "op");
+            Object value = cond.get("value");
+            switch (op) {
+                case "==": query = query.whereEqualTo(field, value); break;
+                case "!=": query = query.whereNotEqualTo(field, value); break;
+                case "<": query = query.whereLessThan(field, value); break;
+                case "<=": query = query.whereLessThanOrEqualTo(field, value); break;
+                case ">": query = query.whereGreaterThan(field, value); break;
+                case ">=": query = query.whereGreaterThanOrEqualTo(field, value); break;
+                case "array-contains": query = query.whereArrayContains(field, value); break;
+                case "in": query = query.whereIn(field, objectList(value)); break;
+                case "not-in": query = query.whereNotIn(field, objectList(value)); break;
+                case "array-contains-any": query = query.whereArrayContainsAny(field, objectList(value)); break;
+                default:
+                    reply.reject("firebase/firestore: unknown where op " + op);
+                    return;
+            }
+        }
+        Map<?, ?> order = mapArg(args, "orderBy");
+        if (order != null && !str(order, "field").isEmpty()) {
+            query = query.orderBy(str(order, "field"),
+                    "desc".equals(str(order, "direction"))
+                            ? Query.Direction.DESCENDING : Query.Direction.ASCENDING);
+        }
+        Number limit = (Number) (args == null ? null : args.get("limit"));
+        if (limit != null) query = query.limit(limit.intValue());
+        query.get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Map<String, Object>> docs = new ArrayList<>();
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        Map<String, Object> entry = new HashMap<>();
+                        entry.put("id", doc.getId());
+                        entry.put("data", doc.getData());
+                        docs.add(entry);
+                    }
+                    reply.resolve(map("docs", docs));
+                })
+                .addOnFailureListener(e -> reply.reject(
+                        "firebase/firestore: runQuery " + collectionPath + " failed: " + e.getMessage()));
+    }
+
+    private static void remoteConfigSetDefaults(Map<?, ?> args, com.longbridge.nsh.NshHostReply reply) {
+        Map<?, ?> raw = mapArg(args, "map");
+        if (raw == null) {
+            reply.reject("firebase/remote-config: setDefaults needs a map");
+            return;
+        }
+        Map<String, Object> defaults = new HashMap<>();
+        for (Map.Entry<?, ?> entry : raw.entrySet()) {
+            Object value = entry.getValue();
+            // The defaults map takes concrete values; a null default would
+            // read back as unset, so it stays out.
+            if (value != null && value != JSONObject.NULL) {
+                defaults.put(String.valueOf(entry.getKey()), value);
+            }
+        }
+        FirebaseRemoteConfig.getInstance().setDefaultsAsync(defaults)
+                .addOnSuccessListener(v -> reply.resolve(Boolean.TRUE))
+                .addOnFailureListener(e -> reply.reject(
+                        "firebase/remote-config: setDefaults failed: " + e.getMessage()));
+    }
+
+    /**
+     * Read back from the SDK (source DEFAULT), not from a module-side copy.
+     * The SDK's canonical view of a default is its string form, so the type
+     * is re-parsed and a default stored as string "5" reads back as number 5.
+     */
+    private static void remoteConfigGetDefaults(com.longbridge.nsh.NshHostReply reply) {
+        Map<String, Object> map = new HashMap<>();
+        for (Map.Entry<String, FirebaseRemoteConfigValue> entry
+                : FirebaseRemoteConfig.getInstance().getAll().entrySet()) {
+            if (entry.getValue().getSource() != FirebaseRemoteConfig.VALUE_SOURCE_DEFAULT) continue;
+            map.put(entry.getKey(), canonicalJsonValue(entry.getValue().asString()));
+        }
+        reply.resolve(map("map", map));
+    }
+
+    private static void remoteConfigFetchAndActivate(com.longbridge.nsh.NshHostReply reply) {
+        FirebaseRemoteConfig.getInstance().fetchAndActivate()
+                .addOnSuccessListener(activated -> {
+                    Map<String, Object> out = new HashMap<>();
+                    out.put("activated", activated);
+                    out.put("lastFetchStatus", fetchStatusName(
+                            FirebaseRemoteConfig.getInstance().getInfo().getLastFetchStatus()));
+                    reply.resolve(out);
+                })
+                .addOnFailureListener(e -> reply.reject(
+                        "firebase/remote-config: fetchAndActivate failed: " + e.getMessage()));
+    }
+
+    private static void remoteConfigGet(Map<?, ?> args, com.longbridge.nsh.NshHostReply reply) {
+        FirebaseRemoteConfigValue value =
+                FirebaseRemoteConfig.getInstance().getValue(str(args, "key"));
+        // Static source = neither the backend nor a default ever set it: null.
+        boolean unset = value.getSource() == FirebaseRemoteConfig.VALUE_SOURCE_STATIC;
+        reply.resolve(map("value", unset ? null : value.asString()));
+    }
+
+    private static void crashlyticsSetCustomKey(Map<?, ?> args) {
+        String key = str(args, "key");
+        Object value = args == null ? null : args.get("value");
+        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+        if (value instanceof Boolean) {
+            crashlytics.setCustomKey(key, (Boolean) value);
+        } else if (value instanceof Number) {
+            double d = ((Number) value).doubleValue();
+            if (d == Math.rint(d) && !Double.isInfinite(d) && Math.abs(d) < 9.2e18) {
+                crashlytics.setCustomKey(key, (long) d);
+            } else {
+                crashlytics.setCustomKey(key, d);
+            }
+        } else {
+            crashlytics.setCustomKey(key, value == null ? "" : String.valueOf(value));
+        }
+    }
+
+    /**
+     * A JS error is not a Java one: the code and message ride in a named
+     * synthetic exception, the optional stack string is parsed into frames,
+     * and the handler's own Java stack is dropped — RNFB's
+     * recordJavaScriptError shape (NativeRNFBTurboCrashlytics.java).
+     */
+    private static void crashlyticsRecordError(Map<?, ?> args) {
+        String message = str(args, "message");
+        long code = number(args, "code");
+        RecordedError error = new RecordedError(code, message);
+        String stack = str(args, "stack", "");
+        error.setStackTrace(stack.isEmpty() ? new StackTraceElement[0] : stackFrames(stack));
+        FirebaseCrashlytics.getInstance().recordException(error);
+    }
+
+    private static void appCheckGetToken(Map<?, ?> args, com.longbridge.nsh.NshHostReply reply) {
+        // The debug provider only produces a token the backend accepts in
+        // debug mode; under the fake project the fetch itself still fails.
+        if (bool(args, "debug") && !appCheckFactorySet) {
+            FirebaseAppCheck.getInstance()
+                    .setAppCheckProviderFactory(DebugAppCheckProviderFactory.getInstance());
+            appCheckFactorySet = true;
+        }
+        FirebaseAppCheck.getInstance().getAppCheckToken(false)
+                .addOnSuccessListener(token -> reply.resolve(map("token", token.getToken())))
+                .addOnFailureListener(e -> reply.reject(
+                        "firebase/app-check: getToken failed: " + e.getMessage()));
+    }
+
+    private static void functionsCall(Map<?, ?> args, com.longbridge.nsh.NshHostReply reply) {
+        String name = str(args, "name");
+        if (name.isEmpty()) {
+            reply.reject("firebase/functions: call needs a name");
+            return;
+        }
+        // Default instance = us-central1; a named region is not in the
+        // handler contract.
+        FirebaseFunctions.getInstance().getHttpsCallable(name)
+                .call(args == null ? null : args.get("data"))
+                .addOnSuccessListener(result -> reply.resolve(map("result", result.getData())))
+                .addOnFailureListener(e -> reply.reject(
+                        "firebase/functions: call " + name + " failed: " + e.getMessage()));
+    }
+
+    /** `no-fetch-yet` mirrors LAST_FETCH_STATUS_NO_FETCH_YET. */
+    private static String fetchStatusName(int status) {
+        if (status == FirebaseRemoteConfig.LAST_FETCH_STATUS_SUCCESS) return "success";
+        if (status == FirebaseRemoteConfig.LAST_FETCH_STATUS_FAILURE) return "failure";
+        if (status == FirebaseRemoteConfig.LAST_FETCH_STATUS_THROTTLED) return "throttled";
+        return "no-fetch-yet";
+    }
+
+    /** "true"/"false" → boolean, integers → Long, decimals → Double, else the string. */
+    private static Object canonicalJsonValue(String raw) {
+        if (raw.equals("true")) return Boolean.TRUE;
+        if (raw.equals("false")) return Boolean.FALSE;
+        try {
+            return Long.parseLong(raw);
+        } catch (NumberFormatException notALong) {
+            try {
+                return Double.parseDouble(raw);
+            } catch (NumberFormatException notADouble) {
+                return raw;
+            }
+        }
+    }
+
+    private static Map<?, ?> mapArg(Map<?, ?> args, String key) {
+        Object value = args == null ? null : args.get(key);
+        return value instanceof Map ? (Map<?, ?>) value : null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Object> objectList(Object value) {
+        return value instanceof List ? (List<Object>) value : new ArrayList<>();
+    }
+
+    private static StackTraceElement[] stackFrames(String stack) {
+        List<StackTraceElement> frames = new ArrayList<>();
+        for (String line : stack.split("\n")) {
+            line = line.trim();
+            if (line.startsWith("at ")) line = line.substring(3);
+            int open = line.indexOf('(');
+            int close = line.lastIndexOf(')');
+            if (open >= 0 && close > open) {
+                frames.add(new StackTraceElement("", line.substring(0, open).trim(),
+                        line.substring(open + 1, close), -1));
+            } else if (!line.isEmpty()) {
+                frames.add(new StackTraceElement("", line, null, -1));
+            }
+        }
+        return frames.toArray(new StackTraceElement[0]);
+    }
+
+    /** A named type so the Crashlytics report says where the error came from. */
+    private static final class RecordedError extends Exception {
+        RecordedError(long code, String message) {
+            super("firebase/" + code + ": " + message);
+        }
     }
 
     // --- Messaging delivery: foreground send, background queue, replay on register ---

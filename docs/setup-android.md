@@ -45,13 +45,19 @@ setup visible in one place and works without touching the host's build.
    `cp fixtures/google-services.json examples/host-android/app/src/main/assets/google-services.json`
 2. **BoM and artifacts.** `native/android/build.gradle` pins
    `com.google.firebase:firebase-bom:35.1.0` (checked on Google Maven,
-   2026-11) and adds `firebase-messaging`, `firebase-analytics`,
-   `firebase-perf` with no versions. Under this BoM the host resolves
-   firebase-messaging 26.0.1, firebase-analytics 24.0.0 and firebase-perf
-   23.0.1. The module compiles against `libs/nsh.aar` with `compileOnly` —
-   the host already packages the AAR, and two copies would clash at dex
-   time. The host includes the module:
-   `implementation project(':nshfirebase')`, with
+   2026-11) and adds the artifacts with no versions: `firebase-messaging`,
+   `firebase-analytics`, `firebase-perf`, plus the six stretch products
+   `firebase-firestore`, `firebase-config`, `firebase-crashlytics`,
+   `firebase-installations`, `firebase-appcheck`,
+   `firebase-appcheck-debug` (the debug provider factory lives in its own
+   artifact) and `firebase-functions`. Under this BoM the host resolves
+   firebase-messaging 26.0.1, firebase-analytics 24.0.0, firebase-perf
+   23.0.1, firestore 27.1.0, config 24.0.1, crashlytics 21.0.1,
+   installations 20.0.0, appcheck and appcheck-debug 20.0.0 and functions
+   23.0.0 (read from the BoM pom in the Gradle cache). The module compiles
+   against `libs/nsh.aar` with `compileOnly` — the host already packages the
+   AAR, and two copies would clash at dex time. The host includes the
+   module: `implementation project(':nshfirebase')`, with
    `project(':nshfirebase').projectDir = file('../../native/android')` in
    `settings.gradle` so the module exists in one place.
 3. **Service and manifest entries.** `native/android/src/main/AndroidManifest.xml`
@@ -62,6 +68,19 @@ setup visible in one place and works without touching the host's build.
    modelled on RNFB's `packages/messaging/android/src/main/AndroidManifest.xml`.
    The manifest merger applies all of it to the host. RNFB's extra c2dm
    receiver + `HeadlessJsTaskService` pair (see below) is replaced by a queue.
+   **The stretch products add nothing to any manifest.** The SDK AARs
+   self-register through `ComponentDiscoveryService` meta-data (read out of
+   the cached firebase-crashlytics 21.0.1 AAR's own manifest) and the
+   product modules RNFB ships for firestore, remote-config and
+   crashlytics declare empty or permission-only manifests
+   (`packages/{firestore,remote-config}/android/src/main/AndroidManifest.xml`).
+   Crashlytics on a modern BoM needs no manifest entry and no init provider
+   (RNFB's `ReactNativeFirebaseCrashlyticsInitProvider` exists only to
+   toggle collection off before RNFB's own init — we do not turn collection
+   off). App Check's debug provider needs nothing at build time either: the
+   factory is swapped at runtime from `firebase.appCheck.getToken({debug:true})`
+   (`DebugAppCheckProviderFactory.getInstance()`, the same call FlutterFire's
+   `FirebaseAppCheckPlugin.kt` makes), before the first token fetch.
 4. **Notification channel.** Created at runtime by `NshFirebase.init` (and
    idempotently before every `show`) as `dev.nsh.firebase.notifications`,
    `IMPORTANCE_HIGH`, badge on — following nsh's unreleased `Notifications`
@@ -120,6 +139,14 @@ fails is anything that talks to Google:
   rejects; `NshFirebase` surfaces it as a rejection of the host call
   (`firebase/token: FCM registration failed: …`). That is the sandbox's
   proof that the request was made and its failure is visible.
+- The same is the point of the stretch handlers that call Google's network:
+  `firebase.installations.getId`/`getToken`, `firebase.remote-config.fetchAndActivate`,
+  `firebase.appCheck.getToken`, `firebase.functions.call` and the Firestore
+  handlers (no host wires `useEmulator`, so they target the real backend)
+  all reject with a `firebase/<product>: …` reason under the fake project.
+  The handlers that never touch the network — Crashlytics logs, custom keys
+  and recorded errors (queued locally, shipped when a real project exists),
+  Remote Config defaults, `get` and `getDefaults` — resolve without it.
 - Analytics and Performance ship over their own pipelines; use
   `adb shell setprop debug.firebase.analytics.app dev.nsh.firebase.host`
   and logcat to watch events leave.

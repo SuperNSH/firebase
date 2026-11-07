@@ -34,10 +34,15 @@ never replace it with a real plist.
    13+ is SPM-only, RNFB now rejects `disableSPM`). Here: no CocoaPods at
    all. `native/ios/NshFirebase/Package.swift` pins
    `firebase-ios-sdk` **13.1.1** (the exact SPM pin in RNFB's
-   `packages/app/ios/RNFBFirebase/Package.swift`) with empty traits (no
-   Firestore, so no gRPC/abseil), and `project.yml` declares it as a local
-   package dependency next to `NativeShell.xcframework` from the `nsh`
-   Homebrew install.
+   `packages/app/ios/RNFBFirebase/Package.swift`) with the `["Firestore"]`
+   trait — the only trait in this SDK; it pulls gRPC and abseil into every
+   build, and the stretch handlers need Firestore. The other five stretch
+   products (`FirebaseRemoteConfig`, `FirebaseCrashlytics`,
+   `FirebaseInstallations`, `FirebaseAppCheck`, `FirebaseFunctions`) are
+   plain products, not trait-gated. `project.yml` declares the package as a
+   local package dependency next to `NativeShell.xcframework` from the `nsh`
+   Homebrew install. First resolve after the trait switch downloads abseil
+   and gRPC — several hundred MB more.
 4. **Delegates** — RNFB's `packages/messaging/ios/RNFBMessaging/RNFBMessaging+{AppDelegate,FIRMessagingDelegate,UNUserNotificationCenter}.m`
    swap `FIRMessaging.delegate` and `UNUserNotificationCenter.delegate` for
    themselves, keep the previous delegates, and forward. `NshFirebase.configure(from:)`
@@ -78,3 +83,20 @@ xcodebuild -project NshFirebaseHost.xcodeproj \
 framework (`$(brew --prefix nsh)/libexec/embed/ios`); override it there if
 your prefix differs. SwiftPM fetches the Firebase SDK on first resolve —
 several hundred MB of binary frameworks, be patient.
+
+## The six stretch handlers and what they initialize
+
+The handlers (`firebase.firestore.*`, `firebase.remote-config.*`,
+`firebase.crashlytics.*`, `firebase.installations.*`,
+`firebase.appCheck.getToken`, `firebase.functions.call`) are registered like
+the messaging and analytics ones: the host's `registerHandlers(on:)` loop
+covers every name in `NshFirebase.handlerNames`. Nothing extra is needed at
+configure time, with one exception: `firebase.appCheck.getToken({debug:true})`
+swaps in `AppCheckDebugProviderFactory()` on the first debug call — App Check
+requires the provider factory to be set before its first token fetch, so the
+first non-debug `getToken` after a debug call still runs on whichever factory
+was in place first. Crashlytics, Installations, Remote Config, Firestore and
+Functions need no setup call at all: `FirebaseApp.configure` plus the module
+imports is the whole integration (the SDK's component discovery does the
+rest, the same mechanism RNFB's `RNFBConfig`, `RNFBFirestore` and co. rely
+on).

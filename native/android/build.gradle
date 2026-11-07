@@ -27,4 +27,14 @@ dependencies {
     api 'com.google.firebase:firebase-messaging'
     api 'com.google.firebase:firebase-analytics'
     api 'com.google.firebase:firebase-perf'
+    // The stretch products. Under this BoM (verified against the BoM pom):
+    // firestore 27.1.0, config 24.0.1, crashlytics 21.0.1, installations
+    // 20.0.0, appcheck and appcheck-debug 20.0.0, functions 23.0.0.
+    api 'com.google.firebase:firebase-firestore'
+    api 'com.google.firebase:firebase-config'
+    api 'com.google.firebase:firebase-crashlytics'
+    api 'com.google.firebase:firebase-installations'
+    api 'com.google.firebase:firebase-appcheck'
+    api 'com.google.firebase:firebase-appcheck-debug'
+    api 'com.google.firebase:firebase-functions'
 }

@@ -15,8 +15,14 @@
 //
 
 import FirebaseAnalytics
+import FirebaseAppCheck
 import FirebaseCore
+import FirebaseCrashlytics
+import FirebaseFirestore
+import FirebaseFunctions
+import FirebaseInstallations
 import FirebaseMessaging
+import FirebaseRemoteConfig
 import Foundation
     @preconcurrency import UserNotifications
 #if os(iOS)
@@ -57,6 +63,25 @@ public final class NshFirebase: NSObject, UNUserNotificationCenterDelegate, Mess
         "firebase.perf.startTrace",
         "firebase.perf.stopTrace",
         "firebase.perf.recordHttpMetric",
+        "firebase.firestore.getDoc",
+        "firebase.firestore.setDoc",
+        "firebase.firestore.addDoc",
+        "firebase.firestore.deleteDoc",
+        "firebase.firestore.runQuery",
+        "firebase.remote-config.setDefaults",
+        "firebase.remote-config.getDefaults",
+        "firebase.remote-config.fetchAndActivate",
+        "firebase.remote-config.get",
+        "firebase.crashlytics.log",
+        "firebase.crashlytics.setUserId",
+        "firebase.crashlytics.setCustomKey",
+        "firebase.crashlytics.recordError",
+        "firebase.crashlytics.sendUnsentReports",
+        "firebase.crashlytics.didCrashDuringPreviousExecution",
+        "firebase.installations.getId",
+        "firebase.installations.getToken",
+        "firebase.appCheck.getToken",
+        "firebase.functions.call",
     ]
 
     /// Delegates that were set before ours; RNFB keeps and forwards to the
@@ -236,6 +261,46 @@ public final class NshFirebase: NSObject, UNUserNotificationCenterDelegate, Mess
             #else
                 reply(nil, "Firebase Performance is iOS-only")
             #endif
+        case "firebase.firestore.getDoc",
+             "firebase.firestore.setDoc",
+             "firebase.firestore.addDoc",
+             "firebase.firestore.deleteDoc",
+             "firebase.firestore.runQuery":
+            firestore(name, data, reply)
+        case "firebase.remote-config.setDefaults",
+             "firebase.remote-config.getDefaults",
+             "firebase.remote-config.fetchAndActivate",
+             "firebase.remote-config.get":
+            remoteConfig(name, data, reply)
+        case "firebase.crashlytics.log",
+             "firebase.crashlytics.setUserId",
+             "firebase.crashlytics.setCustomKey",
+             "firebase.crashlytics.recordError",
+             "firebase.crashlytics.sendUnsentReports",
+             "firebase.crashlytics.didCrashDuringPreviousExecution":
+            crashlytics(name, data, reply)
+        case "firebase.installations.getId":
+            Installations.installations().installationID { fid, error in
+                if let fid {
+                    reply(["id": fid], nil)
+                } else {
+                    // The fake project has no backend: this rejection is the
+                    // honest proof the request was made, like the FCM token's.
+                    reply(nil, "firebase/installations: getId failed: \(error?.localizedDescription ?? "no error given")")
+                }
+            }
+        case "firebase.installations.getToken":
+            Installations.installations().authToken(forcingRefresh: false) { result, error in
+                if let result {
+                    reply(["token": result.authToken], nil)
+                } else {
+                    reply(nil, "firebase/installations: getToken failed: \(error?.localizedDescription ?? "no error given")")
+                }
+            }
+        case "firebase.appCheck.getToken":
+            appCheckGetToken(data, reply)
+        case "firebase.functions.call":
+            functionsCall(data, reply)
         default:
             reply(nil, "no handler for \(name)")
         }
@@ -397,6 +462,265 @@ public final class NshFirebase: NSObject, UNUserNotificationCenterDelegate, Mess
             reply(["recorded": true], nil)
         }
     #endif
+
+    // MARK: Stretch handlers (Firestore, Remote Config, Crashlytics,
+    // Installations, App Check, Functions)
+
+    /// Set once the App Check provider factory was swapped; the factory must
+    /// be in place before the first token fetch (the SDK keeps whichever
+    /// provider was created first).
+    private static var appCheckFactorySet = false
+
+    private func firestore(_ name: String, _ data: Any?, _ reply: @escaping (Any?, String?) -> Void) {
+        let args = data as? [String: Any] ?? [:]
+        let db = Firestore.firestore()
+        switch name {
+        case "firebase.firestore.getDoc":
+            guard let path = string(data, "path") else {
+                reply(nil, "firebase.firestore.getDoc needs a path"); return
+            }
+            db.document(path).getDocument { snapshot, error in
+                if let error {
+                    reply(nil, "firebase/firestore: getDoc \(path) failed: \(error.localizedDescription)")
+                    return
+                }
+                // A missing document resolves with exists:false, data:null —
+                // it is not an error (Firestore's own semantics).
+                reply([
+                    "exists": snapshot?.exists ?? false,
+                    "data": snapshot?.data() ?? NSNull(),
+                ], nil)
+            }
+        case "firebase.firestore.setDoc":
+            guard let path = string(data, "path"),
+                let docData = args["data"] as? [String: Any]
+            else {
+                reply(nil, "firebase.firestore.setDoc needs a path and a data object"); return
+            }
+            let merge = args["merge"] as? Bool ?? false
+            let done: (Error?) -> Void = { error in
+                if let error {
+                    reply(nil, "firebase/firestore: setDoc \(path) failed: \(error.localizedDescription)")
+                } else {
+                    reply([:], nil)
+                }
+            }
+            merge
+                ? db.document(path).setData(docData, merge: true, completion: done)
+                : db.document(path).setData(docData, completion: done)
+        case "firebase.firestore.addDoc":
+            guard let collectionPath = string(data, "collectionPath"),
+                let docData = args["data"] as? [String: Any]
+            else {
+                reply(nil, "firebase.firestore.addDoc needs a collectionPath and a data object"); return
+            }
+            db.collection(collectionPath).addDocument(data: docData) { reference, error in
+                if let error {
+                    reply(nil, "firebase/firestore: addDoc \(collectionPath) failed: \(error.localizedDescription)")
+                } else {
+                    reply(["id": reference?.documentID ?? ""], nil)
+                }
+            }
+        case "firebase.firestore.deleteDoc":
+            guard let path = string(data, "path") else {
+                reply(nil, "firebase.firestore.deleteDoc needs a path"); return
+            }
+            db.document(path).delete { error in
+                if let error {
+                    reply(nil, "firebase/firestore: deleteDoc \(path) failed: \(error.localizedDescription)")
+                } else {
+                    reply([:], nil)
+                }
+            }
+        case "firebase.firestore.runQuery":
+            guard let collectionPath = string(data, "collectionPath") else {
+                reply(nil, "firebase.firestore.runQuery needs a collectionPath"); return
+            }
+            var query: Query = db.collection(collectionPath)
+            if let cond = args["where"] as? [String: Any] {
+                guard let field = cond["field"] as? String, let op = cond["op"] as? String else {
+                    reply(nil, "firebase/firestore: runQuery where needs a field and an op"); return
+                }
+                // A JSON null (or a missing value) compares against Firestore null.
+                let value = cond["value"] ?? NSNull()
+                switch op {
+                case "==": query = query.whereField(field, isEqualTo: value)
+                case "!=": query = query.whereField(field, isNotEqualTo: value)
+                case "<": query = query.whereField(field, isLessThan: value)
+                case "<=": query = query.whereField(field, isLessThanOrEqualTo: value)
+                case ">": query = query.whereField(field, isGreaterThan: value)
+                case ">=": query = query.whereField(field, isGreaterThanOrEqualTo: value)
+                case "array-contains": query = query.whereField(field, arrayContains: value)
+                case "in", "not-in", "array-contains-any":
+                    guard let values = value as? [Any] else {
+                        reply(nil, "firebase/firestore: where op \(op) needs an array value"); return
+                    }
+                    switch op {
+                    case "in": query = query.whereField(field, in: values)
+                    case "not-in": query = query.whereField(field, notIn: values)
+                    default: query = query.whereField(field, arrayContainsAny: values)
+                    }
+                default:
+                    reply(nil, "firebase/firestore: unknown where op \(op)"); return
+                }
+            }
+            if let order = args["orderBy"] as? [String: Any], let field = order["field"] as? String {
+                query = order["direction"] as? String == "desc"
+                    ? query.order(by: field, descending: true)
+                    : query.order(by: field)
+            }
+            if let limit = args["limit"] as? NSNumber {
+                query = query.limit(to: limit.intValue)
+            }
+            query.getDocuments { snapshot, error in
+                if let error {
+                    reply(nil, "firebase/firestore: runQuery \(collectionPath) failed: \(error.localizedDescription)")
+                    return
+                }
+                let docs = snapshot?.documents.map { doc in
+                    ["id": doc.documentID, "data": doc.data()]
+                } ?? []
+                reply(["docs": docs], nil)
+            }
+        default:
+            reply(nil, "no handler for \(name)")
+        }
+    }
+
+    private func remoteConfig(_ name: String, _ data: Any?, _ reply: @escaping (Any?, String?) -> Void) {
+        let config = RemoteConfig.remoteConfig()
+        switch name {
+        case "firebase.remote-config.setDefaults":
+            guard let map = (data as? [String: Any])?["map"] as? [String: Any] else {
+                reply(nil, "firebase.remote-config.setDefaults needs a map"); return
+            }
+            config.setDefaults(map)
+            reply([:], nil)
+        case "firebase.remote-config.getDefaults":
+            var map: [String: Any] = [:]
+            for key in config.allKeys(from: .default) {
+                // jsonValue hands back the stored type (string/number/bool),
+                // not the string view.
+                map[key] = config.configValue(forKey: key, source: .default).jsonValue ?? NSNull()
+            }
+            reply(["map": map], nil)
+        case "firebase.remote-config.fetchAndActivate":
+            config.fetchAndActivate { status, error in
+                if let error {
+                    // The fake project's backend refuses: the rejection is the
+                    // proof, the way the FCM and installations tokens reject.
+                    reply(nil, "firebase/remote-config: fetchAndActivate failed: \(error.localizedDescription)")
+                    return
+                }
+                reply([
+                    "activated": status != .error,
+                    "lastFetchStatus": self.fetchStatusName(config.lastFetchStatus),
+                ], nil)
+            }
+        case "firebase.remote-config.get":
+            guard let key = string(data, "key") else {
+                reply(nil, "firebase.remote-config.get needs a key"); return
+            }
+            let value = config.configValue(forKey: key)
+            // Static source = neither the backend nor a default ever set it:
+            // null, not an empty string.
+            reply(["value": value.source == .static ? nil : value.stringValue], nil)
+        default:
+            reply(nil, "no handler for \(name)")
+        }
+    }
+
+    /// The fetch status names the facade uses (`no-fetch-yet` mirrors the
+    /// SDK's LAST_FETCH_STATUS_NO_FETCH_YET). Nonisolated: the fetchAndActivate
+    /// completion runs off the main actor.
+    nonisolated private func fetchStatusName(_ status: RemoteConfigFetchStatus) -> String {
+        switch status {
+        case .success: return "success"
+        case .failure: return "failure"
+        case .throttled: return "throttled"
+        case .noFetchYet: return "no-fetch-yet"
+        @unknown default: return "unknown"
+        }
+    }
+
+    private func crashlytics(_ name: String, _ data: Any?, _ reply: @escaping (Any?, String?) -> Void) {
+        let args = data as? [String: Any] ?? [:]
+        let crashlytics = Crashlytics.crashlytics()
+        switch name {
+        case "firebase.crashlytics.log":
+            guard let message = args["message"] as? String else {
+                reply(nil, "firebase.crashlytics.log needs a message"); return
+            }
+            crashlytics.log(message)
+            reply([:], nil)
+        case "firebase.crashlytics.setUserId":
+            crashlytics.setUserID(args["id"] as? String)
+            reply([:], nil)
+        case "firebase.crashlytics.setCustomKey":
+            guard let key = args["key"] as? String else {
+                reply(nil, "firebase.crashlytics.setCustomKey needs a key"); return
+            }
+            // Scalars ride as-is (NSString/NSNumber); null clears the key,
+            // which is setCustomValue(_:forKey:) passing nil.
+            crashlytics.setCustomValue(args["value"], forKey: key)
+            reply([:], nil)
+        case "firebase.crashlytics.recordError":
+            guard let message = args["message"] as? String else {
+                reply(nil, "firebase.crashlytics.recordError needs a message"); return
+            }
+            let code = (args["code"] as? NSNumber)?.intValue ?? 0
+            // A JS stack is not a native one: it rides as a breadcrumb log
+            // next to the synthesized NSError, RNFB's
+            // recordJavaScriptError shape (NativeRNFBTurboCrashlytics.java).
+            if let stack = args["stack"] as? String {
+                crashlytics.log(stack)
+            }
+            crashlytics.record(error: NSError(
+                domain: "dev.nsh.firebase.crashlytics", code: code,
+                userInfo: [NSLocalizedDescriptionKey: message]))
+            reply([:], nil)
+        case "firebase.crashlytics.sendUnsentReports":
+            crashlytics.sendUnsentReports()
+            reply([:], nil)
+        case "firebase.crashlytics.didCrashDuringPreviousExecution":
+            reply(["crashed": crashlytics.didCrashDuringPreviousExecution()], nil)
+        default:
+            reply(nil, "no handler for \(name)")
+        }
+    }
+
+    private func appCheckGetToken(_ data: Any?, _ reply: @escaping (Any?, String?) -> Void) {
+        // The debug provider only prints a token the backend accepts in debug
+        // mode; under the fake project the fetch itself still fails and the
+        // handler rejects.
+        if (data as? [String: Any])?["debug"] as? Bool == true, !Self.appCheckFactorySet {
+            AppCheck.setAppCheckProviderFactory(AppCheckDebugProviderFactory())
+            Self.appCheckFactorySet = true
+        }
+        AppCheck.appCheck().token(forcingRefresh: false) { token, error in
+            if let token {
+                reply(["token": token.token], nil)
+            } else {
+                reply(nil, "firebase/app-check: getToken failed: \(error?.localizedDescription ?? "no error given")")
+            }
+        }
+    }
+
+    private func functionsCall(_ data: Any?, _ reply: @escaping (Any?, String?) -> Void) {
+        guard let name = string(data, "name") else {
+            reply(nil, "firebase.functions.call needs a name"); return
+        }
+        let payload = (data as? [String: Any])?["data"]
+        // Default instance = us-central1; a named region is not in the
+        // handler contract.
+        Functions.functions().httpsCallable(name).call(payload) { result, error in
+            if let error {
+                reply(nil, "firebase/functions: call \(name) failed: \(error.localizedDescription)")
+                return
+            }
+            reply(["result": result?.data ?? NSNull()], nil)
+        }
+    }
 
     // MARK: Incoming FCM messages
 
