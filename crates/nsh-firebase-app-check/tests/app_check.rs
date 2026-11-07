@@ -8,8 +8,8 @@ use std::sync::{Arc, Mutex};
 use std::{future::Future, pin::Pin};
 
 use nsh_firebase_app_check::{
-    AppCheck, AppCheckOptions, AppCheckToken, Clock, Exchange, ManualClock, MemoryStore,
-    NATIVE_GET_TOKEN, NativeAppCheck, RecordingExchange,
+    AppCheck, AppCheckOptions, AppCheckToken, Clock, Exchange, KeyValueStore, ManualClock,
+    MemoryStore, NATIVE_GET_TOKEN, NativeAppCheck, RecordingExchange,
 };
 use nsh_firebase_core::{
     FirebaseApp, FirebaseError, FirebaseHost, HostChannel, NativeHost, initialize_app,
@@ -64,7 +64,7 @@ async fn the_native_tier_routes_through_the_host_channel() {
     let channel = Arc::new(ScriptedChannel::answers_with(Ok(json!({
         "token": "host-tok-1",
     }))));
-    let host: Arc<dyn FirebaseHost> = Arc::new(NativeHost::new(Arc::clone(&channel)));
+    let host: Arc<dyn FirebaseHost> = Arc::new(NativeHost::new(channel.clone()));
     let native = NativeAppCheck::new(host);
     let token = native.get_token(true).await.unwrap();
     assert_eq!(
@@ -88,7 +88,7 @@ async fn a_host_failure_surfaces_with_its_native_code() {
             "App Check debug exchange failed: the fake project refuses",
         ),
     )));
-    let host: Arc<dyn FirebaseHost> = Arc::new(NativeHost::new(Arc::clone(&channel)));
+    let host: Arc<dyn FirebaseHost> = Arc::new(NativeHost::new(channel.clone()));
     let error = NativeAppCheck::new(host).get_token(true).await.unwrap_err();
     assert_eq!(error.code, nsh_firebase_core::error::HOST_ERROR);
     assert_eq!(error.native_code.as_deref(), Some("ERR_NSH_HOST_ERROR"));
@@ -98,7 +98,7 @@ async fn a_host_failure_surfaces_with_its_native_code() {
 #[tokio::test]
 async fn a_host_reply_without_a_token_is_a_clear_error() {
     let channel = Arc::new(ScriptedChannel::answers_with(Ok(json!({ "token": "" }))));
-    let host: Arc<dyn FirebaseHost> = Arc::new(NativeHost::new(Arc::clone(&channel)));
+    let host: Arc<dyn FirebaseHost> = Arc::new(NativeHost::new(channel.clone()));
     let error = NativeAppCheck::new(host).get_token(true).await.unwrap_err();
     assert_eq!(error.code, nsh_firebase_app_check::INVALID_RESPONSE);
     assert!(error.message.contains("answered without a token"));

@@ -9,7 +9,7 @@ import { open, test } from "nsh/test";
 import type { App } from "nsh/test";
 
 // A nested entry would make `nsh` treat tests/ as the app.
-const ENTRY = "../firestore-app.tsx";
+const ENTRY = "../firestore-sandbox-app.tsx";
 
 test("writes, reads, queries and deletes against the emulator", async () => {
   const app: App = await open(ENTRY, { network: "live" });

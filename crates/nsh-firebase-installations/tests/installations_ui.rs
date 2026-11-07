@@ -214,7 +214,7 @@ fn InstallationsApp() -> impl IntoElement {
         let (app, store, restored) = (app, Arc::clone(&store), restored);
         move || {
             let host: Arc<dyn FirebaseHost> = Arc::new(PureHost);
-            let second = Installations::new(app, store, host);
+            let second = Installations::new(Arc::clone(&app), Arc::clone(&store), host);
             restored.set(format!(
                 "restored: fid={} refresh={}",
                 second.id().as_deref().unwrap_or("none"),
@@ -291,7 +291,7 @@ fn register_persists_and_get_token_serves_the_cached_token_until_it_is_due() {
     let log: RequestLog = Arc::new(Mutex::new(Vec::new()));
     let network = StubNetwork::new([
         (format!("POST {REGISTER_URL}"), register_route(&log)),
-        (TOKEN_GLOB, token_route(&log, "auth-token-2")),
+        (TOKEN_GLOB.to_owned(), token_route(&log, "auth-token-2")),
     ]);
     let mut app = start(Root::of::<InstallationsApp>(), network);
     app.first_render().unwrap();
@@ -364,7 +364,7 @@ fn a_force_refresh_skips_the_cache_but_a_plain_get_token_keeps_it() {
     let log: RequestLog = Arc::new(Mutex::new(Vec::new()));
     let network = StubNetwork::new([
         (format!("POST {REGISTER_URL}"), register_route(&log)),
-        (TOKEN_GLOB, token_route(&log, "auth-token-gen-1")),
+        (TOKEN_GLOB.to_owned(), token_route(&log, "auth-token-gen-1")),
     ]);
     let mut app = start(Root::of::<InstallationsApp>(), network);
     app.first_render().unwrap();
@@ -435,7 +435,7 @@ fn a_fresh_installations_restores_the_record_another_tier_wrote() {
             r#"{"v":1,"fid":"c0123456789abcdef-_xyz","refreshToken":"stored-refresh"}"#.to_owned(),
         )])))
         .ok();
-    let app = start(
+    let mut app = start(
         Root::of::<RestoreApp>(),
         StubNetwork::new(Vec::<(String, StubResponse)>::new()),
     );

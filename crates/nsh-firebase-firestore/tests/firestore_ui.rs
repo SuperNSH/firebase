@@ -357,7 +357,7 @@ fn request_body(body: &HttpBody) -> String {
 
 /// The one line the app shows that starts with `prefix`.
 fn line_of(app: &Headless, prefix: &str) -> String {
-    let texts = app.texts();
+    let texts = app.screen().texts();
     let found = texts.iter().find(|text| text.starts_with(prefix));
     found.unwrap().to_owned()
 }
@@ -541,7 +541,7 @@ fn a_denied_read_maps_to_permission_denied() {
 
 #[test]
 fn a_bad_path_is_refused_before_any_request() {
-    let network = Arc::new(StubNetwork::new(vec![]));
+    let network = Arc::new(StubNetwork::new(Vec::<(String, StubResponse)>::new()));
     let mut app = start_with_network(Root::of::<FirestoreApp>(), &network);
     app.wait_for("text:ready").unwrap();
     app.press("id:bad-path").unwrap();

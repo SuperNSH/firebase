@@ -177,49 +177,6 @@ export function FirestoreExerciseApp() {
       return `query-bad-op: ${docs.length} docs`;
     }).then((value) => line.set(value));
 
-  // The sandbox buttons: one field per doc, so a read back from the real
-  // emulator is order-proof, and a where filter on the field keeps the
-  // query's matches to this run's docs.
-  const sandboxSet = () =>
-    run("sb-set", async () => {
-      await fs.setDoc("sandbox-fs/one", { n: 1 });
-      return "sb-set: ok";
-    }).then((value) => line.set(value));
-
-  const sandboxGet = () =>
-    run("sb-get", async () => {
-      const snapshot = await fs.getDoc("sandbox-fs/one");
-      return `sb-get: ${show(snapshot)}`;
-    }).then((value) => line.set(value));
-
-  const sandboxAdd = () =>
-    run("sb-add", async () => {
-      const id = await fs.addDoc("sandbox-fs", { n: 2 });
-      return `sb-add: ${id.length > 0 ? "ok" : "empty"}`;
-    }).then((value) => line.set(value));
-
-  const sandboxQuery = () =>
-    run("sb-query", async () => {
-      const docs = await fs.runQuery({
-        collectionPath: "sandbox-fs",
-        where: { field: "n", op: "==", value: 1 },
-        limit: 5,
-      });
-      return `sb-query: has-one=${docs.some((doc) => doc.id === "one")}`;
-    }).then((value) => line.set(value));
-
-  const sandboxDelete = () =>
-    run("sb-delete", async () => {
-      await fs.deleteDoc("sandbox-fs/one");
-      return "sb-delete: ok";
-    }).then((value) => line.set(value));
-
-  const sandboxGetGone = () =>
-    run("sb-get-gone", async () => {
-      const snapshot = await fs.getDoc("sandbox-fs/one");
-      return `sb-get-gone: ${show(snapshot)}`;
-    }).then((value) => line.set(value));
-
   const button = (id: string, label: string, onPress: () => void) => (
     <View testID={id} role="button" onPress={onPress} class="bg-primary p-2">
       <Text class="text-primary-foreground">{label}</Text>
@@ -229,12 +186,6 @@ export function FirestoreExerciseApp() {
   return (
     <View class="flex-1 gap-2 bg-background p-4">
       <Text testID="state">{line()}</Text>
-      {button("sb-set", "sb set", sandboxSet)}
-      {button("sb-get", "sb get", sandboxGet)}
-      {button("sb-add", "sb add", sandboxAdd)}
-      {button("sb-query", "sb query", sandboxQuery)}
-      {button("sb-delete", "sb delete", sandboxDelete)}
-      {button("sb-get-gone", "sb get gone", sandboxGetGone)}
       {button("set", "set", set)}
       {button("merge", "merge", merge)}
       {button("get", "get", get)}
