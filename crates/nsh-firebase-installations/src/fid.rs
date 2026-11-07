@@ -120,6 +120,6 @@ mod tests {
         // "foobar" is the RFC 4648 test vector; the fb-ff-be bytes cover
         // both `+`→`-` and `/`→`_` (standard base64 would give "+/+8").
         assert_eq!(base64url(b"foobar"), "Zm9vYmFy");
-        assert_eq!(base64url(&[0xfb, 0xff, 0xbe]), "-_-_");
+        assert_eq!(base64url(&[0xfb, 0xff, 0xbe]), "-_--");
     }
 }
