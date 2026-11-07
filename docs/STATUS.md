@@ -24,26 +24,38 @@ PRs (jobs: `rust-gate`, `packages`, `emulator`, `demo`, `clean-proof`,
 [.github/workflows/device-proofs.yml](.github/workflows/device-proofs.yml)
 for the native device proofs, `workflow_dispatch` only.
 
-Commit state: three milestones are committed — research `08c5aef`, core
-`89c2304` and the storage-rules fix `8318a75`. The other areas' files
-(crates, package, hosts, demo, evidence, status docs, workflows) sit in
-the working tree, verified per area before the pause, pending commit.
-**CI has not run yet** — nothing has been pushed (the hard rules forbid
-pushing), so every "CI confirmation expected" below is an expectation,
-not a result.
+Commit state: the whole tree is committed on `main` and pushed to the
+public repository https://github.com/SuperNSH/firebase (the user
+directed compile testing there after the battery pause; the brief's
+no-push rule is superseded by that instruction for this repository).
+
+**CI runs and is green** for the push-triggered matrix: run
+[42364995246](https://github.com/SuperNSH/firebase/actions/runs/42364995246)
+passes `rust-gate` (fmt + clippy `-D warnings` + tests, linux),
+`packages` (every area's TSX gate), `emulator` (the full demo-nsh
+sandbox suite against the Firebase emulator suite plus the collector),
+`demo` (demo TSX gates + the demo-rs crate gate), `clean-proof` (fresh
+clone, `bun install`, one command) and `host-android` (the BoM module
+and host app assemble). The macOS jobs (`host-ios` build, iOS device
+proofs) are **blocked at the org level**: GitHub cancels macOS hosted
+runner jobs while queued with zero steps for this org (observed on run
+42361739726 — the ubuntu `host-android` job passed in the same run).
+They are dispatch-only in
+[ci-macos.yml](.github/workflows/ci-macos.yml) until the org enables
+macOS runners or a self-hosted runner exists.
 
 ## Satisfaction criteria
 
 | # | Criterion | Status |
 |---|---|---|
 | 1 | research.md with tier table | PASS |
-| 2 | Gates pass for all crates and packages | pass locally pre-pause; CI confirmation expected on push — CI has not run |
-| 3 | Emulator tests, one documented command | PASS locally; clean-clone proof unverified until CI |
-| 4 | host-ios device proof | UNVERIFIED — device phase cancelled; a first attempt hit a launch crash (recorded) |
-| 5 | host-android device proof | UNVERIFIED — device phase cancelled |
-| 6 | Analytics/perf reach collector; native debug logs | pure tier PASS locally; native debug-log assertion UNVERIFIED |
+| 2 | Gates pass for all crates and packages | PASS — CI run 42364995246 green (rust-gate, packages, demo, host-android); macOS-only gates dispatch-only, org-blocked |
+| 3 | Emulator tests, one documented command | PASS — `clean-proof` job green (fresh clone, `bun install`, `bun run test:emulator`); suite green locally pre-pause too |
+| 4 | host-ios device proof | UNVERIFIED — first attempt hit a launch crash (fixed in source: UIScene lifecycle); the proof runs from ci-macos.yml once macOS runners are available |
+| 5 | host-android device proof | CI `device-proofs` run dispatched — see the run's artifacts; local device phase was cancelled |
+| 6 | Analytics/perf reach collector; native debug logs | pure tier PASS locally; native debug-log assertion UNVERIFIED (needs a device) |
 | 7 | Monitoring screen with slow route on top | PASS on macOS; phone target UNVERIFIED |
-| 8 | ERR_ACCESS_DENIED with a test | PASS |
+| 8 | ERR_ACCESS_DENIED with a test | PASS (locally pre-pause; re-run in CI `packages` job, green) |
 | 9 | Migration note vs React Native Firebase | PASS |
 | 10 | README from clean clone to tests and demo | PASS |
 
@@ -82,11 +94,14 @@ the demo bundle embedded), and Gradle `:app:assembleDebug` for the Android
 host (`docs/evidence/native-android/gradle.log`, BUILD SUCCESSFUL, with
 `JAVA_HOME` at Android Studio's JBR and `ANDROID_HOME=$HOME/Library/Android/sdk`).
 
-**CI has not run.** Jobs `rust-gate`, `packages`, `emulator`, `demo`,
-`clean-proof`, `host-ios`, `host-android` re-run the whole tree on push;
-that confirmation is still outstanding.
+**CI re-runs all of it and is green** (run 42364995246, linux):
+`rust-gate` (fmt + clippy `-D warnings` + cargo test across the
+workspace), `packages` (every area's TSX gate), `demo` and
+`host-android` (Gradle assemble of the BoM module and host app). The
+`swift build`/`xcodebuild` gates ran locally pre-pause only — CI's
+macOS jobs are org-blocked (see the commit-state note above).
 
-### 3. Emulator tests — PASS locally; clean-clone proof unverified until CI
+### 3. Emulator tests — PASS (local suite + CI clean-clone proof)
 
 The one command is `bun run test:emulator` (scripts/test-emulator.sh). It
 starts the suite itself if it is not up (`scripts/probe-emulator.sh` ||
@@ -104,9 +119,12 @@ download, delete. Individual logs: `docs/evidence/database/rust-sandbox.log`,
 `docs/evidence/storage/ts-sandbox-green.log`,
 `docs/evidence/perfmon/sandbox-monitor.log`.
 
-The clean-checkout proof (fresh clone, `bun install`, one command) needs
-a clone-plus-compile and was never run locally under the battery
-constraint — it is CI job `clean-proof`. **Unverified until CI.**
+The clean-checkout proof (fresh clone, `bun install`, one command) was
+never run locally under the battery constraint — it ran as CI job
+`clean-proof` in run 42364995246 and **passed**: a fresh `git clone`,
+`bun install --frozen-lockfile`, then `bun run test:emulator` against
+the emulator suite and collector, with the sibling libraries cloned at
+their pinned commits (see `.github/actions/setup-siblings`).
 
 ### 4. host-ios device — UNVERIFIED (device phase cancelled; launch crash recorded)
 
