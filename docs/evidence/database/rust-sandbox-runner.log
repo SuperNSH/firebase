@@ -1,0 +1,27 @@
+warning: (arm64) deps/libserde_core-1ee88a18c2a9b272.rlib(serde_core-1ee88a18c2a9b272.serde_core.31cabbee6472366e-cgu.0.rcgu.o) unable to open object file: No such file or directory
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.27s
+     Running tests/emulator_auth.rs (target/debug/deps/emulator_auth-0fb9e3dabef7ba8e)
+
+running 1 test
+test signs_up_signs_in_refreshes_and_restores_on_the_emulator ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s
+
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.21s
+     Running tests/emulator_database.rs (target/debug/deps/emulator_database-65c1827cfc4f62f9)
+
+running 1 test
+test writes_reads_and_receives_a_live_update_against_the_emulator ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+
+   Compiling nsh-firebase-storage v0.1.0 (/Users/hmziq/fo/nsh-firebase/crates/nsh-firebase-storage)
+error: argument never used
+   --> crates/nsh-firebase-storage/src/wire.rs:127:13
+    |
+
+(The runner aborts at crates/nsh-firebase-storage/tests/emulator_storage.rs,
+another area's in-flight test; the TSX sandbox half is run below, with the
+same command the runner uses.)
+
+$ cd packages/nsh-firebase && nsh test tests/emulator/database.sandbox.test.tsx
