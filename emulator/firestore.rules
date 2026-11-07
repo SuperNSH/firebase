@@ -1,0 +1,10 @@
+// Sandbox-only rules for the demo-nsh Firestore emulator: everything is
+// open because no real project or data is ever reachable here.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

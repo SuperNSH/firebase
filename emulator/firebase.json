@@ -3,6 +3,8 @@
     "auth": { "port": 19099 },
     "database": { "port": 19000 },
     "storage": { "port": 19199 },
+    "firestore": { "port": 18080 },
+    "functions": { "port": 15001 },
     "hub": { "port": 14400 },
     "ui": { "enabled": false }
   },
@@ -12,5 +14,11 @@
   "storage": {
     "rules": "storage.rules",
     "buckets": ["demo-nsh.firebasestorage.app"]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "functions": {
+    "source": "functions"
   }
 }
