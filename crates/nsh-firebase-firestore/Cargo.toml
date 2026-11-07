@@ -1,6 +1,6 @@
 [package]
 name = "nsh-firebase-firestore"
-description = "Firebase firestore for Native Shell Rust apps (stub; its area replaces this crate)"
+description = "Firebase Cloud Firestore for Native Shell Rust apps: documents CRUD and structured queries over the v1 REST surface, with native routing through the firebase.firestore.* handlers"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,13 @@ repository.workspace = true
 authors.workspace = true
 
 [dependencies]
+nsh-core = { workspace = true }
+nsh-firebase-core = { workspace = true }
+# preserve_order keeps decoded fields and built request objects in the
+# wire's key order, matching the TypeScript side's insertion order.
+serde_json = { workspace = true, features = ["preserve_order"] }
+
+[dev-dependencies]
+nsh-engine = { workspace = true, features = ["net"] }
+nsh-testing = { workspace = true }
+tokio = { version = "1", features = ["rt", "macros"] }

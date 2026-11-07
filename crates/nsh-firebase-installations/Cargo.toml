@@ -1,6 +1,6 @@
 [package]
 name = "nsh-firebase-installations"
-description = "Firebase installations for Native Shell Rust apps (stub; its area replaces this crate)"
+description = "Firebase installations for Native Shell Rust apps: local FID generation, the Installations REST register and authTokens:generate flows, {fid, refreshToken} persistence, and the native tier's firebase.installations.* routing"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,11 @@ repository.workspace = true
 authors.workspace = true
 
 [dependencies]
+nsh-core = { workspace = true }
+nsh-firebase-core = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+nsh-engine = { workspace = true }
+nsh-testing = { workspace = true }
+tokio = { version = "1", features = ["rt", "macros"] }

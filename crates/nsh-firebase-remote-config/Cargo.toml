@@ -1,6 +1,6 @@
 [package]
 name = "nsh-firebase-remote-config"
-description = "Firebase remote-config for Native Shell Rust apps (stub; its area replaces this crate)"
+description = "Firebase Remote Config for Native Shell Rust apps: defaults, typed gets, REST template parsing and an honest, pluggable fetch"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,8 @@ repository.workspace = true
 authors.workspace = true
 
 [dependencies]
+nsh-firebase-core = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["rt", "macros"] }

@@ -1,0 +1,9 @@
+{
+  "name": "nsh-firebase installations tests",
+  "capabilities": {
+    "network": {
+      "hosts": ["firebaseinstallations.googleapis.com"]
+    },
+    "host": ["firebase.*"]
+  }
+}

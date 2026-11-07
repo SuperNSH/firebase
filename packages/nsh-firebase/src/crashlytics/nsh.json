@@ -1,0 +1,6 @@
+{
+  "name": "nsh-firebase crashlytics tests",
+  "capabilities": {
+    "host": ["firebase.*"]
+  }
+}

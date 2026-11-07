@@ -1,6 +1,6 @@
 [package]
 name = "nsh-firebase-crashlytics"
-description = "Firebase crashlytics for Native Shell Rust apps (stub; its area replaces this crate)"
+description = "Firebase Crashlytics for Native Shell Rust apps: the explicit-call facade over the native tier, and the pure tier's clear rejections"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,8 @@ repository.workspace = true
 authors.workspace = true
 
 [dependencies]
+nsh-firebase-core = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["rt", "macros"] }

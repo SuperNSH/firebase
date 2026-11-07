@@ -1,6 +1,6 @@
 [package]
 name = "nsh-firebase-app-check"
-description = "Firebase app-check for Native Shell Rust apps (stub; its area replaces this crate)"
+description = "Firebase App Check for Native Shell Rust apps: the debug-token exchange with ttl caching, and the native tier's firebase.appcheck.getToken routing"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,9 @@ repository.workspace = true
 authors.workspace = true
 
 [dependencies]
+nsh-core = { workspace = true }
+nsh-firebase-core = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["rt", "macros"] }
