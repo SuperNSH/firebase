@@ -22,8 +22,11 @@ runs:
       run: |
         cd examples/demo
         mkdir -p node_modules
-        # Symlink targets resolve from node_modules/, hence the three ../.
+        # Targets resolve from node_modules/: three ../ reach the repo
+        # root, four reach the workspace parent where the siblings sit.
         ln -sfn ../../../packages/nsh-firebase node_modules/nsh-firebase
-        ln -sfn ../../../nsh-query/packages/nsh-query node_modules/nsh-query
-        ln -sfn ../../../nsh-form/packages/nsh-form node_modules/nsh-form
+        ln -sfn ../../../../../nsh-query/packages/nsh-query node_modules/nsh-query
+        ln -sfn ../../../../../nsh-form/packages/nsh-form node_modules/nsh-form
         test -f node_modules/nsh-firebase/package.json
+        test -f node_modules/nsh-query/package.json
+        test -f node_modules/nsh-form/package.json
