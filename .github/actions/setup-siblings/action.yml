@@ -1,11 +1,12 @@
-# Clones the public sibling libraries beside the checkout so demo-rs's
-# relative path deps (../../../nsh-query/...) and the demo's node_modules
-# links resolve. The same relative layout works on a dev machine where
-# ~/fo/nsh-query sits beside ~/fo/nsh-firebase.
+# Clones the public sibling libraries beside the checkout at the exact
+# commits the local development gates ran against, so demo-rs's relative
+# path deps (../../../nsh-query/...) and the demo's node_modules links
+# resolve identically. The same relative layout works on a dev machine
+# where ~/fo/nsh-query sits beside ~/fo/nsh-firebase.
 name: Clone sibling libraries
 inputs:
   with-demo-links:
-    description: "Also create examples/demo/node_modules links"
+    description: "Also link the siblings into examples/demo/node_modules and install their deps"
     required: false
     default: "false"
 runs:
@@ -14,8 +15,13 @@ runs:
     - shell: bash
       run: |
         cd "$GITHUB_WORKSPACE/.."
-        [ -d nsh-query ] || git clone -q --depth 1 https://github.com/SuperNSH/nsh-query.git nsh-query
-        [ -d nsh-form ] || git clone -q --depth 1 https://github.com/SuperNSH/nsh-form.git nsh-form
+        [ -d nsh-query ] || git clone -q https://github.com/SuperNSH/nsh-query.git nsh-query
+        [ -d nsh-form ] || git clone -q https://github.com/SuperNSH/nsh-form.git nsh-form
+        # Pinned to the commits this repo was built against; a drifted
+        # sibling HEAD would silently change the APIs the demo compiles
+        # against.
+        git -C nsh-query checkout -q 470e10a49f0e4e44148a6a08e229a55867eb9688
+        git -C nsh-form checkout -q 682844a08bb5de5b5a0d196d8ea383cce7dcba2b
         ls -d nsh-query/crates/nsh-query nsh-form/crates/nsh-form
     - shell: bash
       if: inputs.with-demo-links == 'true'
@@ -30,3 +36,7 @@ runs:
         test -f node_modules/nsh-firebase/package.json
         test -f node_modules/nsh-query/package.json
         test -f node_modules/nsh-form/package.json
+        # The linked packages' own dependencies must exist for the type
+        # checker that follows the symlinks into their sources.
+        (cd "$GITHUB_WORKSPACE/../nsh-form/packages/nsh-form" && bun install)
+        (cd "$GITHUB_WORKSPACE/../nsh-query/packages/nsh-query" && bun install)

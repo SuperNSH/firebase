@@ -114,10 +114,12 @@ jobs:
         run: |
           rm -rf /tmp/nsh-firebase-clean
           git clone -q --no-hardlinks "$GITHUB_WORKSPACE" /tmp/nsh-firebase-clean
-          # Siblings beside the clean clone: demo-rs's relative deps and
-          # the relative node_modules links resolve to /tmp from there.
-          git clone -q --depth 1 https://github.com/SuperNSH/nsh-query.git /tmp/nsh-query
-          git clone -q --depth 1 https://github.com/SuperNSH/nsh-form.git /tmp/nsh-form
+          # Siblings beside the clean clone at the pinned commits (see
+          # .github/actions/setup-siblings).
+          git clone -q https://github.com/SuperNSH/nsh-query.git /tmp/nsh-query
+          git clone -q https://github.com/SuperNSH/nsh-form.git /tmp/nsh-form
+          git -C /tmp/nsh-query checkout -q 470e10a49f0e4e44148a6a08e229a55867eb9688
+          git -C /tmp/nsh-form checkout -q 682844a08bb5de5b5a0d196d8ea383cce7dcba2b
           cd /tmp/nsh-firebase-clean
           bun install --frozen-lockfile
           bun run test:emulator
