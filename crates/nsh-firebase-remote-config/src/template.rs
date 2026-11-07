@@ -191,7 +191,7 @@ pub fn parse_template(document: &JsonValue) -> Result<RemoteConfigTemplate, Fire
             };
             if conditions
                 .iter()
-                .any(|parsed| parsed.name == condition.name)
+                .any(|parsed: &RemoteConfigCondition| parsed.name == condition.name)
             {
                 return Err(invalid(format!(
                     "conditions.{index}.name `{}` is a duplicate",

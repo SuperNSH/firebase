@@ -99,7 +99,7 @@ pub struct FunctionsError {
     pub code: String,
     pub message: String,
     pub native_code: Option<String>,
-    pub details: Option<JsonValue>,
+    pub details: Option<Box<JsonValue>>,
 }
 
 impl FunctionsError {
@@ -224,7 +224,7 @@ pub fn error_for_response(status: u16, body: Option<&JsonValue>) -> Option<Funct
         // Attached whenever the key exists, JSON null included: the SDK
         // checks `details !== undefined`, not truthiness.
         if let Some(found) = error.get("details") {
-            details = Some(found.clone());
+            details = Some(Box::new(found.clone()));
         }
     }
     if code == "ok" {
@@ -367,7 +367,7 @@ mod tests {
         let body = json!({"error": {"status": "FAILED_PRECONDITION", "message": "no", "details": {"retry": true}}});
         let error = error_for_response(400, Some(&body)).unwrap();
         assert_eq!(error.code, FAILED_PRECONDITION);
-        assert_eq!(error.details, Some(json!({"retry": true})));
+        assert_eq!(error.details, Some(Box::new(json!({"retry": true}))));
 
         // A present null is attached, like the SDK's `!== undefined` check.
         let null_details =

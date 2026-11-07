@@ -131,13 +131,13 @@ impl AppCheck {
             ));
         }
         let now = self.clock.now_ms();
-        if let Some(cached) = &*self.lock() {
-            if now < cached.expires_at_ms {
-                return Ok(AppCheckToken {
-                    token: cached.token.clone(),
-                    expires_at_ms: Some(cached.expires_at_ms),
-                });
-            }
+        if let Some(cached) = &*self.lock()
+            && now < cached.expires_at_ms
+        {
+            return Ok(AppCheckToken {
+                token: cached.token.clone(),
+                expires_at_ms: Some(cached.expires_at_ms),
+            });
         }
         let request = exchange_debug_token_request(
             &self.options.base_url,

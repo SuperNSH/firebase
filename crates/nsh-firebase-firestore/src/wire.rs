@@ -143,7 +143,7 @@ fn split_path(path: &str, kind: PathKind) -> Result<Vec<String>, FirebaseError> 
             )));
         }
     }
-    let even = segments.len() % 2 == 0;
+    let even = segments.len().is_multiple_of(2);
     let fits = match kind {
         PathKind::Document => even,
         PathKind::Collection => !even,

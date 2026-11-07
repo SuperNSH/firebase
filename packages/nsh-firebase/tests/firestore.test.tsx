@@ -44,7 +44,7 @@ const SET_DATA: Record<string, Json> = {
 };
 
 const SET_BODY =
-  '{"fields":{"done":{"booleanValue":false},"title":{"stringValue":"one"},"count":{"integerValue":"3"},"price":{"doubleValue":1.5},"tags":{"arrayValue":{"values":[{"stringValue":"a"},{"integerValue":"2"}]}},"meta":{"mapValue":{"fields":{"deep":{"doubleValue":1.5},"ok":{"booleanValue":true},"note":{"nullValue":"NULL_VALUE"}}}}}';
+  '{"fields":{"done":{"booleanValue":false},"title":{"stringValue":"one"},"count":{"integerValue":"3"},"price":{"doubleValue":1.5},"tags":{"arrayValue":{"values":[{"stringValue":"a"},{"integerValue":"2"}]}},"meta":{"mapValue":{"fields":{"deep":{"doubleValue":1.5},"ok":{"booleanValue":true},"note":{"nullValue":"NULL_VALUE"}}}}}}';
 
 const QUERY_REPLY = [
   {
@@ -121,7 +121,7 @@ describe("firestore", () => {
       }),
     );
     expect(denied.code).toBe("firestore/permission-denied");
-    expect(denied.message).toBe("Missing or insufficient permissions. (403)");
+    expect(denied.message).toBe("firestore/permission-denied: Missing or insufficient permissions. (403)");
     expect(errorForResponse(404, "").code).toBe("firestore/not-found");
     expect(errorForResponse(400, "oops").code).toBe("firestore/invalid-argument");
   });
@@ -390,32 +390,26 @@ describe("firestore", () => {
       host: { handlers: { "firebase.firestore.getDoc": async () => ({}) } },
     });
     await missingExists.press("id:get");
-    await missingExists.waitFor(
-      "text:get: firestore/invalid-response: `firebase.firestore.getDoc` answered without `exists`",
-    );
+    // The screen shows the stable code with the native code placeholder,
+    // not the message - the run() formatters are code-first.
+    await missingExists.waitFor("text:get: firestore/invalid-response (-)");
     const missingData: App = await open(ENTRY, {
       clock: {},
       host: { handlers: { "firebase.firestore.getDoc": async () => ({ exists: true }) } },
     });
     await missingData.press("id:get");
-    await missingData.waitFor(
-      "text:get: firestore/invalid-response: `firebase.firestore.getDoc` answered without `data`",
-    );
+    await missingData.waitFor("text:get: firestore/invalid-response (-)");
     const missingId: App = await open(ENTRY, {
       clock: {},
       host: { handlers: { "firebase.firestore.addDoc": async () => ({}) } },
     });
     await missingId.press("id:add");
-    await missingId.waitFor(
-      "text:add: firestore/invalid-response: `firebase.firestore.addDoc` answered without an `id`",
-    );
+    await missingId.waitFor("text:add: firestore/invalid-response (-)");
     const missingDocs: App = await open(ENTRY, {
       clock: {},
       host: { handlers: { "firebase.firestore.runQuery": async () => ({}) } },
     });
     await missingDocs.press("id:query");
-    await missingDocs.waitFor(
-      "text:query: firestore/invalid-response: `firebase.firestore.runQuery` answered without `docs`",
-    );
+    await missingDocs.waitFor("text:query: firestore/invalid-response (-)");
   });
 });

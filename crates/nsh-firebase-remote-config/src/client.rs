@@ -238,7 +238,7 @@ impl Default for RemoteConfig {
 fn host_error(handler: &str, problem: impl Into<String>) -> FirebaseError {
     FirebaseError::new(
         nsh_firebase_core::error::HOST_ERROR,
-        format!("the {handler} handler returned {problem}"),
+        format!("the {handler} handler returned {}", problem.into()),
     )
 }
 

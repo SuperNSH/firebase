@@ -46,7 +46,7 @@ use serde_json::Value as JsonValue;
 use crate::error::{REGISTER_IN_PROGRESS, reply_error};
 use crate::fid::generate_fid;
 use crate::store::{KeyValueStore, StoredInstallation, store_key};
-use crate::wire::{self, AuthToken};
+use crate::wire::{self};
 
 /// A cached token goes stale this long before its expiry, like the
 /// js-SDK's one-hour `TOKEN_EXPIRATION_BUFFER`.
