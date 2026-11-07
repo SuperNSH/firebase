@@ -10,7 +10,7 @@ use nsh_core::platform::HttpRequest;
 use nsh_firebase_core::{FirebaseError, join_url};
 use serde_json::{Value as JsonValue, json};
 
-use crate::error::invalid_response;
+use crate::error::{INVALID_RESPONSE, invalid_response};
 
 /// The REST reference's service endpoint (the client SDKs use the
 /// `content-` frontend variant; both serve the same paths).

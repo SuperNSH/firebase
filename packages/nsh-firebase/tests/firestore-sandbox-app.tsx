@@ -3,7 +3,8 @@
 // headless unit gates drive ../firestore-app.tsx instead. Network stays
 // 127.0.0.1-only per tests/nsh.json.
 import { mount, signal, Text, View } from "nsh";
-import { demoOptions, initializeApp, toFirebaseError, firestore, type DocSnapshot } from "../src/firestore";
+import { demoOptions, initializeApp, toFirebaseError } from "../src/core";
+import { firestore, type DocSnapshot } from "../src/firestore";
 
 function failed(error: unknown): string {
   const err = toFirebaseError(error);
