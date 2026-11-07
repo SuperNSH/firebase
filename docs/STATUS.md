@@ -52,7 +52,7 @@ macOS runners or a self-hosted runner exists.
 | 2 | Gates pass for all crates and packages | PASS — CI run 42364995246 green (rust-gate, packages, demo, host-android); macOS-only gates dispatch-only, org-blocked |
 | 3 | Emulator tests, one documented command | PASS — `clean-proof` job green (fresh clone, `bun install`, `bun run test:emulator`); suite green locally pre-pause too |
 | 4 | host-ios device proof | UNVERIFIED — first attempt hit a launch crash (fixed in source: UIScene lifecycle); the proof runs from ci-macos.yml once macOS runners are available |
-| 5 | host-android device proof | CI `device-proofs` run dispatched — see the run's artifacts; local device phase was cancelled |
+| 5 | host-android device proof | partial: CI run 42366965860 proved install + launch + the host view rendering, but CI's software emulator ANRed mid-run so the captures show a System UI dialog, not the app — **not** criterion-5 evidence; second attempt (API 33 + ANR suppression) dispatched, and the full proof still has the plugged-in local path |
 | 6 | Analytics/perf reach collector; native debug logs | pure tier PASS locally; native debug-log assertion UNVERIFIED (needs a device) |
 | 7 | Monitoring screen with slow route on top | PASS on macOS; phone target UNVERIFIED |
 | 8 | ERR_ACCESS_DENIED with a test | PASS (locally pre-pause; re-run in CI `packages` job, green) |
