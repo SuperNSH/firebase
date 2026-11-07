@@ -1,19 +1,26 @@
-# Installs nsh 0.4.0 from the upstream release, matching the pin the
-# longbridge Homebrew formula carries for linux x86_64. Deterministic
-# (checksum from the formula) and independent of Linuxbrew on the runner.
+# Installs the nsh 0.4.0 CLI with the upstream install scripts, on every
+# runner OS, and puts it on PATH for the later steps of the job.
 name: Install nsh 0.4.0
 runs:
   using: composite
   steps:
-    - shell: bash
+    - name: Install NSH (Linux and macOS)
+      if: runner.os != 'Windows'
+      shell: bash
+      env:
+        NSH_VERSION: v0.4.0
       run: |
-        curl -fsSL -o /tmp/nsh.tar.gz \
-          https://github.com/longbridge/nsh/releases/download/v0.4.0/nsh-linux-x86_64.tar.gz
-        echo "8806121aebf40bb51f8fb6aa703722fbb01253f9a435759c18d53beece1ec976  /tmp/nsh.tar.gz" | sha256sum -c -
-        mkdir -p /tmp/nsh-bin && tar -xzf /tmp/nsh.tar.gz -C /tmp/nsh-bin
-        BIN_DIR="$(dirname "$(find /tmp/nsh-bin -type f -name nsh | head -1)")"
-        chmod +x "$BIN_DIR/nsh"
-        # GITHUB_PATH only affects later steps, so verify via the absolute
-        # path here and let the PATH entry serve the job's own steps.
-        echo "$BIN_DIR" >> "$GITHUB_PATH"
-        "$BIN_DIR/nsh" --version
+        curl -fsSL https://nsh.dev/install.sh | sh
+        echo "$HOME/.nsh/bin" >> "$GITHUB_PATH"
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        PATH="$HOME/.nsh/bin:$HOME/.local/bin:$PATH" nsh --version
+    - name: Install NSH (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      env:
+        NSH_VERSION: v0.4.0
+      run: |
+        irm https://nsh.dev/install.ps1 | iex
+        "$env:LOCALAPPDATA\nsh\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+        $env:Path = "$env:LOCALAPPDATA\nsh\bin;$env:Path"
+        nsh --version
