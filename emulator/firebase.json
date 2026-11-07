@@ -1,0 +1,16 @@
+{
+  "emulators": {
+    "auth": { "port": 19099 },
+    "database": { "port": 19000 },
+    "storage": { "port": 19199 },
+    "hub": { "port": 14400 },
+    "ui": { "enabled": false }
+  },
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "storage": {
+    "rules": "storage.rules",
+    "buckets": ["demo-nsh.firebasestorage.app"]
+  }
+}

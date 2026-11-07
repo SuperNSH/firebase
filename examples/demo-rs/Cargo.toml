@@ -1,0 +1,10 @@
+[package]
+name = "demo-rs"
+description = "The Rust demo app (stub; the demo area replaces this crate)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]

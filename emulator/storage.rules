@@ -1,0 +1,8 @@
+// Sandbox-only rules for the demo-nsh emulators: everything is readable
+// and writable locally. Never ship these to a real project.
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    allow read, write: if true;
+  }
+}

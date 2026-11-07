@@ -1,0 +1,48 @@
+[workspace]
+members = [
+    "crates/nsh-firebase-core",
+    "crates/nsh-firebase-auth",
+    "crates/nsh-firebase-database",
+    "crates/nsh-firebase-storage",
+    "crates/nsh-firebase-messaging",
+    "crates/nsh-firebase-analytics",
+    "crates/nsh-firebase-perf",
+    "crates/nsh-firebase-firestore",
+    "crates/nsh-firebase-remote-config",
+    "crates/nsh-firebase-crashlytics",
+    "crates/nsh-firebase-installations",
+    "crates/nsh-firebase-app-check",
+    "crates/nsh-firebase-functions",
+    "examples/demo-rs",
+]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/hmziqrs/nsh-firebase"
+authors = ["hmziqrs"]
+
+[workspace.dependencies]
+# Every NSH crate must come from one place: the CLI's version (nsh 0.4.0).
+nsh-core = "0.4.0"
+nsh-engine = "0.4.0"
+nsh-testing = "0.4.0"
+serde_json = "1"
+nsh-firebase-core = { path = "crates/nsh-firebase-core" }
+nsh-firebase-auth = { path = "crates/nsh-firebase-auth" }
+nsh-firebase-database = { path = "crates/nsh-firebase-database" }
+nsh-firebase-storage = { path = "crates/nsh-firebase-storage" }
+nsh-firebase-messaging = { path = "crates/nsh-firebase-messaging" }
+nsh-firebase-analytics = { path = "crates/nsh-firebase-analytics" }
+nsh-firebase-perf = { path = "crates/nsh-firebase-perf" }
+nsh-firebase-firestore = { path = "crates/nsh-firebase-firestore" }
+nsh-firebase-remote-config = { path = "crates/nsh-firebase-remote-config" }
+nsh-firebase-crashlytics = { path = "crates/nsh-firebase-crashlytics" }
+nsh-firebase-installations = { path = "crates/nsh-firebase-installations" }
+nsh-firebase-app-check = { path = "crates/nsh-firebase-app-check" }
+nsh-firebase-functions = { path = "crates/nsh-firebase-functions" }
+
+[profile.release]
+lto = "thin"

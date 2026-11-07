@@ -12,3 +12,6 @@ google-services.json
 GoogleService-Info.plist
 !**/fixtures/google-services.json
 !**/fixtures/GoogleService-Info.plist
+dist/
+emulator/emulator.log
+emulator/emulator.pid

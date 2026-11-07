@@ -1,0 +1,20 @@
+{
+  "name": "nsh-firebase",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Firebase libraries for Native Shell apps, in Rust and TypeScript",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "emulator:start": "bash scripts/start-emulator.sh",
+    "test:emulator": "bash scripts/test-emulator.sh",
+    "test:packages": "bash scripts/test-packages.sh",
+    "test:demo": "bash scripts/test-demo.sh",
+    "gate:rust": "bash scripts/gate-workspace.sh",
+    "gate:ts": "bash scripts/test-packages.sh",
+    "check:evidence": "bash scripts/check-evidence.sh"
+  },
+  "devDependencies": {
+    "firebase-tools": "^14.0.0"
+  }
+}

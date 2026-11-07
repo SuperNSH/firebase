@@ -1,0 +1,12 @@
+{
+  "name": "nsh-firebase tests",
+  "id": "dev.nsh.firebase",
+  "version": "0.1.0",
+  "build": 1,
+  "capabilities": {
+    "network": {
+      "hosts": ["127.0.0.1"]
+    },
+    "host": ["firebase.*"]
+  }
+}

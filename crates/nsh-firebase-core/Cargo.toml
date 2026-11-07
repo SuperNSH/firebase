@@ -1,0 +1,17 @@
+[package]
+name = "nsh-firebase-core"
+description = "Firebase Core for Native Shell Rust apps: app and options, emulator config, the shared error type, the event bus, the tier facade and the pure-tier transports"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+nsh-core = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+nsh-engine = { workspace = true }
+nsh-testing = { workspace = true }
+tokio = { version = "1", features = ["rt", "macros"] }

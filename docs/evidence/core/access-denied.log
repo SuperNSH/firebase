@@ -1,0 +1,27 @@
+# Criterion 8: revoking network capabilities gives ERR_ACCESS_DENIED through the facade
+# Run: bash scripts/gate-tsx.sh tests/core-app.tsx tests/core.test.tsx (from packages/nsh-firebase)
+# nsh.json declares capabilities.network hosts [127.0.0.1] and capabilities.host [firebase.*].
+# The deny test fetches https://denied.example.test/.json (undeclared network host) and the
+# ping-denied/post-denied buttons call other.ping/other.post (names capabilities.host does not grant);
+# the stub route must never answer and the runtime must refuse before any handler is reached.
+# Test 3 also asserts app.host.posts() actually received the firebase.core.track post.
+
+$ nsh test tests/core.test.tsx
+✓ bundled App.tsx (16577 B in 4.5 ms)
+✓ tests/core.test.tsx › core › initializes with the demo config (7ms)
+✓ tests/core.test.tsx › core › the pure tier goes through the stubbed network (1ms)
+warn nsh/host: `other.ping` is not granted: add it to capabilities.host in nsh.json
+warn nsh/host: `other.post` is not granted: add it to capabilities.host in nsh.json
+✓ tests/core.test.tsx › core › a host call resolves, and failures map to stable codes (1ms)
+✓ tests/core.test.tsx › core › a config document loads with the emulator switch winning (1ms)
+✓ tests/core.test.tsx › core › the event bus fans out and off stops a listener (1ms)
+✓ tests/core.test.tsx › core › a refused network capability rejects with ERR_ACCESS_DENIED through the facade (1ms)
+✓ 6 tests: 6 passed, 0 failed (19ms)
+
+$ cargo test -p nsh-firebase-core (the Rust side of the same facade, incl. post)
+running 26 tests
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+running 4 tests
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
