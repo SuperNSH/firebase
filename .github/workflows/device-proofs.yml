@@ -26,6 +26,9 @@ jobs:
         with:
           api-level: 34
           arch: x86_64
+          # Software-mode boots on CI runners are slow.
+          boot-timeout: 1200
+          disable-animations: true
           script: |
             set -euo pipefail
             mkdir -p docs/evidence/native-android
@@ -34,18 +37,21 @@ jobs:
             adb shell am start -n dev.nsh.firebase.host/.MainActivity
             sleep 15
             adb exec-out screencap -p > docs/evidence/native-android/host-emulator-1.png
+            # The module's own notification path, then the FCM auto-post
+            # press path — the drive commands docs/status/native-android.md
+            # documents for this module.
+            adb shell am start -n dev.nsh.firebase.host/.MainActivity --es dev.nsh.firebase.NOTIFICATION ci-proof-1
+            sleep 4
+            adb exec-out screencap -p > docs/evidence/native-android/host-emulator-2.png
             adb shell input keyevent KEYCODE_HOME
             sleep 2
-            adb shell am broadcast -a android.intent.action.BOOT_COMPLETED dev.nsh.firebase.host >/dev/null || true
-            sleep 5
-            adb exec-out screencap -p > docs/evidence/native-android/host-emulator-2.png
-            adb shell am start -n dev.nsh.firebase.host/.MainActivity
+            adb shell am start -n dev.nsh.firebase.host/.MainActivity --es google.message_id ci-proof-2
             sleep 5
             adb exec-out screencap -p > docs/evidence/native-android/host-emulator-3.png
-            grep -i -m 40 "firebase\|FCM\|token" docs/evidence/native-android/logcat.txt \
-              > docs/evidence/native-android/token-proof.log || true
+            grep -i -m 40 -E "firebase|FCM|token|dev\.nsh\.firebase" docs/evidence/native-android/logcat.txt > docs/evidence/native-android/token-proof.log || true
             kill "$(cat /tmp/logpid)" || true
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: native-android-proofs
           path: docs/evidence/native-android/
