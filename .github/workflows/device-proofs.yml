@@ -24,7 +24,9 @@ jobs:
       - name: Boot the emulator and run the proofs
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          # API 33: the first attempt on API 34 ANRed the System UI under
+          # CI's software emulation before the app's bundle finished loading.
+          api-level: 33
           arch: x86_64
           # Software-mode boots on CI runners are slow.
           boot-timeout: 1200
@@ -34,19 +36,22 @@ jobs:
             mkdir -p docs/evidence/native-android
             adb install examples/host-android/app/build/outputs/apk/debug/app-debug.apk
             (adb logcat -v time > docs/evidence/native-android/logcat.txt 2>&1 & echo $! > /tmp/logpid)
+            # Software emulation is slow enough that system dialogs fire;
+            # keep them down so the screenshots show the app, not an ANR.
+            adb shell settings put secure anr_show_background false || true
             adb shell am start -n dev.nsh.firebase.host/.MainActivity
-            sleep 15
+            sleep 40
             adb exec-out screencap -p > docs/evidence/native-android/host-emulator-1.png
             # The module's own notification path, then the FCM auto-post
             # press path — the drive commands docs/status/native-android.md
             # documents for this module.
             adb shell am start -n dev.nsh.firebase.host/.MainActivity --es dev.nsh.firebase.NOTIFICATION ci-proof-1
-            sleep 4
+            sleep 10
             adb exec-out screencap -p > docs/evidence/native-android/host-emulator-2.png
             adb shell input keyevent KEYCODE_HOME
-            sleep 2
+            sleep 4
             adb shell am start -n dev.nsh.firebase.host/.MainActivity --es google.message_id ci-proof-2
-            sleep 5
+            sleep 10
             adb exec-out screencap -p > docs/evidence/native-android/host-emulator-3.png
             grep -i -m 40 -E "firebase|FCM|token|dev\.nsh\.firebase" docs/evidence/native-android/logcat.txt > docs/evidence/native-android/token-proof.log || true
             kill "$(cat /tmp/logpid)" || true
