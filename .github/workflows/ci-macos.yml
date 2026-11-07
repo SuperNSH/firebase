@@ -15,12 +15,14 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: nsh-embed
+        uses: ./.github/actions/fetch-nsh-embed-ios
       - run: cd examples/host-ios && xcodegen generate
       - run: >
           cd examples/host-ios && xcodebuild -project NshFirebaseHost.xcodeproj
           -scheme NshFirebaseHost -sdk iphonesimulator
           -destination 'generic/platform=iOS Simulator'
-          -derivedDataPath build build
+          -derivedDataPath build NSH_EMBED_IOS="${{ steps.nsh-embed.outputs.dir }}" build
       - name: Boot the repo simulator and run the proofs
         run: |
           set -euo pipefail

@@ -244,12 +244,14 @@ jobs:
       - name: Build the SwiftPM package for the iOS simulator
         working-directory: native/ios/NshFirebase
         run: xcodebuild -scheme NshFirebase -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' build
+      - id: nsh-embed
+        uses: ./.github/actions/fetch-nsh-embed-ios
       - run: cd examples/host-ios && xcodegen generate
       - run: >
           cd examples/host-ios && xcodebuild -project NshFirebaseHost.xcodeproj
           -scheme NshFirebaseHost -sdk iphonesimulator
           -destination 'generic/platform=iOS Simulator'
-          -derivedDataPath build build
+          -derivedDataPath build NSH_EMBED_IOS="${{ steps.nsh-embed.outputs.dir }}" build
 
   host-android:
     # The Firebase BoM module and the embedding host app assemble with the
