@@ -26,9 +26,14 @@ function render(error: {
 }): string {
   // The callable wire's message already leads with its code; the
     // render shows it once.
-    const message = error.message.startsWith(`${error.code}: `)
-      ? error.message.slice(error.code.length + 2)
-      : error.message;
+    let message = error.message;
+    if (message.startsWith(`${error.code}: `)) {
+      message = message.slice(error.code.length + 2);
+    } else if (message.startsWith(`${error.code} (`)) {
+      // The host-error shape: `code (NATIVE): the message`.
+      const end = message.indexOf("): ");
+      if (end !== -1) message = message.slice(end + 3);
+    }
     const base = `${error.code}${error.nativeCode ? ` (${error.nativeCode})` : ""}: ${message}`;
   return error.details === undefined || error.details === null
     ? base

@@ -77,7 +77,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("set")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -95,7 +94,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("merge")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -120,7 +118,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("get")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -138,7 +135,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("missing")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -156,7 +152,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("add")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -174,7 +169,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("delete")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -192,7 +186,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("delete-missing")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -214,7 +207,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("query")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -252,7 +244,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("denied")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -270,7 +261,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("bad-path")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -288,7 +278,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("typed")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -306,7 +295,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("auth")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
@@ -325,7 +313,6 @@ fn FirestoreApp() -> impl IntoElement {
                 .test_id("bad-json")
                 .on_press({
                     let fs = fs.clone();
-                    let line = line.clone();
                     move || {
                         let fs = fs.clone();
                         spawn(async move {
