@@ -1,6 +1,6 @@
 [package]
 name = "nsh-firebase-perf"
-description = "Firebase perf for Native Shell Rust apps (stub; its area replaces this crate)"
+description = "Firebase Performance Monitoring and the network monitor for Native Shell Rust apps: NetworkEvent capture, the ring-buffer monitor with per-host/per-path aggregates, instrumented fetch, traces and HTTP metrics with a pluggable transport and the firebase.perf.* native tier"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,12 @@ repository.workspace = true
 authors.workspace = true
 
 [dependencies]
+nsh-core = { workspace = true }
+nsh-firebase-core = { workspace = true }
+serde = { version = "1", features = ["derive"] }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+nsh-engine = { workspace = true }
+nsh-testing = { workspace = true }
+tokio = { version = "1", features = ["rt", "macros"] }

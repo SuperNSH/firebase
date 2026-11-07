@@ -1,0 +1,4 @@
+✓ bundled tests/perf-app.tsx (24615 B in 6.3 ms)
+✓ tests/emulator/monitor.sandbox.test.tsx › monitor sandbox (collector on 127.0.0.1:18742) › a queued HTTP metric reaches the collector and is asserted there (422ms)
+✓ tests/emulator/monitor.sandbox.test.tsx › monitor sandbox (collector on 127.0.0.1:18742) › the collector's slow route records a real duration (1.0s)
+✓ 2 tests: 2 passed, 0 failed (1.4s)

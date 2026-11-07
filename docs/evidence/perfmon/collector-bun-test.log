@@ -1,0 +1,14 @@
+bun test v1.4.4 (38afee6c8)
+
+tools/collector/server.test.ts:
+(pass) appendBody > appends each JSON body as one line [0.13ms]
+(pass) appendBody > a newline-separated POST body is one line per JSON value [0.02ms]
+(pass) appendBody > blank lines change nothing [0.02ms]
+(pass) assertLines > a contains ask needs one matching line and counts them [0.05ms]
+(pass) assertLines > a count ask is a minimum-lines ask, echoed back [0.01ms]
+(pass) assertLines > both asks must hold [0.02ms]
+
+ 6 pass
+ 0 fail
+ 13 expect() calls
+Ran 6 tests across 1 file. [193.00ms]
