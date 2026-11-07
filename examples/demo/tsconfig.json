@@ -1,0 +1,14 @@
+{
+  "extends": "./.nsh/tsconfig.json",
+  "include": [
+    "App.tsx",
+    "App.test.tsx",
+    "nav.ts",
+    "ui/**/*.tsx",
+    "components/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tests/demo.test.tsx",
+    "tests/screenshots.test.tsx"
+  ]
+}

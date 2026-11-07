@@ -1,0 +1,14 @@
+{
+  "name": "Firebase Demo",
+  "id": "dev.nsh.demo",
+  "version": "0.1.0",
+  "build": 1,
+  "appearance": "system",
+  "theme": "theme.json",
+  "capabilities": {
+    "network": {
+      "hosts": ["127.0.0.1"]
+    },
+    "host": ["firebase.*"]
+  }
+}

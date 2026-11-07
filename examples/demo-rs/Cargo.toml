@@ -1,6 +1,6 @@
 [package]
 name = "demo-rs"
-description = "The Rust demo app (stub; the demo area replaces this crate)"
+description = "The Rust demo app for nsh-firebase: one screen per product over the crates"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,23 @@ repository.workspace = true
 authors.workspace = true
 
 [dependencies]
+# Not in the workspace's table; kept at the CLI's version like the rest.
+nsh-base = "0.4.0"
+nsh-core = { workspace = true }
+serde_json = { workspace = true }
+# The products the demo shows; the screens consume them in the second pass.
+nsh-firebase-core = { workspace = true }
+nsh-firebase-auth = { workspace = true }
+nsh-firebase-database = { workspace = true }
+nsh-firebase-storage = { workspace = true }
+nsh-firebase-messaging = { workspace = true }
+nsh-firebase-analytics = { workspace = true }
+nsh-firebase-perf = { workspace = true }
+# The sibling libraries, same behavior as their TSX packages.
+nsh-form = { path = "../../../nsh-form/crates/nsh-form" }
+nsh-query = { path = "../../../nsh-query/crates/nsh-query" }
+
+[dev-dependencies]
+# Headless Rust-only tests: no JS runtime, no live network.
+nsh-engine = { workspace = true, default-features = false }
+nsh-testing = { workspace = true, default-features = false }

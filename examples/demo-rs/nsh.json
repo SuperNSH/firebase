@@ -1,0 +1,16 @@
+{
+  "name": "Firebase Demo Rust",
+  "id": "dev.nsh.demo-rs",
+  "version": "0.1.0",
+  "build": 1,
+  "appearance": "system",
+  "theme": "theme.json",
+  "rust": ".",
+  "root": "App",
+  "capabilities": {
+    "network": {
+      "hosts": ["127.0.0.1"]
+    },
+    "host": ["firebase.*"]
+  }
+}
