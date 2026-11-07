@@ -37,6 +37,14 @@ targets:
         CFBundleShortVersionString: "0.1.0"
         CFBundleVersion: "1"
         UILaunchScreen: {}
+        # The SDK requires the UIScene life cycle; the delegate class is
+        # wired here and the window is built in SceneDelegate.
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
         UIBackgroundModes:
           - remote-notification
         # We own the UIApplicationDelegate and wire FCM explicitly, so no

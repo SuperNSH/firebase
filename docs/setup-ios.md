@@ -64,7 +64,10 @@ cd examples/host-ios/mini-app && nsh build --release --out ../App/nsh
 # 2. regenerate the Xcode project (needed after project.yml or sources change)
 cd .. && xcodegen generate
 
-# 3. build
+# 3. build. The host uses the UIScene life cycle (a SceneDelegate builds
+#    the window; the UIApplicationSceneManifest in project.yml names it) —
+#    this SDK refuses to launch a legacy-AppDelegate-only app.
+
 xcodebuild -project NshFirebaseHost.xcodeproj \
   -scheme NshFirebaseHost -sdk iphonesimulator \
   -destination 'generic/platform=iOS Simulator' \

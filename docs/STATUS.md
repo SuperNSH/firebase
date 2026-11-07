@@ -125,8 +125,11 @@ apps built with this SDK` (Info.plist has no `UIApplicationSceneManifest`;
 reports on the simulator). `xcrun simctl push` consequently failed
 (`UNErrorDomain 2003`, exit 211). `host-sim-1.png`/`host-sim-2.png` show
 the simulator home screen with the app installed — not a running app.
-**This is an open defect to fix before the proof can pass**, then the
-proof runs as `device-proofs.yml`'s `ios-proofs` job (manual dispatch) or
+**The defect is now fixed in source** (a `SceneDelegate` builds the
+window, `configurationForConnecting` wires it, and the
+`UIApplicationSceneManifest` in project.yml names it), but the fix has
+not run on a device yet — the proof runs as `device-proofs.yml`'s
+`ios-proofs` job (manual dispatch) or
 a plugged-in local run: launch, screenshot, `simctl push` of
 `docs/evidence/native-ios/push.apns`, tap reaching the app's handler,
 screenshots saved and looked at. None of that has happened.

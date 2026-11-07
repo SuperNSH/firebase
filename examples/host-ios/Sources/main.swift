@@ -7,19 +7,25 @@ import NativeShell
 import UIKit
 
 final class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
-
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         // Swizzling is off; FCM needs the APNs token from us.
         application.registerForRemoteNotifications()
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        window.rootViewController = HostController()
-        window.makeKeyAndVisible()
-        self.window = window
         return true
+    }
+
+    // This SDK refuses to launch apps without the scene lifecycle, so the
+    // window lives in SceneDelegate and the manifest in Info.plist names it.
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let config = UISceneConfiguration(name: "Default", sessionRole: connectingSceneSession.role)
+        config.delegateClass = SceneDelegate.self
+        return config
     }
 
     func application(
@@ -46,6 +52,22 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) {
         NshFirebase.shared.onRemoteMessage(userInfo)
         completionHandler(.newData)
+    }
+}
+
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
+        guard let windowScene = scene as? UIWindowScene else { return }
+        let window = UIWindow(windowScene: windowScene)
+        window.rootViewController = HostController()
+        window.makeKeyAndVisible()
+        self.window = window
     }
 }
 
