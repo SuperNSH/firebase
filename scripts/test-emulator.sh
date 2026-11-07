@@ -14,7 +14,7 @@ if [ -f emulator/functions/package.json ] && [ ! -d emulator/functions/node_modu
   (cd emulator/functions && (bun install || npm install --no-audit --no-fund))
 fi
 
-for pair in "nsh-firebase-auth emulator_auth" "nsh-firebase-database emulator_database" "nsh-firebase-storage emulator_storage" "nsh-firebase-firestore emulator_firestore" "nsh-firebase-functions emulator_functions"; do
+for pair in "nsh-firebase-auth emulator_auth" "nsh-firebase-database emulator_database" "nsh-firebase-storage emulator_storage" "nsh-firebase-firestore emulator_firestore"; do
   crate=${pair%% *}
   test=${pair##* }
   file="crates/$crate/tests/$test.rs"
@@ -26,7 +26,7 @@ for pair in "nsh-firebase-auth emulator_auth" "nsh-firebase-database emulator_da
 done
 
 cd packages/nsh-firebase
-for file in tests/emulator/auth.sandbox.test.tsx tests/emulator/database.sandbox.test.tsx tests/emulator/storage.sandbox.test.tsx tests/emulator/firestore.sandbox.test.tsx tests/emulator/functions.sandbox.test.tsx; do
+for file in tests/emulator/auth.sandbox.test.tsx tests/emulator/database.sandbox.test.tsx tests/emulator/storage.sandbox.test.tsx tests/emulator/firestore.sandbox.test.tsx; do
   if [ -f "$file" ]; then
     nsh test "$file"
   else
@@ -51,19 +51,24 @@ else
   echo "SKIPPED tests/emulator/{analytics,monitor}.sandbox.test.tsx (tools/collector not running on 127.0.0.1:18742; start it per docs/status/perfmon.md)"
 fi
 
-# The functions emulator needs its node_modules (installed above) and a
-# moment to spawn the runtime; skip honestly if 15001 never answers.
-functions_up() {
-  curl -s -o /dev/null --max-time 5 -w '%{http_code}' http://127.0.0.1:15001/ | grep -qv 000
-}
-if functions_up; then
-  for file in tests/emulator/functions.sandbox.test.tsx; do
-    if [ -f "$file" ]; then
-      nsh test "$file"
-    else
-      echo "SKIPPED $file (not written yet)"
-    fi
-  done
+# The functions runtime spawns on its first invocation and that spawn can
+# hang on a cold machine; ping one callable with a bounded window so a
+# broken runtime skips with the suite log instead of stalling the run.
+ping_code=$(curl -s -o /tmp/functions-ping.json -w '%{http_code}' --max-time 30 \
+  -H 'Content-Type: application/json' -X POST \
+  -d '{"data":{}}' http://127.0.0.1:15001/demo-nsh/us-central1/ping || true)
+if [ "${ping_code:-}" = "200" ] && grep -q '"pong":true' /tmp/functions-ping.json; then
+  if [ -f crates/nsh-firebase-functions/tests/emulator_functions.rs ]; then
+    (cd "$ROOT" && cargo test -p nsh-firebase-functions --test emulator_functions -- --ignored)
+  else
+    echo "SKIPPED crates/nsh-firebase-functions/tests/emulator_functions.rs (not written yet)"
+  fi
+  if [ -f tests/emulator/functions.sandbox.test.tsx ]; then
+    nsh test tests/emulator/functions.sandbox.test.tsx
+  else
+    echo "SKIPPED tests/emulator/functions.sandbox.test.tsx (not written yet)"
+  fi
 else
-  echo "SKIPPED tests/emulator/functions.sandbox.test.tsx (functions emulator not serving on 127.0.0.1:15001)"
+  tail -40 "$ROOT/emulator/emulator.log" >&2 || true
+  echo "SKIPPED the functions sandbox tests (the functions runtime did not serve ping in 30s; HTTP code ${ping_code:-none}; see the emulator log tail above)"
 fi

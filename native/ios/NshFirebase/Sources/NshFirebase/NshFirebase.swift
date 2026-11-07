@@ -516,13 +516,15 @@ public final class NshFirebase: NSObject, UNUserNotificationCenterDelegate, Mess
             else {
                 reply(nil, "firebase.firestore.addDoc needs a collectionPath and a data object"); return
             }
-            // addDocument's completion carries only the error; the
-            // reference comes back synchronously.
-            let reference = db.collection(collectionPath).addDocument(data: docData) { error in
+            // The document reference is created synchronously, so the
+            // completion can name it; addDocument's completion carries
+            // only the error.
+            let document = db.collection(collectionPath).document()
+            document.setData(docData) { error in
                 if let error {
                     reply(nil, "firebase/firestore: addDoc \(collectionPath) failed: \(error.localizedDescription)")
                 } else {
-                    reply(["id": reference.documentID], nil)
+                    reply(["id": document.documentID], nil)
                 }
             }
         case "firebase.firestore.deleteDoc":

@@ -225,8 +225,7 @@ async fn record_error_carries_the_stack_only_when_given() {
 async fn did_crash_reads_the_flag_both_ways() {
     let (crashlytics, channel) = stub(&[answered(wire::DID_CRASH, json!({ "crashed": true }))]);
     assert!(crashlytics.did_crash_on_previous_execution().await.unwrap());
-    let (crashlytics, _channel) =
-        stub(&[answered(wire::DID_CRASH, json!({ "crashed": false }))]);
+    let (crashlytics, _channel) = stub(&[answered(wire::DID_CRASH, json!({ "crashed": false }))]);
     assert!(!crashlytics.did_crash_on_previous_execution().await.unwrap());
     // The no-arg call really carried no args.
     assert_eq!(calls(&channel)[0].1, JsonValue::Null);
@@ -235,7 +234,10 @@ async fn did_crash_reads_the_flag_both_ways() {
 #[tokio::test]
 async fn a_reply_without_the_flag_is_a_host_error_not_a_false() {
     let (crashlytics, channel) = stub(&[answered(wire::DID_CRASH, json!({}))]);
-    let error = crashlytics.did_crash_on_previous_execution().await.unwrap_err();
+    let error = crashlytics
+        .did_crash_on_previous_execution()
+        .await
+        .unwrap_err();
     assert_eq!(error.code, HOST_ERROR, "{error}");
     assert!(error.message.contains("crashed flag"), "{error}");
     assert_eq!(calls(&channel).len(), 1);
@@ -315,6 +317,9 @@ async fn the_pure_tier_still_validates_its_arguments_first() {
     // a bad custom value is the caller's bug, whatever tier it runs in.
     // PureHost records nothing, so "the host never saw it" is structural.
     let crashlytics = pure();
-    let error = crashlytics.set_attribute("bad", JsonValue::Null).await.unwrap_err();
+    let error = crashlytics
+        .set_attribute("bad", JsonValue::Null)
+        .await
+        .unwrap_err();
     assert_eq!(error.code, INVALID_ARGUMENT, "{error}");
 }

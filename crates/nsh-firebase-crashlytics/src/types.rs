@@ -11,8 +11,7 @@ pub const UNAVAILABLE: &str = "crashlytics/unavailable";
 
 /// The pure tier's one failure message, verbatim in the contract both
 /// language facades carry.
-pub const NEEDS_NATIVE_TIER: &str =
-    "Firebase Crashlytics needs the native tier: iOS/Android host with firebase.crashlytics.* handlers (Crashlytics has no REST — no honest pure tier exists)";
+pub const NEEDS_NATIVE_TIER: &str = "Firebase Crashlytics needs the native tier: iOS/Android host with firebase.crashlytics.* handlers (Crashlytics has no REST — no honest pure tier exists)";
 
 /// The handler names the native tier registers; the app declares
 /// `firebase.crashlytics.*` under `capabilities.host` for them.

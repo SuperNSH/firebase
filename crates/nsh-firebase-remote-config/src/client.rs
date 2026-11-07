@@ -275,7 +275,10 @@ impl NativeRemoteConfig {
     }
 
     pub async fn fetch_and_activate(&self) -> Result<FetchAndActivateResult, FirebaseError> {
-        let result = self.host.call(NATIVE_FETCH_AND_ACTIVATE, JsonValue::Null).await?;
+        let result = self
+            .host
+            .call(NATIVE_FETCH_AND_ACTIVATE, JsonValue::Null)
+            .await?;
         let activated = result
             .get("activated")
             .and_then(JsonValue::as_bool)
@@ -330,10 +333,7 @@ impl NativeRemoteConfig {
 
     /// The local echo of the last `fetch_and_activate` result.
     pub fn last_fetch_status(&self) -> String {
-        self.last_fetch_status
-            .lock()
-            .expect("status lock")
-            .clone()
+        self.last_fetch_status.lock().expect("status lock").clone()
     }
 }
 
@@ -367,7 +367,12 @@ mod tests {
     fn invalid_defaults_are_refused_before_any_state_changes() {
         let config = pure();
         config.set_defaults(&json!({"ok": "yes"})).unwrap();
-        for bad in [json!("nope"), json!([1]), json!({"nested": {}}), json!({"none": null})] {
+        for bad in [
+            json!("nope"),
+            json!([1]),
+            json!({"nested": {}}),
+            json!({"none": null}),
+        ] {
             let error = config.set_defaults(&bad).unwrap_err();
             assert_eq!(error.code, INVALID_ARGUMENT, "for {bad}");
         }
@@ -505,7 +510,10 @@ mod tests {
                 last_fetch_status: FETCH_SUCCESS.to_owned(),
             }
         );
-        assert_eq!(config.get_string("welcome_message"), "Welcome to nsh-firebase");
+        assert_eq!(
+            config.get_string("welcome_message"),
+            "Welcome to nsh-firebase"
+        );
         assert!(config.get_boolean("feature_flag_dark_mode"));
         assert_eq!(config.get_number("tip_amount"), 25.0);
         assert_eq!(config.get_string("checkout_button_label"), "Pay now");
@@ -530,7 +538,11 @@ mod tests {
         let error = config.fetch_and_activate().await.unwrap_err();
         assert_eq!(error.code, UNAVAILABLE);
         assert!(error.message.contains("OAuth 2.0"), "names the requirement");
-        assert!(error.message.contains("firebaseremoteconfig.googleapis.com"));
+        assert!(
+            error
+                .message
+                .contains("firebaseremoteconfig.googleapis.com")
+        );
         assert_eq!(config.last_fetch_status(), NO_FETCH_YET);
         assert_eq!(config.last_fetch_time_ms(), None);
     }
@@ -566,8 +578,7 @@ mod tests {
     #[tokio::test]
     async fn an_invalid_template_records_failure_and_names_itself() {
         let clock = Arc::new(ManualClock::new(500));
-        let document =
-            json!({"conditions": [{"name": "dup", "expression": "x"}, {"name": "dup", "expression": "y"}]});
+        let document = json!({"conditions": [{"name": "dup", "expression": "x"}, {"name": "dup", "expression": "y"}]});
         let config = RemoteConfig::with_parts(
             Some(template_transport(document)),
             Arc::clone(&clock) as Arc<dyn Clock>,
@@ -628,7 +639,10 @@ mod tests {
     async fn native_calls_carry_the_contract_wire_shapes() {
         let (native, host) = host_with_answers(BTreeMap::from([
             (NATIVE_SET_DEFAULTS.to_owned(), json!({})),
-            (NATIVE_GET_DEFAULTS.to_owned(), json!({"map": {"k": "host"}})),
+            (
+                NATIVE_GET_DEFAULTS.to_owned(),
+                json!({"map": {"k": "host"}}),
+            ),
             (
                 NATIVE_FETCH_AND_ACTIVATE.to_owned(),
                 json!({"activated": true, "lastFetchStatus": "success"}),
@@ -670,9 +684,10 @@ mod tests {
 
     #[tokio::test]
     async fn native_typed_reads_coerce_the_wire_value() {
-        let (native, _) = host_with_answers(BTreeMap::from([
-            (NATIVE_GET.to_owned(), json!({"value": "TRUE"})),
-        ]));
+        let (native, _) = host_with_answers(BTreeMap::from([(
+            NATIVE_GET.to_owned(),
+            json!({"value": "TRUE"}),
+        )]));
         assert!(native.get_boolean("anything").await.unwrap());
         assert_eq!(native.get_string("anything").await.unwrap(), "TRUE");
         assert_eq!(native.get_number("anything").await.unwrap(), 0.0);

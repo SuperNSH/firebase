@@ -162,7 +162,10 @@ fn parse_parameters(
     let object = as_object(value, what)?;
     let mut parameters = BTreeMap::new();
     for (key, inner) in object {
-        parameters.insert(key.clone(), parse_parameter(inner, &format!("{what}.{key}"))?);
+        parameters.insert(
+            key.clone(),
+            parse_parameter(inner, &format!("{what}.{key}"))?,
+        );
     }
     Ok(parameters)
 }
@@ -186,7 +189,10 @@ pub fn parse_template(document: &JsonValue) -> Result<RemoteConfigTemplate, Fire
                 expression: required_string(object, "expression", &what)?,
                 tag_color: optional_string(object, "tagColor", &what)?,
             };
-            if conditions.iter().any(|parsed| parsed.name == condition.name) {
+            if conditions
+                .iter()
+                .any(|parsed| parsed.name == condition.name)
+            {
                 return Err(invalid(format!(
                     "conditions.{index}.name `{}` is a duplicate",
                     condition.name

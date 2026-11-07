@@ -14,11 +14,11 @@ use std::{
 
 use serde_json::{Value as JsonValue, json};
 
-use nsh_firebase_core::{FirebaseError, FirebaseHost};
 use nsh_firebase_core::error::{HOST_ERROR, INVALID_ARGUMENT, NETWORK};
+use nsh_firebase_core::{FirebaseError, FirebaseHost};
 use nsh_firebase_remote_config::{
-    FETCH_FAILURE, FETCH_SUCCESS, NATIVE_FETCH_AND_ACTIVATE, NATIVE_GET, NATIVE_GET_DEFAULTS,
-    NATIVE_SET_DEFAULTS, NO_FETCH_YET, FetchAndActivateResult, ManualClock, NativeRemoteConfig,
+    FETCH_FAILURE, FETCH_SUCCESS, FetchAndActivateResult, ManualClock, NATIVE_FETCH_AND_ACTIVATE,
+    NATIVE_GET, NATIVE_GET_DEFAULTS, NATIVE_SET_DEFAULTS, NO_FETCH_YET, NativeRemoteConfig,
     RemoteConfig, Transport, UNAVAILABLE, parse_template,
 };
 
@@ -78,7 +78,9 @@ fn manual_config() -> RemoteConfig {
 }
 
 fn config_with_template(body: &str) -> RemoteConfig {
-    let transport = Arc::new(StubbedTransport { body: body.to_owned() });
+    let transport = Arc::new(StubbedTransport {
+        body: body.to_owned(),
+    });
     RemoteConfig::with_parts(Some(transport), Arc::new(ManualClock::new(10_000)))
 }
 
@@ -117,7 +119,12 @@ fn set_defaults_replaces_and_refuses_invalid_maps() {
         json!({"second": 2}),
         "later calls replace, not merge"
     );
-    for bad in [json!("scalar"), json!([]), json!({"object": {}}), json!({"null": null})] {
+    for bad in [
+        json!("scalar"),
+        json!([]),
+        json!({"object": {}}),
+        json!({"null": null}),
+    ] {
         let error = config.set_defaults(&bad).unwrap_err();
         assert_eq!(error.code, INVALID_ARGUMENT, "for {bad}");
     }
@@ -161,7 +168,11 @@ fn a_realistic_template_document_parses() {
     let template = parse_template(&document).unwrap();
     assert_eq!(template.conditions.len(), 2);
     assert_eq!(template.conditions[1].name, "beta_cohort");
-    assert_eq!(template.parameters.len(), 6, "five parameters plus the group's");
+    assert_eq!(
+        template.parameters.len(),
+        6,
+        "five parameters plus the group's"
+    );
     assert_eq!(
         template.parameters["welcome_message"].conditional_values["ios_users"],
         "Welcome, iOS user"
@@ -208,7 +219,10 @@ async fn fetch_and_activate_applies_the_template_over_the_defaults() {
             last_fetch_status: FETCH_SUCCESS.to_owned(),
         }
     );
-    assert_eq!(config.get_string("welcome_message"), "Welcome to nsh-firebase");
+    assert_eq!(
+        config.get_string("welcome_message"),
+        "Welcome to nsh-firebase"
+    );
     assert!(config.get_boolean("feature_flag_dark_mode"));
     assert_eq!(config.get_number("tip_amount"), 25.0);
     assert_eq!(config.get_string("checkout_button_label"), "Pay now");
@@ -233,7 +247,11 @@ async fn fetch_and_activate_without_a_transport_rejects_with_the_documented_code
     let error = config.fetch_and_activate().await.unwrap_err();
     assert_eq!(error.code, UNAVAILABLE);
     assert!(error.message.contains("OAuth 2.0"));
-    assert!(error.message.contains("firebaseremoteconfig.googleapis.com"));
+    assert!(
+        error
+            .message
+            .contains("firebaseremoteconfig.googleapis.com")
+    );
     // Nothing was fetched and nothing is pretended: no template, no
     // fetch time, the RNFB initial status.
     assert_eq!(config.last_fetch_status(), NO_FETCH_YET);
@@ -318,7 +336,10 @@ fn native_with_answers(
 async fn native_routing_asserts_the_contract_wire_calls() {
     let (native, host) = native_with_answers(BTreeMap::from([
         (NATIVE_SET_DEFAULTS.to_owned(), json!({})),
-        (NATIVE_GET_DEFAULTS.to_owned(), json!({"map": {"k": "host"}})),
+        (
+            NATIVE_GET_DEFAULTS.to_owned(),
+            json!({"map": {"k": "host"}}),
+        ),
         (
             NATIVE_FETCH_AND_ACTIVATE.to_owned(),
             json!({"activated": true, "lastFetchStatus": "success"}),
@@ -344,7 +365,10 @@ async fn native_routing_asserts_the_contract_wire_calls() {
     );
     // The stub answers every key with the same value; the typed reads
     // coerce whatever the wire carried.
-    assert_eq!(native.get_string("missing_key").await.unwrap(), "host value");
+    assert_eq!(
+        native.get_string("missing_key").await.unwrap(),
+        "host value"
+    );
     assert!(!native.get_boolean("missing_key").await.unwrap());
     assert_eq!(native.get_number("missing_key").await.unwrap(), 0.0);
     assert_eq!(native.last_fetch_status(), "success");

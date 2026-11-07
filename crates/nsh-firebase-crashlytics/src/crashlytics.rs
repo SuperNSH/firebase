@@ -9,7 +9,7 @@ use std::sync::Arc;
 use serde_json::{Value as JsonValue, json};
 
 use nsh_firebase_core::{
-    error::{HOST_ERROR, INVALID_ARGUMENT, FirebaseError},
+    error::{FirebaseError, HOST_ERROR, INVALID_ARGUMENT},
     host::FirebaseHost,
 };
 
@@ -67,11 +67,8 @@ impl Crashlytics {
                 "crashlytics custom keys take a string, number or boolean",
             ));
         }
-        self.call(
-            wire::SET_CUSTOM_KEY,
-            json!({ "key": key, "value": value }),
-        )
-        .await?;
+        self.call(wire::SET_CUSTOM_KEY, json!({ "key": key, "value": value }))
+            .await?;
         Ok(())
     }
 
@@ -101,7 +98,8 @@ impl Crashlytics {
     /// Asks the native SDK to send reports it has unsent; what it holds
     /// and when it sends is the SDK's own state machine.
     pub async fn send_unsent_reports(&self) -> Result<(), FirebaseError> {
-        self.call(wire::SEND_UNSENT_REPORTS, JsonValue::Null).await?;
+        self.call(wire::SEND_UNSENT_REPORTS, JsonValue::Null)
+            .await?;
         Ok(())
     }
 
