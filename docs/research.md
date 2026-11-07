@@ -238,6 +238,12 @@ emulator's own banner).
   - `POST …/accounts:signInWithCustomToken?key=…` with `{token,
     returnSecureToken}` -> `{idToken, refreshToken, expiresIn}`. Errors:
     `INVALID_CUSTOM_TOKEN`, `CREDENTIAL_MISMATCH`.
+  - `POST …/accounts:verifyCustomToken?key=…` with `{token,
+    returnSecureToken: true}` -> `{idToken, refreshToken, expiresIn}`
+    ("Verify custom token", same reference page): what
+    `signInWithCredential` posts to exchange a custom token or an ID
+    token another library minted. The emulator suite does not serve it
+    (404; its `signInWithCustomToken` is separate).
   - Errors come back as `{error: {code: 400, message: "EMAIL_NOT_FOUND"}}`;
     the `message` field is the machine-readable code.
 - Token refresh = Secure Token. Same docs page, "Sign in / token refresh":
