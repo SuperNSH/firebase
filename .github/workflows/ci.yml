@@ -1,7 +1,10 @@
 # The compile and test gates for nsh-firebase. Local runs are limited to
 # implementation only (the build machine is often on battery), so CI is the
-# place every gate is expected to pass. nsh 0.4.0 ships from longbridge/tap
-# as an arm64-macOS formula, which pins the TSX jobs to macos-14.
+# place every gate is expected to pass. Every job runs on ubuntu because
+# macOS hosted runners are currently blocked for this org (jobs are
+# cancelled while queued); nsh 0.4.0 installs from the upstream release
+# tarball, which ships a linux-x86_64 build. The Apple-tooling gates live
+# in ci-macos.yml until macOS runners are enabled.
 name: ci
 
 on:
@@ -13,14 +16,9 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  NSH_VERSION: "0.4.0"
-
 jobs:
   rust-gate:
-    # The crates are developed against macOS; keep the whole gate on one
-    # proven platform rather than risking linux-only nsh-crate breakage.
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -35,14 +33,14 @@ jobs:
   packages:
     # Every package area's TSX gate: nsh check, a warning-gated nsh build,
     # then the headless UI tests (scripts/test-packages.sh skips stubs).
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: "1.4.4"
-      - run: brew tap longbridge/tap && brew install longbridge/tap/nsh && nsh --version
+      - uses: ./.github/actions/install-nsh
       - run: bun install
       - run: bun run test:packages
 
@@ -50,7 +48,7 @@ jobs:
     # The labelled sandbox tests under project demo-nsh: sign up, sign in,
     # refresh, database write/read/live listener, storage upload/download/
     # delete, analytics+monitor against the collector. No real account.
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -63,7 +61,7 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - run: brew tap longbridge/tap && brew install longbridge/tap/nsh && nsh --version
+      - uses: ./.github/actions/install-nsh
       - run: bun install
       # Java 21 mis-evaluates some cloud-storage rules (see docs/evidence/
       # core/storage-rules-fix.log); the glob form works everywhere, and 17
@@ -73,7 +71,7 @@ jobs:
 
   demo:
     # The TSX demo gates plus the demo-rs crate gate.
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -84,7 +82,7 @@ jobs:
         with:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
-      - run: brew tap longbridge/tap && brew install longbridge/tap/nsh && nsh --version
+      - uses: ./.github/actions/install-nsh
       - run: bun install
       - run: bash scripts/test-demo.sh
       - run: bash scripts/gate-crate.sh demo-rs
@@ -92,7 +90,7 @@ jobs:
   clean-proof:
     # Criterion 3: the emulator tests pass from a clean checkout with one
     # documented command (bun install && bun run test:emulator).
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -105,7 +103,7 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - run: brew tap longbridge/tap && brew install longbridge/tap/nsh && nsh --version
+      - uses: ./.github/actions/install-nsh
       - name: Clean clone, one command
         run: |
           rm -rf /tmp/nsh-firebase-clean
@@ -113,24 +111,6 @@ jobs:
           cd /tmp/nsh-firebase-clean
           bun install --frozen-lockfile
           bun run test:emulator
-
-  host-ios:
-    # The embedding host and the Swift package compile against the iOS
-    # Simulator SDK; SPM resolves the pinned firebase-ios-sdk.
-    runs-on: macos-14
-    timeout-minutes: 90
-    steps:
-      - uses: actions/checkout@v4
-      - run: xcodebuild -version && xcrun simctl list devicetypes | tail -3
-      - uses: actions/cache@v4
-        with:
-          path: |
-            native/ios/NshFirebase/.build
-            examples/host-ios/build/SourcePackages
-          key: spm-${{ runner.os }}-${{ hashFiles('native/ios/NshFirebase/Package.swift') }}
-      - run: cd native/ios/NshFirebase && swift build
-      - run: cd examples/host-ios && xcodegen generate
-      - run: cd examples/host-ios && xcodebuild -project NshFirebaseHost.xcodeproj -scheme NshFirebaseHost -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build build
 
   host-android:
     # The Firebase BoM module and the embedding host app assemble with the

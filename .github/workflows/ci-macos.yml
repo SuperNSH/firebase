@@ -1,0 +1,78 @@
+# The Apple-tooling gates: the SwiftPM package, the embedding host build
+# and the iOS device proofs. macOS hosted runners are currently blocked
+# for this org (jobs are cancelled while queued, 0 steps), so these run
+# only when asked for: on a self-hosted macOS runner, or on GitHub's
+# macOS runners once the org enables them. The android device proofs run
+# from device-proofs.yml on ubuntu today.
+name: ci-macos
+
+on:
+  workflow_dispatch:
+
+jobs:
+  host-ios:
+    runs-on: macos-14
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - run: xcodebuild -version
+      - uses: actions/cache@v4
+        with:
+          path: |
+            native/ios/NshFirebase/.build
+            examples/host-ios/build/SourcePackages
+          key: spm-${{ runner.os }}-${{ hashFiles('native/ios/NshFirebase/Package.swift') }}
+      - run: cd native/ios/NshFirebase && swift build
+      - run: cd examples/host-ios && xcodegen generate
+      - run: >
+          cd examples/host-ios && xcodebuild -project NshFirebaseHost.xcodeproj
+          -scheme NshFirebaseHost -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath build build
+
+  ios-proofs:
+    # Criterion 4: the host on a simulator — launch (validates the
+    # UIScene-life-cycle fix), APNs push, notification and tap handling.
+    runs-on: macos-14
+    timeout-minutes: 60
+    needs: host-ios
+    steps:
+      - uses: actions/checkout@v4
+      - run: cd examples/host-ios && xcodegen generate
+      - run: >
+          cd examples/host-ios && xcodebuild -project NshFirebaseHost.xcodeproj
+          -scheme NshFirebaseHost -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath build build
+      - name: Boot the repo simulator and run the proofs
+        run: |
+          set -euo pipefail
+          UDID=$(xcrun simctl create nsh-firebase-ios "$(
+            xcrun simctl list devicetypes | grep -o 'iPhone [0-9]* ' | tail -1 | sed 's/ *$//'
+          )" "$(
+            xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-[0-9-]*' | tail -1
+          )")
+          xcrun simctl boot "$UDID"
+          APP=examples/host-ios/build/Build/Products/Debug-iphonesimulator/NshFirebaseHost.app
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl launch "$UDID" dev.nsh.firebase.host
+          sleep 15
+          mkdir -p docs/evidence/native-ios
+          xcrun simctl io "$UDID" screenshot docs/evidence/native-ios/host-sim-1.png
+          cat > docs/evidence/native-ios/push.apns <<'EOF'
+          {"aps":{"alert":{"title":"FCM proof","body":"tap me"},"sound":"default","badge":1},"gcm.message_id":"ci-proof-1"}
+          EOF
+          (xcrun simctl spawn "$UDID" log stream --style compact > docs/evidence/native-ios/unified.log 2>&1 & echo $! > /tmp/logpid)
+          xcrun simctl push "$UDID" dev.nsh.firebase.host docs/evidence/native-ios/push.apns \
+            | tee docs/evidence/native-ios/simctl-push.log
+          sleep 10
+          xcrun simctl io "$UDID" screenshot docs/evidence/native-ios/host-sim-2.png
+          kill "$(cat /tmp/logpid)" || true
+          sleep 2
+          grep -h -i "firebase.messaging\|FCM proof" docs/evidence/native-ios/unified.log \
+            | tail -50 >> docs/evidence/native-ios/simctl-push.log || true
+          xcrun simctl shutdown "$UDID"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-ios-proofs
+          path: docs/evidence/native-ios/

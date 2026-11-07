@@ -1,0 +1,17 @@
+# Installs nsh 0.4.0 from the upstream release, matching the pin the
+# longbridge Homebrew formula carries for linux x86_64. Deterministic
+# (checksum from the formula) and independent of Linuxbrew on the runner.
+name: Install nsh 0.4.0
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        curl -fsSL -o /tmp/nsh.tar.gz \
+          https://github.com/longbridge/nsh/releases/download/v0.4.0/nsh-linux-x86_64.tar.gz
+        echo "8806121aebf40bb51f8fb6aa703722fbb01253f9a435759c18d53beece1ec976  /tmp/nsh.tar.gz" | sha256sum -c -
+        mkdir -p /tmp/nsh-bin && tar -xzf /tmp/nsh.tar.gz -C /tmp/nsh-bin
+        BIN_DIR="$(dirname "$(find /tmp/nsh-bin -type f -name nsh | head -1)")"
+        chmod +x "$BIN_DIR/nsh"
+        echo "$BIN_DIR" >> "$GITHUB_PATH"
+        nsh --version
