@@ -238,7 +238,12 @@ jobs:
             native/ios/NshFirebase/.build
             examples/host-ios/build/SourcePackages
           key: spm-${{ runner.os }}-${{ hashFiles('native/ios/NshFirebase/Package.swift') }}
-      - run: cd native/ios/NshFirebase && swift build
+      # Not `swift build`: the manifest declares only iOS, so a macOS host build
+      # resolves to macOS 10.13 and the Firebase products need 11. The package is
+      # an iOS library, so it is built for the simulator it targets.
+      - name: Build the SwiftPM package for the iOS simulator
+        working-directory: native/ios/NshFirebase
+        run: xcodebuild -scheme NshFirebase -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' build
       - run: cd examples/host-ios && xcodegen generate
       - run: >
           cd examples/host-ios && xcodebuild -project NshFirebaseHost.xcodeproj
