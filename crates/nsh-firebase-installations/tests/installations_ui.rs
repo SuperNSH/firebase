@@ -92,6 +92,16 @@ fn header_of(sent: &Sent, name: &str) -> String {
 
 /// The register route: records the request, echoes the FID it carried as
 /// the server does, and answers with the reply shape the service gives.
+/// Logs the request and answers with the refusal body, so a test can
+/// assert the request was made while the registration still failed.
+fn refusal_route(log: &RequestLog) -> StubRoute {
+    let log = Arc::clone(log);
+    StubRoute::Handler(Arc::new(move |request: HttpRequest, reply_channel| {
+        snapshot(&log, &request);
+        reply_channel.send(reply(403, DENIED_BODY));
+    }))
+}
+
 fn register_route(log: &RequestLog) -> StubRoute {
     let log = Arc::clone(log);
     StubRoute::Handler(Arc::new(move |request: HttpRequest, reply_channel| {
@@ -384,7 +394,7 @@ fn a_force_refresh_skips_the_cache_but_a_plain_get_token_keeps_it() {
 #[test]
 fn a_fake_project_refusal_maps_to_a_clear_request_failed_and_persists_nothing() {
     let log: RequestLog = Arc::new(Mutex::new(Vec::new()));
-    let network = StubNetwork::new([(format!("POST {REGISTER_URL}"), reply(403, DENIED_BODY))]);
+    let network = StubNetwork::new([(format!("POST {REGISTER_URL}"), refusal_route(&log))]);
     let mut app = start(Root::of::<InstallationsApp>(), network);
     app.first_render().unwrap();
     app.press("id:get-id").unwrap();
