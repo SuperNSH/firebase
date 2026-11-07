@@ -1,6 +1,6 @@
 [package]
 name = "nsh-firebase-auth"
-description = "Firebase auth for Native Shell Rust apps (stub; its area replaces this crate)"
+description = "Firebase auth for Native Shell Rust apps: Identity Toolkit sign-in, Secure Token refresh, a currentUser signal and persistence behind a key-value store"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,10 @@ repository.workspace = true
 authors.workspace = true
 
 [dependencies]
+nsh-core = { workspace = true }
+nsh-firebase-core = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+nsh-engine = { workspace = true }
+nsh-testing = { workspace = true }
