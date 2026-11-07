@@ -32,6 +32,8 @@ jobs:
         with:
           toolchain: stable
           components: rustfmt
+      # cargo metadata loads every member, and demo-rs path-depends on the siblings.
+      - uses: ./.github/actions/setup-siblings
       - run: cargo fmt --all -- --check
 
   rust:
@@ -220,7 +222,7 @@ jobs:
   host-ios:
     # The embedding host app builds for the simulator. The device proof that
     # runs the app and pushes a notification is ci-macos.yml (manual).
-    runs-on: macos-14
+    runs-on: macos-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

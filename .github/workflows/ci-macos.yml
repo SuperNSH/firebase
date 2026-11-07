@@ -11,7 +11,7 @@ jobs:
   ios-proofs:
     # Criterion 4: the host on a simulator — launch (validates the
     # UIScene-life-cycle fix), APNs push, notification and tap handling.
-    runs-on: macos-14
+    runs-on: macos-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
