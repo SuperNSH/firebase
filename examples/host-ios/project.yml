@@ -1,0 +1,59 @@
+# The nsh-firebase embedding host. Generated with `xcodegen generate` in this
+# directory. NativeShell comes from the nsh Homebrew install; override
+# NSH_EMBED_IOS when brew's prefix is not /opt/homebrew.
+name: NshFirebaseHost
+options:
+  bundleIdPrefix: dev.nsh
+  deploymentTarget:
+    iOS: "15.0"
+  createIntermediateGroups: true
+packages:
+  NshFirebase:
+    path: ../../native/ios/NshFirebase
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    # NativeShell.xcframework ships an arm64 simulator slice only.
+    ARCHS: arm64
+    NSH_EMBED_IOS: /opt/homebrew/opt/nsh/libexec/embed/ios
+targets:
+  NshFirebaseHost:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: App/nsh
+        type: folder
+      - path: ../../fixtures/GoogleService-Info.plist
+        buildPhase: resources
+    dependencies:
+      - package: NshFirebase
+      - framework: ${NSH_EMBED_IOS}/NativeShell.xcframework
+        embed: false
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: nsh-firebase
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UIBackgroundModes:
+          - remote-notification
+        # We own the UIApplicationDelegate and wire FCM explicitly, so no
+        # swizzler stands between it and us.
+        FirebaseAppDelegateProxyEnabled: false
+        CADisableMinimumFrameDurationOnPhone: true
+    entitlements:
+      path: Sources/NshFirebaseHost.entitlements
+      properties:
+        aps-environment: development
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.nsh.firebase.host
+schemes:
+  NshFirebaseHost:
+    build:
+      targets:
+        NshFirebaseHost: all
+    run:
+      config: Debug

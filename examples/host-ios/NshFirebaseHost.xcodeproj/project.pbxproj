@@ -1,0 +1,397 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		095ACDCCF980550A66BE58BC /* NshFirebase in Frameworks */ = {isa = PBXBuildFile; productRef = 5EA749096C85BC3C1726F803 /* NshFirebase */; };
+		290BCDA98ADA6F15FF1144D6 /* NativeShell.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54EB3E6915E71C13957946C4 /* NativeShell.xcframework */; };
+		43C1BC3FD044B79459A5B85D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CFED3B5E577625B25DD5BC /* GoogleService-Info.plist */; };
+		5AFA6F00EC60F84907328411 /* nsh in Resources */ = {isa = PBXBuildFile; fileRef = 1FCAA3A7BE80D20BFAF159DF /* nsh */; };
+		80EBC024F81CC15D83F3C8C4 /* HostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D25448C9B3E439181C6FD0 /* HostController.swift */; };
+		9995EE1422AAE58AAC1211D8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2B6845C45F1BE94E284003 /* main.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		02D25448C9B3E439181C6FD0 /* HostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostController.swift; sourceTree = "<group>"; };
+		1FCAA3A7BE80D20BFAF159DF /* nsh */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nsh; path = App/nsh; sourceTree = SOURCE_ROOT; };
+		259A05A901CF90F6CC06314F /* NshFirebase */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NshFirebase; path = ../../native/ios/NshFirebase; sourceTree = SOURCE_ROOT; };
+		3C2B6845C45F1BE94E284003 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		484E2BBC8DB23B96C9DCED34 /* NshFirebaseHost.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NshFirebaseHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		54EB3E6915E71C13957946C4 /* NativeShell.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = NativeShell.xcframework; path = "${NSH_EMBED_IOS}/NativeShell.xcframework"; sourceTree = "<group>"; };
+		72CFED3B5E577625B25DD5BC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8975A42AC12BEB39CD495F22 /* NshFirebaseHost.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NshFirebaseHost.entitlements; sourceTree = "<group>"; };
+		92884C19F341F5C1A3776B10 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8CD007AA00E9C9E6DCAA9B9F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				095ACDCCF980550A66BE58BC /* NshFirebase in Frameworks */,
+				290BCDA98ADA6F15FF1144D6 /* NativeShell.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0E992F2D99A6C78BA10013AF /* nsh-firebase */ = {
+			isa = PBXGroup;
+			children = (
+				ED94703568BAD2F6540086C3 /* fixtures */,
+			);
+			name = "nsh-firebase";
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		2D63C79859B88328EF97B9F6 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				1FCAA3A7BE80D20BFAF159DF /* nsh */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		31E2BCCB6A10BCB3ED262DD8 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				259A05A901CF90F6CC06314F /* NshFirebase */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		A63E03DFC1B961BB7CD1CB15 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				54EB3E6915E71C13957946C4 /* NativeShell.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C8B4BB368EA84995FCC2174F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				484E2BBC8DB23B96C9DCED34 /* NshFirebaseHost.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CC86759F9D2B49F6500CD527 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				02D25448C9B3E439181C6FD0 /* HostController.swift */,
+				92884C19F341F5C1A3776B10 /* Info.plist */,
+				3C2B6845C45F1BE94E284003 /* main.swift */,
+				8975A42AC12BEB39CD495F22 /* NshFirebaseHost.entitlements */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		D6523B1F298F4DAD1D9F664B = {
+			isa = PBXGroup;
+			children = (
+				2D63C79859B88328EF97B9F6 /* App */,
+				0E992F2D99A6C78BA10013AF /* nsh-firebase */,
+				31E2BCCB6A10BCB3ED262DD8 /* Packages */,
+				CC86759F9D2B49F6500CD527 /* Sources */,
+				A63E03DFC1B961BB7CD1CB15 /* Frameworks */,
+				C8B4BB368EA84995FCC2174F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ED94703568BAD2F6540086C3 /* fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				72CFED3B5E577625B25DD5BC /* GoogleService-Info.plist */,
+			);
+			path = fixtures;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		148DCDC1782CF171A326D1D9 /* NshFirebaseHost */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7AE2E676BEC1D17089B9038D /* Build configuration list for PBXNativeTarget "NshFirebaseHost" */;
+			buildPhases = (
+				AE19A03AA0AAC422CAB6C73C /* Sources */,
+				66BDD4626AE44411252925B1 /* Resources */,
+				8CD007AA00E9C9E6DCAA9B9F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NshFirebaseHost;
+			packageProductDependencies = (
+				5EA749096C85BC3C1726F803 /* NshFirebase */,
+			);
+			productName = NshFirebaseHost;
+			productReference = 484E2BBC8DB23B96C9DCED34 /* NshFirebaseHost.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E4A7DA8C84CFEEB891EBF9C7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = F998F943885B5447E46F8510 /* Build configuration list for PBXProject "NshFirebaseHost" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D6523B1F298F4DAD1D9F664B;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				85FA2FE102831CD096E70023 /* XCLocalSwiftPackageReference "../../native/ios/NshFirebase" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				148DCDC1782CF171A326D1D9 /* NshFirebaseHost */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		66BDD4626AE44411252925B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43C1BC3FD044B79459A5B85D /* GoogleService-Info.plist in Resources */,
+				5AFA6F00EC60F84907328411 /* nsh in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AE19A03AA0AAC422CAB6C73C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				80EBC024F81CC15D83F3C8C4 /* HostController.swift in Sources */,
+				9995EE1422AAE58AAC1211D8 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		36784590DF72E9EAF1472764 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				NSH_EMBED_IOS = /opt/homebrew/opt/nsh/libexec/embed/ios;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Debug;
+		};
+		4366780D9BE0009BD90EEA55 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Sources/NshFirebaseHost.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${NSH_EMBED_IOS}\"",
+				);
+				INFOPLIST_FILE = Sources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.nsh.firebase.host;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4ACBE2434E4A320B07A04C3E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Sources/NshFirebaseHost.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${NSH_EMBED_IOS}\"",
+				);
+				INFOPLIST_FILE = Sources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.nsh.firebase.host;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E0110D48C4851D0EB27D4DC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				NSH_EMBED_IOS = /opt/homebrew/opt/nsh/libexec/embed/ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7AE2E676BEC1D17089B9038D /* Build configuration list for PBXNativeTarget "NshFirebaseHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4366780D9BE0009BD90EEA55 /* Debug */,
+				4ACBE2434E4A320B07A04C3E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F998F943885B5447E46F8510 /* Build configuration list for PBXProject "NshFirebaseHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36784590DF72E9EAF1472764 /* Debug */,
+				E0110D48C4851D0EB27D4DC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		85FA2FE102831CD096E70023 /* XCLocalSwiftPackageReference "../../native/ios/NshFirebase" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../native/ios/NshFirebase;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5EA749096C85BC3C1726F803 /* NshFirebase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NshFirebase;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = E4A7DA8C84CFEEB891EBF9C7 /* Project object */;
+}

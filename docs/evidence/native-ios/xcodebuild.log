@@ -1,0 +1,2 @@
+** BUILD SUCCEEDED ** (demo bundle embedded)
+embedded examples/demo/dist/nsh into examples/host-ios/App/nsh; built .app nsh/ byte-identical to dist/nsh (bundle.nshc 76131 B, bundle.js 63151 B); demo declares host:["firebase.*"] matching the host grant

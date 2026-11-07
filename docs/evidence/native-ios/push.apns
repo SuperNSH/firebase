@@ -1,0 +1,17 @@
+{
+  "aps": {
+    "alert": {
+      "title": "FCM proof",
+      "body": "tap me"
+    },
+    "sound": "default"
+  },
+  "gcm.message_id": "nsh-firebase-proof-001",
+  "gcm": {
+    "message_id": "nsh-firebase-proof-001"
+  },
+  "google.c.a.e": 1,
+  "nsh": {
+    "demo": "messaging-proof"
+  }
+}
