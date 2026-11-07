@@ -1,0 +1,23 @@
+aapt2 dump permissions + manifest services, Sat Nov  7 08:11:38 PKT 2026
+package: dev.nsh.firebase.host
+uses-permission: name='android.permission.POST_NOTIFICATIONS'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
+uses-permission: name='android.permission.WAKE_LOCK'
+uses-permission: name='com.google.android.c2dm.permission.RECEIVE'
+uses-permission: name='com.google.android.gms.permission.AD_ID'
+uses-permission: name='android.permission.ACCESS_ADSERVICES_ATTRIBUTION'
+uses-permission: name='android.permission.ACCESS_ADSERVICES_AD_ID'
+uses-permission: name='com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE'
+permission: dev.nsh.firebase.host.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+uses-permission: name='dev.nsh.firebase.host.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+---
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="dev.nsh.firebase.NshFirebaseMessagingService" (Raw: "dev.nsh.firebase.NshFirebaseMessagingService")
+            A: http://schemas.android.com/apk/res/android:exported(0x01010010)=false
+              E: intent-filter (line=53)
+                  E: action (line=54)
+                    A: http://schemas.android.com/apk/res/android:name(0x01010003)="com.google.firebase.MESSAGING_EVENT" (Raw: "com.google.firebase.MESSAGING_EVENT")
+          E: meta-data (line=58)
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="com.google.firebase.messaging.default_notification_channel_id" (Raw: "com.google.firebase.messaging.default_notification_channel_id")
+---
+POST_NOTIFICATIONS + MESSAGING_EVENT service present in merged APK manifest

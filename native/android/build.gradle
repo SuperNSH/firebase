@@ -1,0 +1,30 @@
+// The Firebase libraries only link through an embedding host: `nsh package`
+// has no setting for extra native SDKs, so hosts include this module.
+plugins {
+    id 'com.android.library' version '9.1.0'
+}
+
+android {
+    namespace 'dev.nsh.firebase'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 28
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    // The view classes: compiled against, never packaged — the host already
+    // bundles the AAR, and two copies would clash at dex time.
+    compileOnly files('libs/nsh.aar')
+    // Version-less artifacts: the BoM pinned here decides every Firebase version.
+    api platform('com.google.firebase:firebase-bom:35.1.0')
+    api 'com.google.firebase:firebase-messaging'
+    api 'com.google.firebase:firebase-analytics'
+    api 'com.google.firebase:firebase-perf'
+}

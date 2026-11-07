@@ -1,0 +1,12 @@
+{
+  "name": "Firebase mini",
+  "id": "dev.nsh.firebase.mini",
+  "version": "1.0.0",
+  "build": 1,
+  "capabilities": {
+    "network": {
+      "hosts": ["127.0.0.1"]
+    },
+    "host": ["firebase.*"]
+  }
+}

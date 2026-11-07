@@ -1,0 +1,3 @@
+demo bundle packaged: assets/nsh == examples/demo/dist/nsh (diff -r clean)
+app.json: {"id":"dev.nsh.demo"}
+sizes: bundle.js 63151, bundle.nshc 76131 — APK uncompressed sizes above match
