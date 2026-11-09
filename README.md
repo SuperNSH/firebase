@@ -67,6 +67,9 @@ Other scripts: `bun run gate:rust` (fmt + clippy + test for all crates),
 (evidence manifest). CI runs all of them — see
 [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
+Pages: a push to `main` with every gate green deploys the demo's web build to
+https://supernsh.github.io/nsh-firebase/ (Pages source must be "GitHub Actions").
+
 ## Demo
 
 `examples/demo` is a TSX app (auth, database, storage, messaging,

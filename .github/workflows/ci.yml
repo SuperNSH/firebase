@@ -1,7 +1,8 @@
 # The compile and test gates for nsh-firebase. Every compile, test and demo
 # build runs on GitHub's runners, never on a developer's machine. kache caches
 # compiler outputs in GitHub's Actions cache; only main saves to it. A push to
-# main with every gate green replaces the `latest` release with the demo builds.
+# main with every gate green replaces the `latest` release with the demo builds
+# and deploys the web build to GitHub Pages (https://supernsh.github.io/nsh-firebase/).
 name: ci
 
 on:
@@ -273,19 +274,25 @@ jobs:
   package:
     # Demo builds for every target the demo supports. Each one is uploaded as
     # an artifact; the publish job attaches them to the `latest` release.
-    name: package (${{ matrix.target }})
+    name: package (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { os: macos-latest, target: macos }
-          - { os: macos-latest, target: ios-simulator }
-          - { os: ubuntu-latest, target: linux }
-          - { os: ubuntu-latest, target: android }
-          - { os: ubuntu-latest, target: web }
-          - { os: windows-latest, target: windows }
+          # Desktop builds come out for the runner's own processor, so each architecture gets its own runner.
+          # The three non-default architectures (builds: true) install NSH from SuperNSH/nsh-builds, which
+          # has builds where NSH's own release has none.
+          - { os: macos-latest, target: macos, name: macos-arm64 }
+          - { os: macos-15-intel, target: macos, name: macos-x86_64, builds: true }
+          - { os: ubuntu-latest, target: linux, name: linux-x86_64 }
+          - { os: ubuntu-24.04-arm, target: linux, name: linux-arm64, builds: true }
+          - { os: windows-latest, target: windows, name: windows-x86_64 }
+          - { os: windows-11-arm, target: windows, name: windows-arm64, builds: true }
+          - { os: macos-latest, target: ios-simulator, name: ios-simulator }
+          - { os: ubuntu-latest, target: android, name: android }
+          - { os: ubuntu-latest, target: web, name: web }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
@@ -299,8 +306,8 @@ jobs:
         with:
           version: v2.0.0
           cache-dir: ${{ runner.temp }}/kache
-          manifest-key: package-${{ matrix.target }}
-          cache-key-prefix: kache-package-${{ matrix.target }}
+          manifest-key: package-${{ matrix.name }}
+          cache-key-prefix: kache-package-${{ matrix.name }}
           save-cache: ${{ github.ref == 'refs/heads/main' }}
           pr-comment: false
       - name: Install the wasm-bindgen CLI that NSH's web runtime needs
@@ -312,6 +319,23 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y $LINUX_PACKAGES
       - uses: ./.github/actions/install-nsh
+        if: ${{ !matrix.builds }}
+      - name: Install NSH from nsh-builds
+        if: matrix.builds && runner.os != 'Windows'
+        env:
+          NSH_VERSION: v0.4.0
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/SuperNSH/nsh-builds/master/install.sh | sh
+          echo "$HOME/.nsh/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Install NSH from nsh-builds
+        if: matrix.builds && runner.os == 'Windows'
+        shell: pwsh
+        env:
+          NSH_VERSION: v0.4.0
+        run: |
+          irm https://raw.githubusercontent.com/SuperNSH/nsh-builds/master/install.ps1 | iex
+          "$env:LOCALAPPDATA\nsh\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
       - uses: ./.github/actions/setup-siblings
         with:
           with-demo-links: "true"
@@ -339,7 +363,7 @@ jobs:
         run: |
           mkdir -p dist
           cd "$RUNNER_TEMP/out"
-          name="firebase-demo-${{ matrix.target }}"
+          name="firebase-demo-${{ matrix.name }}"
           case "${{ matrix.target }}" in
             android) cp ./*.apk "$GITHUB_WORKSPACE/dist/$name.apk" ;;
             linux) cp ./*.tar.gz "$GITHUB_WORKSPACE/dist/$name.tar.gz" ;;
@@ -350,7 +374,7 @@ jobs:
           ls -la "$GITHUB_WORKSPACE/dist"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: package-${{ matrix.target }}
+          name: package-${{ matrix.name }}
           path: dist/*
           if-no-files-found: error
 
@@ -379,4 +403,38 @@ jobs:
           gh release delete latest --repo "$REPO" --cleanup-tag --yes || true
           gh release create latest dist/* --repo "$REPO" --target "$GITHUB_SHA" --latest \
             --title "Latest build" \
-            --notes "Demo builds from main at $GITHUB_SHA, replaced on every push to main. Built for macOS, iOS simulator, Linux, Android (arm64-v8a), web and Windows. Unsigned: macOS and Windows will warn before opening them, and the iOS build runs only in the simulator."
+            --notes "Demo builds from main at $GITHUB_SHA, replaced on every push to main. Built for macOS, Linux and Windows (x86_64 and arm64 each), the iOS simulator, Android (arm64-v8a) and the web. Unsigned: macOS and Windows will warn before opening them, and the iOS build runs only in the simulator."
+
+  pages:
+    name: deploy the web demo to Pages
+    needs: [publish]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Job-level permissions replace the workflow's, and deploy-pages authenticates with OIDC.
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # The pages group, not ci-<ref>, so a deployment from an older run is cancelled by a newer one.
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: package-web
+          path: dist
+      - name: Unpack the web build
+        run: |
+          # NSH packages the web build inside a directory named after the app; the site root is its contents.
+          mkdir -p "$RUNNER_TEMP/site"
+          tar -xzf dist/firebase-demo-web.tar.gz -C "$RUNNER_TEMP/site" --strip-components=1
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: ${{ runner.temp }}/site
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
