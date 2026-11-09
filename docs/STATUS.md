@@ -36,23 +36,22 @@ passes `rust-gate` (fmt + clippy `-D warnings` + tests, linux),
 sandbox suite against the Firebase emulator suite plus the collector),
 `demo` (demo TSX gates + the demo-rs crate gate), `clean-proof` (fresh
 clone, `bun install`, one command) and `host-android` (the BoM module
-and host app assemble). The macOS jobs (`host-ios` build, iOS device
-proofs) are **blocked at the org level**: GitHub cancels macOS hosted
-runner jobs while queued with zero steps for this org (observed on run
-42361739726 — the ubuntu `host-android` job passed in the same run).
-They are dispatch-only in
-[ci-macos.yml](.github/workflows/ci-macos.yml) until the org enables
-macOS runners or a self-hosted runner exists.
+and host app assemble). The macOS `host-ios` build gate runs on macOS
+hosted runners now and is green on every push (the earlier org-level
+block — runs cancelled while queued with zero steps, observed on run
+42361739726 — was lifted). The iOS device proof stays dispatch-only in
+[ci-macos.yml](.github/workflows/ci-macos.yml) purely because it sleeps
+for real push/tap timing, not because of any runner block.
 
 ## Satisfaction criteria
 
 | # | Criterion | Status |
 |---|---|---|
 | 1 | research.md with tier table | PASS |
-| 2 | Gates pass for all crates and packages | PASS — CI run 42364995246 green (rust-gate, packages, demo, host-android); macOS-only gates dispatch-only, org-blocked |
+| 2 | Gates pass for all crates and packages | PASS — run [42403998509](https://github.com/SuperNSH/firebase/actions/runs/42403998509) green across every job including host-ios on macOS |
 | 3 | Emulator tests, one documented command | PASS — `clean-proof` job green (fresh clone, `bun install`, `bun run test:emulator`); suite green locally pre-pause too |
-| 4 | host-ios device proof | UNVERIFIED — first attempt hit a launch crash (fixed in source: UIScene lifecycle); the proof runs from ci-macos.yml once macOS runners are available |
-| 5 | host-android device proof | UNVERIFIED on CI: two attempts (42366965860, 42368309047) both proved install + launch environment, but CI's software-mode emulator ANRed the System UI mid-run and the captures show dialogs, not the app — **not** criterion-5 evidence. The full proof runs locally when the machine is on power: the AVD boots with hardware acceleration and the drive commands are documented in `docs/status/native-android.md` (`am start … --es dev.nsh.firebase.NOTIFICATION <id>` and `--es google.message_id <id>`); the CI workflow [device-proofs.yml](.github/workflows/device-proofs.yml) stays for faster runners |
+| 4 | host-ios device proof | UNVERIFIED — the launch crash is fixed (UIScene lifecycle) and the macOS build gate is green; dispatch [ci-macos.yml](https://github.com/SuperNSH/firebase/blob/main/.github/workflows/ci-macos.yml) for the proof |
+| 5 | host-android device proof | UNVERIFIED on CI — three attempts (42366965860, 42368309047, 42383580047) all end with CI's software-mode emulator ANRing the System UI: the captures show dialogs or a black screen, never the app, so their green conclusions are **not** criterion-5 evidence. The proof runs on this Mac's hardware emulator when it is on power (drive commands in `docs/status/native-android.md`); [device-proofs.yml](.github/workflows/device-proofs.yml) remains for a faster runner |
 | 6 | Analytics/perf reach collector; native debug logs | pure tier PASS locally; native debug-log assertion UNVERIFIED (needs a device) |
 | 7 | Monitoring screen with slow route on top | PASS on macOS; phone target UNVERIFIED |
 | 8 | ERR_ACCESS_DENIED with a test | PASS (locally pre-pause; re-run in CI `packages` job, green) |
@@ -94,12 +93,13 @@ the demo bundle embedded), and Gradle `:app:assembleDebug` for the Android
 host (`docs/evidence/native-android/gradle.log`, BUILD SUCCESSFUL, with
 `JAVA_HOME` at Android Studio's JBR and `ANDROID_HOME=$HOME/Library/Android/sdk`).
 
-**CI re-runs all of it and is green** (run 42364995246, linux):
-`rust-gate` (fmt + clippy `-D warnings` + cargo test across the
-workspace), `packages` (every area's TSX gate), `demo` and
-`host-android` (Gradle assemble of the BoM module and host app). The
-`swift build`/`xcodebuild` gates ran locally pre-pause only — CI's
-macOS jobs are org-blocked (see the commit-state note above).
+**CI re-runs all of it and is green** — latest full run
+[42403998509](https://github.com/SuperNSH/firebase/actions/runs/42403998509):
+`rust-gate` on three OSes (fmt + clippy `-D warnings` + cargo test),
+every cross-target check, `packages` (every area's TSX gate), `demo`,
+`clean-proof`, `emulator` (now including the Firestore and Functions
+sandbox tests) and both host builds on their native toolchains —
+`host-ios` compiles the Swift package and the host app on macOS.
 
 ### 3. Emulator tests — PASS (local suite + CI clean-clone proof)
 
