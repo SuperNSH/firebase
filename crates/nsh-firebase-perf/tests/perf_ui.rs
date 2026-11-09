@@ -133,7 +133,11 @@ fn InstrumentApp() -> impl IntoElement {
 #[test]
 fn an_instrumented_fetch_records_every_field_on_the_manual_clock() {
     let clock = clock();
-    let mut app = start(Root::of::<InstrumentApp>(), clock.clone(), stub_network(clock));
+    let mut app = start(
+        Root::of::<InstrumentApp>(),
+        clock.clone(),
+        stub_network(clock),
+    );
     app.wait_for("text:fetch").unwrap();
     app.press("id:fetch").unwrap();
     // The response's 120 ms delay passes when the clock moves past it,
