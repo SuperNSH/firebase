@@ -67,7 +67,7 @@ Other scripts: `bun run gate:rust` (fmt + clippy + test for all crates),
 (evidence manifest). CI runs all of them — see
 [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
-Pages: a push to `main` with every gate green deploys the demo's web build to
+Pages: a push to `master` with every gate green deploys the demo's web build to
 https://supernsh.github.io/nsh-firebase/ (Pages source must be "GitHub Actions").
 
 ## Demo
@@ -134,7 +134,7 @@ in a run.
 ```sh
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export ANDROID_HOME="$HOME/Library/Android/sdk"   # else "SDK location not found"
-cd examples/demo && nsh build App.tsx --release --out ../host-android/app/src/main/assets/nsh
+cd examples/demo && nsh build App.tsx --release --out ../host-android/app/src/master/assets/nsh
 cd ../host-android
 gradle :app:assembleDebug        # Gradle 9.3.1; these projects carry no wrapper
 adb install app/build/outputs/apk/debug/app-debug.apk

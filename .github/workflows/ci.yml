@@ -1,13 +1,13 @@
 # The compile and test gates for nsh-firebase. Every compile, test and demo
 # build runs on GitHub's runners, never on a developer's machine. kache caches
-# compiler outputs in GitHub's Actions cache; only main saves to it. A push to
-# main with every gate green replaces the `latest` release with the demo builds
+# compiler outputs in GitHub's Actions cache; only master saves to it. A push to
+# master with every gate green replaces the `latest` release with the demo builds
 # and deploys the web build to GitHub Pages (https://supernsh.github.io/nsh-firebase/).
 name: ci
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
   workflow_dispatch:
 
@@ -57,7 +57,7 @@ jobs:
           cache-dir: ${{ runner.temp }}/kache
           manifest-key: rust-${{ matrix.os }}
           cache-key-prefix: kache-rust-${{ matrix.os }}
-          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          save-cache: ${{ github.ref == 'refs/heads/master' }}
           pr-comment: false
       # The workspace's demo-rs member path-depends on the sibling libs.
       - uses: ./.github/actions/setup-siblings
@@ -91,7 +91,7 @@ jobs:
           cache-dir: ${{ runner.temp }}/kache
           manifest-key: check-${{ matrix.target }}
           cache-key-prefix: kache-check-${{ matrix.target }}
-          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          save-cache: ${{ github.ref == 'refs/heads/master' }}
           pr-comment: false
       - uses: ./.github/actions/setup-siblings
       - name: Point cc at the NDK
@@ -141,7 +141,7 @@ jobs:
           cache-dir: ${{ runner.temp }}/kache
           manifest-key: emulator
           cache-key-prefix: kache-emulator
-          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          save-cache: ${{ github.ref == 'refs/heads/master' }}
           pr-comment: false
       - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
         with:
@@ -175,7 +175,7 @@ jobs:
           cache-dir: ${{ runner.temp }}/kache
           manifest-key: demo
           cache-key-prefix: kache-demo
-          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          save-cache: ${{ github.ref == 'refs/heads/master' }}
           pr-comment: false
       - uses: ./.github/actions/install-nsh
       - uses: ./.github/actions/setup-siblings
@@ -204,7 +204,7 @@ jobs:
           cache-dir: ${{ runner.temp }}/kache
           manifest-key: clean-proof
           cache-key-prefix: kache-clean-proof
-          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          save-cache: ${{ github.ref == 'refs/heads/master' }}
           pr-comment: false
       - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
         with:
@@ -308,7 +308,7 @@ jobs:
           cache-dir: ${{ runner.temp }}/kache
           manifest-key: package-${{ matrix.name }}
           cache-key-prefix: kache-package-${{ matrix.name }}
-          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          save-cache: ${{ github.ref == 'refs/heads/master' }}
           pr-comment: false
       - name: Install the wasm-bindgen CLI that NSH's web runtime needs
         if: matrix.target == 'web'
@@ -381,7 +381,7 @@ jobs:
   publish:
     name: publish the latest build
     needs: [format, rust, cross-check, packages, emulator, demo, clean-proof, host-ios, host-android, package]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -403,12 +403,12 @@ jobs:
           gh release delete latest --repo "$REPO" --cleanup-tag --yes || true
           gh release create latest dist/* --repo "$REPO" --target "$GITHUB_SHA" --latest \
             --title "Latest build" \
-            --notes "Demo builds from main at $GITHUB_SHA, replaced on every push to main. Built for macOS, Linux and Windows (x86_64 and arm64 each), the iOS simulator, Android (arm64-v8a) and the web. Unsigned: macOS and Windows will warn before opening them, and the iOS build runs only in the simulator."
+            --notes "Demo builds from master at $GITHUB_SHA, replaced on every push to master. Built for macOS, Linux and Windows (x86_64 and arm64 each), the iOS simulator, Android (arm64-v8a) and the web. Unsigned: macOS and Windows will warn before opening them, and the iOS build runs only in the simulator."
 
   pages:
     name: deploy the web demo to Pages
     needs: [publish]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # Job-level permissions replace the workflow's, and deploy-pages authenticates with OIDC.
