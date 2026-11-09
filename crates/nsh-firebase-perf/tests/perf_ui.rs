@@ -30,23 +30,23 @@ fn clock() -> Clock {
     Clock::manual(SystemTime::UNIX_EPOCH + Duration::from_secs(1_767_258_000))
 }
 
-/// Starts `root` on the manual clock over `network`, whose response
-/// delays pass on that same clock.
-fn start(root: Root, network: Arc<dyn Network>) -> Headless {
-    let clock = clock();
+/// Starts `root` on `clock` over `network`; the network's response
+/// delays pass on that same clock, so the wall's never decides one.
+fn start(root: Root, clock: Clock, network: Arc<dyn Network>) -> Headless {
     let mut config = EngineConfig::new(root);
-    config.clock = clock.clone();
+    config.clock = clock;
     config.network = Some(network);
     Headless::start(config).unwrap()
 }
 
-fn stub_network() -> Arc<StubNetwork> {
+fn stub_network(clock: Clock) -> Arc<StubNetwork> {
     let mut response = StubResponse::default();
     response.status = 200;
     response.body = br#"[{"id":1,"title":"one"}]"#.to_vec();
     response.headers = vec![("content-length".to_owned(), "24".to_owned())];
     response.delay = Duration::from_millis(120);
-    Arc::new(StubNetwork::new([(format!("GET {TODOS}"), response)]))
+    // Without `with_clock` a stub's delays run on the wall clock.
+    Arc::new(StubNetwork::new([(format!("GET {TODOS}"), response)]).with_clock(clock))
 }
 
 fn sink_network() -> Arc<StubNetwork> {
@@ -132,7 +132,8 @@ fn InstrumentApp() -> impl IntoElement {
 
 #[test]
 fn an_instrumented_fetch_records_every_field_on_the_manual_clock() {
-    let mut app = start(Root::of::<InstrumentApp>(), stub_network());
+    let clock = clock();
+    let mut app = start(Root::of::<InstrumentApp>(), clock.clone(), stub_network(clock));
     app.wait_for("text:fetch").unwrap();
     app.press("id:fetch").unwrap();
     // The response's 120 ms delay passes when the clock moves past it,
@@ -149,7 +150,7 @@ fn an_instrumented_fetch_records_every_field_on_the_manual_clock() {
 
 #[test]
 fn an_unrouted_request_records_an_error_event() {
-    let mut app = start(Root::of::<InstrumentApp>(), empty_network());
+    let mut app = start(Root::of::<InstrumentApp>(), clock(), empty_network());
     app.wait_for("text:fetch").unwrap();
     app.press("id:fetch").unwrap();
     app.wait_for("text:/error: core\\/network/").unwrap();
@@ -187,7 +188,7 @@ fn RingApp() -> impl IntoElement {
 
 #[test]
 fn the_ring_keeps_the_newest_three() {
-    let mut app = start(Root::of::<RingApp>(), empty_network());
+    let mut app = start(Root::of::<RingApp>(), clock(), empty_network());
     app.wait_for("text:ring").unwrap();
     app.press("id:ring").unwrap();
     app.wait_for("text:ring: 3 kept e3,e4,e5").unwrap();
@@ -287,7 +288,7 @@ fn a_trace_stops_on_the_clock_and_flushes_one_ndjson_line_to_the_sink() {
     *TRACE_STATE.lock().expect("trace state") =
         Some((Arc::clone(&perfmon), Arc::new(Mutex::new(None))));
     let network = sink_network();
-    let mut app = start(Root::of::<TraceApp>(), network);
+    let mut app = start(Root::of::<TraceApp>(), clock(), network);
     app.wait_for("text:trace start").unwrap();
     app.press("id:trace-start").unwrap();
     app.wait_for("text:trace: started").unwrap();
@@ -464,7 +465,7 @@ fn the_native_tier_takes_the_trace_and_the_http_metric_through_the_fixed_handler
     );
     *NATIVE_STATE.lock().expect("native state") =
         Some((Arc::clone(&channel), Arc::clone(&perfmon)));
-    let mut app = start(Root::of::<NativeApp>(), empty_network());
+    let mut app = start(Root::of::<NativeApp>(), clock(), empty_network());
     app.wait_for("text:metric").unwrap();
 
     // The HTTP metric crosses as the recordHttpMetric post, its args
