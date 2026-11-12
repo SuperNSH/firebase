@@ -323,7 +323,7 @@ jobs:
       - name: Install NSH from nsh-builds
         if: matrix.builds && runner.os != 'Windows'
         env:
-          NSH_VERSION: v0.4.0
+          NSH_VERSION: v0.5.0
         run: |
           curl -fsSL https://raw.githubusercontent.com/SuperNSH/nsh-builds/master/install.sh | sh
           echo "$HOME/.nsh/bin" >> "$GITHUB_PATH"
@@ -332,18 +332,18 @@ jobs:
         if: matrix.builds && runner.os == 'Windows'
         shell: pwsh
         env:
-          NSH_VERSION: v0.4.0
+          NSH_VERSION: v0.5.0
         run: |
           irm https://raw.githubusercontent.com/SuperNSH/nsh-builds/master/install.ps1 | iex
           "$env:LOCALAPPDATA\nsh\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
       - uses: ./.github/actions/setup-siblings
         with:
           with-demo-links: "true"
-      - name: Work around NSH 0.4.0's crates.io packaging of nsh-platform-ios
+      - name: Build NSH's crates from the v0.5.0 source for the iOS package
         if: matrix.target == 'ios-simulator'
-        # The published crate includes a file it does not ship, so build NSH's crates from its v0.4.0 source.
+        # Added because 0.4.0's crates.io nsh-platform-ios did not package; a local 0.5.0 ios-simulator package built without it.
         run: |
-          git clone --quiet --depth 1 --branch v0.4.0 https://github.com/longbridge/nsh "$RUNNER_TEMP/nsh-src"
+          git clone --quiet --depth 1 --branch v0.5.0 https://github.com/longbridge/nsh "$RUNNER_TEMP/nsh-src"
           mkdir -p examples/demo/.cargo
           {
             echo "[patch.crates-io]"

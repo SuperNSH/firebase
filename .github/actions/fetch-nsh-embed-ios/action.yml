@@ -1,8 +1,8 @@
-# Downloads the NSH 0.4.0 iOS embedding frameworks from the upstream release,
+# Downloads the NSH 0.5.0 iOS embedding frameworks from the upstream release,
 # checks them against the published sha256, and outputs the directory that
 # holds NativeShell.xcframework. Pass it to xcodebuild as NSH_EMBED_IOS, which
 # overrides the Homebrew path in examples/host-ios/project.yml.
-name: Fetch NSH 0.4.0 iOS embedding frameworks
+name: Fetch NSH 0.5.0 iOS embedding frameworks
 outputs:
   dir:
     description: Directory containing NativeShell.xcframework
@@ -20,7 +20,7 @@ runs:
         set -euo pipefail
         work="$RUNNER_TEMP/nsh-embed-ios"
         mkdir -p "$work" && cd "$work"
-        base=https://github.com/longbridge/nsh/releases/download/v0.4.0
+        base=https://github.com/longbridge/nsh/releases/download/v0.5.0
         curl -fsSL -O "$base/nsh-embed-ios.zip"
         curl -fsSL -O "$base/nsh-embed-ios.zip.sha256"
         shasum -a 256 -c nsh-embed-ios.zip.sha256

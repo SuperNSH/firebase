@@ -30,9 +30,10 @@ Status and the per-criterion evidence live in
 - Rust stable (`rustup`) — the crates and the Rust half of the emulator
   tests are cargo builds. iOS/Android cross-compilation targets are only
   needed for the native hosts.
-- `nsh` 0.4.0, exactly — do not upgrade:
+- `nsh` 0.5.0, exactly, with the upstream installer (the Homebrew tap
+  still ships 0.4.0):
   ```sh
-  brew tap longbridge/tap && brew install longbridge/tap/nsh
+  curl -fsSL https://nsh.dev/install.sh | NSH_VERSION=v0.5.0 sh
   ```
 - A JDK 17 for the emulator suite (the Storage emulator's rules runtime
   needs it). `/usr/bin/java` is a stub on macOS; if you have Android
