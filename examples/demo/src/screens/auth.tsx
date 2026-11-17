@@ -1,7 +1,7 @@
 // The Authentication screen: an nsh-form sign-in/sign-up form over the
 // auth library with core's emulator config, and the currentUser signal.
 import { Scroll, Text, View, signal } from "nsh";
-import { createForm, email, minLength, required } from "nsh-form";
+import { createForm, email, inputProps, minLength, required } from "nsh-form";
 import { AUTH_CODES } from "nsh-firebase/auth";
 import type { FirebaseError } from "nsh-firebase/core";
 import { demoAuth } from "../firebase";
@@ -31,34 +31,41 @@ function submitErrors(error: FirebaseError): { fields?: Record<string, string>; 
   }
 }
 
+// Field rules, run on every change and again on submit.
+const emailRules = ({ value }: { value: string }) =>
+  required("Enter your email.")({ value }) ?? email("That is not an email address.")({ value });
+const passwordRules = ({ value }: { value: string }) =>
+  required("Enter your password.")({ value }) ?? minLength(8, "Use at least 8 characters.")({ value });
+
 export function AuthScreen() {
   const auth = demoAuth();
   const mode = signal<"signin" | "signup">("signin");
 
-  const form = createForm<Credentials>({
-    initial: { email: "", password: "" },
-    onSubmit: async (values) => {
-      try {
-        if (mode() === "signup") {
-          await auth.createUserWithEmailAndPassword(values.email, values.password);
-        } else {
-          await auth.signInWithEmailAndPassword(values.email, values.password);
+  // The server call is the form's submit validator, so a rejected sign-in
+  // comes back as field and form errors the way TanStack Form reports them.
+  const form = createForm(() => ({
+    defaultValues: { email: "", password: "" } as Credentials,
+    validators: {
+      onSubmitAsync: async ({ value }: { value: Credentials }) => {
+        try {
+          if (mode() === "signup") {
+            await auth.createUserWithEmailAndPassword(value.email, value.password);
+          } else {
+            await auth.signInWithEmailAndPassword(value.email, value.password);
+          }
+          return undefined;
+        } catch (error) {
+          return submitErrors(error as FirebaseError);
         }
-      } catch (error) {
-        return submitErrors(error as FirebaseError);
-      }
+      },
     },
-  });
-  const emailField = form.field("email", {
-    rules: [required("Enter your email."), email("That is not an email address.")],
-  });
-  const passwordField = form.field("password", {
-    rules: [required("Enter your password."), minLength(8, "Use at least 8 characters.")],
-  });
+  }));
+  const isSubmitting = form.useStore((state) => state.isSubmitting);
+  const formError = form.useStore((state) => state.errors[0]);
 
   const submit = (next: "signin" | "signup") => {
     mode.set(next);
-    void form.submit();
+    void form.handleSubmit();
   };
 
   const user = auth.currentUser;
@@ -95,48 +102,60 @@ export function AuthScreen() {
           <View class="gap-3">
             <View class="gap-1">
               <Text class="text-sm font-medium text-foreground">Email</Text>
-              <Input
-                {...emailField.inputProps()}
-                placeholder="you@example.test"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                testID="auth-email"
-              />
-              <If when={emailField.error()}>
-                {(message) => (
-                  <Text class="text-sm text-destructive" testID="auth-email-error">
-                    {message()}
-                  </Text>
+              <form.Field name="email" validators={{ onChange: emailRules }}>
+                {(field) => (
+                  <View class="gap-1">
+                    <Input
+                      {...inputProps(field)}
+                      placeholder="you@example.test"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      testID="auth-email"
+                    />
+                    <If when={field().state.meta.errors[0]}>
+                      {(message) => (
+                        <Text class="text-sm text-destructive" testID="auth-email-error">
+                          {String(message())}
+                        </Text>
+                      )}
+                    </If>
+                  </View>
                 )}
-              </If>
+              </form.Field>
             </View>
             <View class="gap-1">
               <Text class="text-sm font-medium text-foreground">Password</Text>
-              <Input
-                {...passwordField.inputProps()}
-                placeholder="At least 8 characters"
-                masked
-                testID="auth-password"
-              />
-              <If when={passwordField.error()}>
-                {(message) => (
-                  <Text class="text-sm text-destructive" testID="auth-password-error">
-                    {message()}
-                  </Text>
+              <form.Field name="password" validators={{ onChange: passwordRules }}>
+                {(field) => (
+                  <View class="gap-1">
+                    <Input
+                      {...inputProps(field)}
+                      placeholder="At least 8 characters"
+                      masked
+                      testID="auth-password"
+                    />
+                    <If when={field().state.meta.errors[0]}>
+                      {(message) => (
+                        <Text class="text-sm text-destructive" testID="auth-password-error">
+                          {String(message())}
+                        </Text>
+                      )}
+                    </If>
+                  </View>
                 )}
-              </If>
+              </form.Field>
             </View>
-            <If when={form.error()}>
+            <If when={formError()}>
               {(message) => (
                 <Text class="text-sm text-destructive" testID="auth-form-error">
-                  {message()}
+                  {String(message())}
                 </Text>
               )}
             </If>
             <View class="flex-row gap-2">
               <Button
                 accessibilityLabel="Sign in"
-                disabled={form.isSubmitting()}
+                disabled={isSubmitting()}
                 onPress={() => submit("signin")}
               >
                 <Text class="text-sm font-medium text-primary-foreground">Sign in</Text>
@@ -144,7 +163,7 @@ export function AuthScreen() {
               <Button
                 variant="outline"
                 accessibilityLabel="Create account"
-                disabled={form.isSubmitting()}
+                disabled={isSubmitting()}
                 onPress={() => submit("signup")}
               >
                 <Text class="text-sm font-medium text-foreground">Create account</Text>

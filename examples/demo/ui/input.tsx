@@ -6,6 +6,7 @@ import { Input as BaseInput } from "nsh/base";
 export function Input(props: {
   value?: string;
   onChange?: (event: { value: string }) => void;
+  onFocus?: () => void;
   onBlur?: () => void;
   onSubmit?: () => void;
   placeholder?: string;
@@ -23,6 +24,7 @@ export function Input(props: {
     <BaseInput
       value={props.value}
       onChange={props.onChange}
+      onFocus={props.onFocus}
       onBlur={props.onBlur}
       onSubmit={props.onSubmit}
       placeholder={props.placeholder}
