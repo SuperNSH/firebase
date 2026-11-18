@@ -1,0 +1,11 @@
+# Android emulator (AVD nsh-firebase-0.6, API 37), host rebuilt with firebase_performance_logcat_enabled=true; Performance SDK's own logcat lines (tag FirebasePerformance) for pid 6375
+11-19 04:27:51.087  6375  6375 I FirebasePerformance: Firebase Performance Monitoring is successfully initialized! In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/android:dev.nsh.firebase.host/trends?utm_source=perf-android-sdk&utm_medium=android-ide
+11-19 04:27:51.087  6375  6375 D FirebasePerformance: onResume(): dev.nsh.firebase.host.MainActivity: 360263 microseconds
+11-19 04:27:51.097  6375  6465 I FirebasePerformance: Event dropped due to device sampling - trace metric: _as (duration: 360.263ms)
+11-19 04:27:58.603  6375  6465 I FirebasePerformance: Event dropped due to device sampling - trace metric: nsh_probe (duration: 29.342ms)
+11-19 04:27:59.788  6375  6465 I FirebasePerformance: Event dropped due to device sampling - trace metric: monitor_load (duration: 1164.024ms)
+# host handler lines
+11-19 04:27:58.552  6375  6375 D NshFirebase: handle firebase.perf.startTrace
+11-19 04:27:58.589  6375  6375 D NshFirebase: handle firebase.perf.stopTrace
+11-19 04:27:58.602  6375  6375 D NshFirebase: handle firebase.perf.startTrace
+11-19 04:27:59.765  6375  6375 D NshFirebase: handle firebase.perf.stopTrace

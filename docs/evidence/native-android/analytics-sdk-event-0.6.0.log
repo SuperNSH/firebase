@@ -1,0 +1,3 @@
+# Android emulator, setprop log.tag.FA VERBOSE and log.tag.FA-SVC VERBOSE (event lines use tag FA-SVC); Log SDK event pressed once
+11-19 04:26:43.287  5562  5562 D NshFirebase: handle firebase.analytics.logEvent
+11-19 04:26:43.325  5438  5647 V FA-SVC  : Logging event: origin=app,name=demo_sdk_tap,params=Bundle[{screen=analytics, ga_event_origin(_o)=app, ga_screen_class(_sc)=MainActivity, ga_screen_id(_si)=6349458904512753219}]

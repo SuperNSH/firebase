@@ -139,16 +139,40 @@ test on 0.6.0; `nsh build` has no warnings, which is what the gate checks.
   `native-android/analytics-debug.log`; the host log also shows
   `handle firebase.perf.startTrace` / `stopTrace` pairs
   (`monitor-phone.png`).
-- iOS: `native-ios/unified-0.6.0.log` shows Firebase Analytics 13.1.1
-  started with debug logging; the host header shows
-  `firebase.analytics.logEvent` was handled
-  (`analytics-sdk.png`), but no per-event line (`demo_sdk_tap`) appears in
-  the unified log or the console, with `-FIRAnalyticsDebugEnabled` or the
-  verbose flag. UNVERIFIED that the event reached the SDK's log on iOS.
+- iOS: `native-ios/sdk-debug-0.6.0.log` (fresh simulator `nsh-firebase-0.6`,
+  launched with `-FIRDebugEnabled -FIRAnalyticsDebugEnabled`, UI driven with
+  `idb ui tap`) shows the SDK's per-event lines for `demo_sdk_tap`:
+  `I-ACS023051 Logging event: origin, name, params: app, demo_sdk_tap`,
+  `I-ACS023073`, `I-ACS023072 Event logged` and `I-ACS023105`
+  (screen `native-ios/analytics-sdk-event-0.6.0.png`). **Cause of the
+  earlier "missing" line: not this repo.** Those lines are os_log
+  `Debug`-level messages; `log show`/`log stream` and `simctl launch
+  --console-pty` omit them unless the stream runs with `--level debug`
+  (`xcrun simctl spawn <udid> log stream --level debug --predicate
+  'process == "NshFirebaseHost"'`). The earlier captures were default
+  level. No code change.
+- Android: Analytics event lines carry the tag `FA-SVC`, not `FA`: set
+  `adb shell setprop log.tag.FA-SVC VERBOSE` too
+  (`native-android/analytics-sdk-event-0.6.0.log`).
+- Performance Monitoring native SDK logs, both platforms, fake project:
+  - iOS: `native-ios/sdk-debug-0.6.0.log` has `I-PRF100009 Logging trace
+    metric - nsh_probe 8.5630ms` and `monitor_load 1200.3810ms`
+    (`native-ios/perf-trace-0.6.0.png`).
+  - Android: the SDK logs nothing to logcat by default and
+    `setprop log.tag.FirebasePerformance` no longer enables it in
+    firebase-perf 23.0.1. The host manifest now carries
+    `firebase_performance_logcat_enabled=true` (the real cause; a repo
+    change in `examples/host-android`, debug host only). Then
+    `native-android/perf-sdk-0.6.0.log` shows the SDK initialised and
+    `trace metric: nsh_probe (duration: 29.342ms)` and `monitor_load
+    (duration: 1164.024ms)`, both "Event dropped due to device sampling"
+    (the SDK's own sampling on a project with no remote config, so no
+    delivery is expected). Build log `native-android/gradle-perflog.log`;
+    screen `native-android/perf-trace-0.6.0.png`. No unit test applies: a
+    manifest flag in a host app.
 - The pure tier reaches `tools/collector` (the analytics sandbox test in
   `core/test-emulator-0.6.0.log`, copied to `analytics/collector-assert.log`).
-- Performance Monitoring native traces: the handlers ran on both hosts;
-  the SDKs' own perf logs were not captured.
+- Not shown: a trace reaching the Performance dashboard (needs a real project).
 
 ### Criterion 7: phone targets — PASS
 
@@ -160,8 +184,8 @@ Record: `docs/evidence/demo/vision.md`.
 ### Still blocked or unverified
 
 - A real FCM token and a real delivery: no Firebase account (by design).
-- iOS per-event Analytics debug line (above).
-- Native Performance Monitoring dashboards/logs: no emulator for them.
+- Native Performance Monitoring dashboards: no emulator for them (the SDKs'
+  own logs are captured, above).
 - iOS/Android host runs are local-only; CI cannot run them (see criteria
   4 and 5 history). The device-proof workflows remain dispatch-only.
 - Criteria 1, 2, 3, 8, 9, 10 were re-checked by the gates above; the
@@ -176,7 +200,7 @@ Record: `docs/evidence/demo/vision.md`.
 | 3 | Emulator tests, one documented command | PASS — `clean-proof` job green (fresh clone, `bun install`, `bun run test:emulator`); suite green locally pre-pause too |
 | 4 | host-ios device proof | PASS on 2026-11-19 — see Plan audit; the older UNVERIFIED text below is history. Was: UNVERIFIED — the launch crash is fixed (UIScene lifecycle) and the macOS build gate is green; dispatch [ci-macos.yml](https://github.com/SuperNSH/firebase/blob/main/.github/workflows/ci-macos.yml) for the proof |
 | 5 | host-android device proof | PASS on 2026-11-19 on this Mac's emulator — see Plan audit. Was: UNVERIFIED on CI — three attempts (42366965860, 42368309047, 42383580047) all end with CI's software-mode emulator ANRing the System UI: the captures show dialogs or a black screen, never the app, so their green conclusions are **not** criterion-5 evidence. The proof runs on this Mac's hardware emulator when it is on power (drive commands in `docs/status/native-android.md`); [device-proofs.yml](.github/workflows/device-proofs.yml) remains for a faster runner |
-| 6 | Analytics/perf reach collector; native debug logs | pure tier PASS; Android native debug log PASS (`demo_sdk_tap` in `native-android/analytics-debug.log`); iOS: SDK debug logging on, per-event line not observed (see Plan audit) |
+| 6 | Analytics/perf reach collector; native debug logs | pure tier PASS; Android native debug log PASS (`demo_sdk_tap` in `native-android/analytics-debug.log`); iOS per-event line PASS (`native-ios/sdk-debug-0.6.0.log`, needs `log stream --level debug`); native perf SDK logs captured on both |
 | 7 | Monitoring screen with slow route on top | PASS on macOS, iOS simulator and Android emulator (see Plan audit) |
 | 8 | ERR_ACCESS_DENIED with a test | PASS (locally pre-pause; re-run in CI `packages` job, green) |
 | 9 | Migration note vs React Native Firebase | PASS |

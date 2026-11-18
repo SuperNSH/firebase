@@ -9,6 +9,11 @@
         android:label="nsh-firebase host"
         android:icon="@android:drawable/sym_def_app_icon"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <!-- Debug host: the Performance SDK logs each trace to logcat (tag
+             FirebasePerformance) only with this flag; the old
+             `setprop log.tag.FirebasePerformance` switch no longer does it. -->
+        <meta-data android:name="firebase_performance_logcat_enabled" android:value="true" />
+
 
         <activity
             android:name=".MainActivity"
