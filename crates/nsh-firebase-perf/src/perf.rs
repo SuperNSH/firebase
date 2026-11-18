@@ -28,7 +28,7 @@ const RECORDS_CAPACITY: usize = 500;
 /// The name of the throwaway trace the first native call probes with: it
 /// tells "handlers exist" apart from "a host exists but grants nothing",
 /// which posts alone cannot (an unhandled post is dropped silently).
-pub const PROBE_TRACE_NAME: &str = "__nsh_probe__";
+pub const PROBE_TRACE_NAME: &str = "nsh_probe";
 
 /// One delivered record: a stopped trace, or an HTTP metric built from a
 /// [`NetworkEvent`]. The JSON is one collector line; the `http` record's
@@ -422,6 +422,16 @@ mod tests {
             error: None,
             initiator: Some("firebase-fetch".to_owned()),
         }
+    }
+
+    // The Apple SDK asserts (an uncatchable NSException) on a name with a
+    // leading or trailing underscore or whitespace, or over 100 chars.
+    #[test]
+    fn the_probe_trace_name_is_one_the_sdks_accept() {
+        let name = PROBE_TRACE_NAME;
+        assert!(!name.is_empty() && name.len() <= 100);
+        assert!(!name.starts_with('_') && !name.ends_with('_'));
+        assert_eq!(name.trim(), name);
     }
 
     #[test]

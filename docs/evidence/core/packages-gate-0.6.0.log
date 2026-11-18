@@ -1,0 +1,362 @@
+== gate: tests/core-app.tsx tests/core.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled App.tsx (16769 B in 5.3 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/core.test.tsx › core › initializes with the demo config (10ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/core.test.tsx › core › the pure tier goes through the stubbed network (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn nsh/host: `other.ping` is not granted: add it to capabilities.host in nsh.json
+warn nsh/host: `other.post` is not granted: add it to capabilities.host in nsh.json
+✓ tests/core.test.tsx › core › a host call resolves, and failures map to stable codes (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/core.test.tsx › core › a config document loads with the emulator switch winning (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/core.test.tsx › core › the event bus fans out and off stops a listener (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/core.test.tsx › core › a refused network capability rejects with ERR_ACCESS_DENIED through the facade (2ms)
+✓ 6 tests: 6 passed, 0 failed (32ms)
+== gate: tests/auth-app.tsx tests/auth.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/auth-app.tsx (26134 B in 6.2 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › sign up signs in and persists the record on the manual clock (12ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › sign in maps the wire errors and keeps the user signed out (5ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › empty arguments fail before any request is made (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › anonymous sign in sends no email and no password (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › a custom token signs in with the uid from the token claims (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › a credential from a foreign id token posts verify custom token (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › the refresh schedule follows the moved clock (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › a lost session maps to user token expired and signs out (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › a network failure keeps the core network code (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › sign out clears the signal and the store (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › a second auth restores the record another tier wrote (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › expiresIn parses like the Rust u64: plus sign and u64 ceiling (7ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › a seeded null record restores as signed out, not a crash (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › a deleted user signs out on refresh (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › a non-JSON success reply is an auth/invalid-response (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › a record with a negative timestamp restores as signed out (1ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › a JSON null success reply is an auth/invalid-response too (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › an expiresIn of zero is accepted and one past u64 is not (4ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/auth.test.tsx › auth › sign up refuses an already registered email (2ms)
+✓ 19 tests: 19 passed, 0 failed (75ms)
+== gate: tests/database-app.tsx tests/database.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 9ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/database-app.tsx (32224 B in 8.3 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › set then get round trips through the stubbed rest (15ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › update merges multi paths and get shows the merge (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › remove deletes and the read back is none (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › push ids stay ordered within and across milliseconds (4ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › a transaction rebuilds on 412 and commits (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › a queried get encodes the params and sorts children (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › a request no route lists is a network failure (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › the listener receives then reconnects and resyncs from the put (8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › a patch in a later chunk re-renders the listener text (94ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › a cancel stops the listener without reconnecting (4ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › a listener on an invalid query fails at subscribe time (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › a non-json 200 body is a network failure with the mapped message (2ms)
+✓ tests/database.test.tsx › database › a deep put and a patch yield a fresh cache reference (0ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › getDatabase hands back one database per app, carrying the token (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › a path with a space or a question mark is percent-encoded (2ms)
+✓ tests/database.test.tsx › database › the parser reads lf and crlf framed events alike (0ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/database.test.tsx › database › off during the backoff stops the reconnecting (4ms)
+✓ 17 tests: 17 passed, 0 failed (176ms)
+== gate: tests/storage-app.tsx tests/storage.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 9ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/storage-app.tsx (26554 B in 6.0 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › uploads in 256 KiB slices with progress (14ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › an interrupted upload resumes from the saved session id (5ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › pause holds and resume continues (515ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › cancel ends in error with the canceled code (306ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › a denied finalize is an error despite its final header (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › a query without its size header errors instead of restarting (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › download compares bytes and carries the Firebase auth header (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › the download URL comes from the metadata's first token (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › metadata round-trips and the patch sends writable fields only (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › list walks pages by nextPageToken (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/storage.test.tsx › storage › delete succeeds and a missing object maps to its stable code (3ms)
+✓ 11 tests: 11 passed, 0 failed (873ms)
+== gate: tests/messaging-app.tsx tests/messaging.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled src/messaging/app.tsx (12221 B in 5.1 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/messaging.test.tsx › messaging › the native tier routes every call, and the wire names and args match the contract (16ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/messaging.test.tsx › messaging › a failed token request surfaces the host error with its message (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/messaging.test.tsx › messaging › press, message and token events reach the listeners (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/messaging.test.tsx › messaging › an empty topic is refused before the host is reached (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/messaging.test.tsx › messaging › the pure tier fails every call with the error naming what is missing (3ms)
+✓ 5 tests: 5 passed, 0 failed (35ms)
+== gate: tests/analytics-app.tsx tests/analytics.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/analytics-app.tsx (37131 B in 7.2 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › events batch at maxBatchSize without waiting for the interval (15ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › events flush on the interval and no earlier (7ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › denied consent blocks sends until it is reganted (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › a failed send retries after backoff and then succeeds (5ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › screen views carry the ga4 param names (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › user properties merge and the user id rides the batch (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › reserved names are refused with the stable code (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › the collector transport posts ndjson to /collect (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › the mp transport posts the ga4 body to the collect endpoint (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › a leftover full batch drains on the next tick without the interval (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › an explicit mp config overrides native routing (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › a throwing onSend hook does not stall the retry schedule (5ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › the native tier routes through the firebase.analytics.* handlers (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/analytics.test.tsx › analytics › without a host the native path refuses to build without a transport (2ms)
+✓ 14 tests: 14 passed, 0 failed (72ms)
+== gate: tests/perf-app.tsx tests/perf.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 9ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › the probe trace name is one the Firebase SDKs accept (0ms)
+✓ bundled tests/perf-app.tsx (24843 B in 7.3 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › instrumentFetch records every field of a fetched event (14ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › a delayed response times on the manual clock (108ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › a failed exchange records an error event with no status (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › the ring evicts the oldest past the capacity (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › aggregates compute count, errorRate, p50 and p95 per host and path (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › the view model sorts slowest first and filters (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › a trace records its metric, attribute and clock duration (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › an HTTP metric builds from a monitor event and flushes as one ndjson line (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › a native capture that refuses falls back to the transport (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/perf.test.tsx › perf/monitor › with firebase.perf.* handlers played, the trace calls and the metric post cross (2ms)
+✓ 11 tests: 11 passed, 0 failed (155ms)
+SKIPPED tests/monitor-app.tsx tests/monitor.test.tsx (stub until its area lands)
+== gate: tests/firestore-app.tsx tests/firestore.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 9ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › typed values encode to the wire and decode back (0ms)
+✓ bundled tests/firestore-app.tsx (32219 B in 6.7 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › setDoc writes the typed fields document (13ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › setDoc with merge writes the leaf-path updateMask (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › getDoc decodes a present document and maps 404 to exists false (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › addDoc posts to the collection and reads the id from the name (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › deleteDoc deletes and a 404 is done (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › runQuery posts the structured query and maps the documents (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › a denied read maps to firestore/permission-denied (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › values the JSON contract cannot carry are invalid-data (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › a non-json body is invalid-response (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › the auth token rides as a Bearer header (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › validation refusals happen before any request (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › the native tier routes the five calls with the contract args (6ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/firestore.test.tsx › firestore › a native reply without the contract shape is invalid-response (13ms)
+✓ 14 tests: 14 passed, 0 failed (81ms)
+== gate: tests/remote-config-app.tsx tests/remote-config.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 9ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/remote-config-app.tsx (24591 B in 7.7 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › the pure tier sets, reads and types the defaults (15ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › unset keys read empty, false, zero and null like the SDKs (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › without a transport the fetch rejects with the oauth code and nothing is pretended (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › a fetched template activates over the defaults (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › a refusing backend records failure and rejects (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › a corrupt template rejects with the template code (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › defaults that are not a flat map are refused with the stable code (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › the native tier routes through the firebase.remote-config.* handlers (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › a malformed native answer is a clear host error (4ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › a host handler that throws surfaces clearly (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/remote-config.test.tsx › remote-config › an explicit transport forces the pure path even on a native tier (2ms)
+✓ 11 tests: 11 passed, 0 failed (59ms)
+== gate: tests/crashlytics-app.tsx tests/crashlytics.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled src/crashlytics/app.tsx (9803 B in 4.4 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/crashlytics.test.tsx › crashlytics › the native tier routes every call, and the wire names and args match the contract (11ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/crashlytics.test.tsx › crashlytics › didCrashDuringPreviousExecution reports a clean previous run too (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/crashlytics.test.tsx › crashlytics › a reply without a crashed flag is a host error, not a silent false (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/crashlytics.test.tsx › crashlytics › a failing handler surfaces the host error with its message (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/crashlytics.test.tsx › crashlytics › a non-scalar custom key value is refused before the host (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/crashlytics.test.tsx › crashlytics › the pure tier rejects every call with the error naming what is missing (3ms)
+✓ 6 tests: 6 passed, 0 failed (34ms)
+== gate: tests/installations-app.tsx tests/installations.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled src/installations/app.tsx (16425 B in 6.5 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/installations.test.tsx › installations › the pure tier registers an FID, persists the record, and serves the cached token until it is due (13ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/installations.test.tsx › installations › a force refresh on an unregistered installation registers first, then mints (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/installations.test.tsx › installations › a restore of the record the Rust tier wrote answers without any request (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/installations.test.tsx › installations › the demo- project's refusal maps to a clear request-failed and persists nothing (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/installations.test.tsx › installations › a server failure and a transport failure map distinctly (5ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/installations.test.tsx › installations › the native tier routes through the firebase.installations.* handlers (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/installations.test.tsx › installations › a native host failure keeps the host error with its message (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/installations.test.tsx › installations › a native reply without the field is a host error (2ms)
+✓ 8 tests: 8 passed, 0 failed (42ms)
+== gate: tests/app-check-app.tsx tests/app-check.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 9ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/app-check-app.tsx (13498 B in 5.8 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › the debug exchange request matches the wire and caches its ttl (12ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › the cache answers before expiry and refreshes once past it (4ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › a stored record restores and answers with no request (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › a corrupt or expired record is exchanged over (6ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › getToken without debug names the missing device attestors (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › an empty debug token fails before any request (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › a refusal maps to invalid-debug-token with the server's message (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › a 500 maps to exchange-failed and a bad ttl to invalid-response (6ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › a network failure keeps the core network code (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › the native tier routes the contract call with the debug flag (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › a native reply without a token is a host error (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › a native handler failure surfaces with its message (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/app-check.test.tsx › app-check › the default exchange URL pins the real endpoint (2ms)
+✓ 13 tests: 13 passed, 0 failed (68ms)
+== gate: tests/functions-app.tsx tests/functions.test.tsx
+✓ built App.tsx into .nsh/out (16.4 KB js, 39.8 KB bytecode, 8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/functions-app.tsx (14841 B in 6.6 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/functions.test.tsx › functions › the request speaks the callable wire protocol and maps the result (12ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/functions.test.tsx › functions › absent data is null in the body (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/functions.test.tsx › functions › a backend error maps to the functions code with its message (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/functions.test.tsx › functions › an unknown canonical status is internal, read even on a 200 (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/functions.test.tsx › functions › the emulator's missing function is functions/not-found (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/functions.test.tsx › functions › the wire's optional error.details reaches the error (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/functions.test.tsx › functions › a data-shaped answer maps too: data is read before result (3ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/functions.test.tsx › functions › the native tier routes through firebase.functions.call per the contract (2ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/functions.test.tsx › functions › a failed native handler surfaces the host error with its message (2ms)
+✓ 9 tests: 9 passed, 0 failed (42ms)

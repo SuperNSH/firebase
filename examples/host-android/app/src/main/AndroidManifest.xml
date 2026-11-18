@@ -20,5 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <receiver android:name=".DebugPushReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="dev.nsh.firebase.host.DEBUG_PUSH"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

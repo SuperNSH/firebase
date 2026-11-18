@@ -6,13 +6,13 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-bash scripts/probe-emulator.sh || bash scripts/start-emulator.sh
-
-# The Functions emulator serves emulator/functions; its one dependency
-# must be present before the suite can serve ping/add.
+# The Functions emulator loads emulator/functions at start-up, so its one
+# dependency must be installed before the suite starts, not after.
 if [ -f emulator/functions/package.json ] && [ ! -d emulator/functions/node_modules ]; then
   (cd emulator/functions && (bun install || npm install --no-audit --no-fund))
 fi
+
+bash scripts/probe-emulator.sh || bash scripts/start-emulator.sh
 
 for pair in "nsh-firebase-auth emulator_auth" "nsh-firebase-database emulator_database" "nsh-firebase-storage emulator_storage" "nsh-firebase-firestore emulator_firestore"; do
   crate=${pair%% *}
@@ -58,7 +58,7 @@ ping_code=$(curl -s -o /tmp/functions-ping.json -w '%{http_code}' --max-time 30 
   -H 'Content-Type: application/json' -X POST \
   -d '{"data":{}}' http://127.0.0.1:15001/demo-nsh/us-central1/ping || true)
 if [ "${ping_code:-}" = "200" ] && grep -q '"pong":true' /tmp/functions-ping.json; then
-  if [ -f crates/nsh-firebase-functions/tests/emulator_functions.rs ]; then
+  if [ -f "$ROOT/crates/nsh-firebase-functions/tests/emulator_functions.rs" ]; then
     (cd "$ROOT" && cargo test -p nsh-firebase-functions --test emulator_functions -- --ignored)
   else
     echo "SKIPPED crates/nsh-firebase-functions/tests/emulator_functions.rs (not written yet)"

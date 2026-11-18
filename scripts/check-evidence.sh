@@ -31,15 +31,15 @@ for f in \
   docs/evidence/perfmon/vision.md \
   docs/evidence/perfmon/collector.jsonl \
   docs/evidence/native-ios/simctl-push.log \
-  docs/evidence/native-android/logcat.txt \
+  docs/evidence/native-android/analytics-debug.log \
   docs/evidence/analytics/collector-assert.log \
   docs/evidence/core/access-denied.log
 do
   check_file "$f"
 done
 
-check_pngs docs/evidence/native-ios 2
-check_pngs docs/evidence/native-android 2
+check_pngs docs/evidence/native-ios 8
+check_pngs docs/evidence/native-android 8
 check_pngs docs/evidence/demo 2
 check_pngs docs/evidence/perfmon 2
 

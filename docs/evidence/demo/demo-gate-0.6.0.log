@@ -1,0 +1,56 @@
+✓ built App.tsx into .nsh/out (240.8 KB js, 637.0 KB bytecode, 47ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled App.tsx (246555 B in 34.7 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › the home rows open every product page (66ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › the auth form validates, then signs in through the stubbed emulator (20ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › a server auth error lands on its field (15ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › the database screen shows the live value and pushes (8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › the upload shows its progress, then download and delete run (141ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › messaging says plainly that the pure tier has no token (8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › messaging reaches a native host when one answers (8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › analytics queues three events and the flush sends the batch (8ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › the SDK button posts to the host, and says so plainly without one (15ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › the monitor's load runs a native trace around its calls (117ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/demo.test.tsx › demo › the monitor renders the measured calls from the stubbed collector (115ms)
+✓ 11 tests: 11 passed, 0 failed (534ms)
+    Blocking waiting for file lock on build directory
+   Compiling demo-rs v0.1.0 (/Users/hmziq/fo/nsh-firebase/examples/demo-rs)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2m 01s
+     Running unittests src/lib.rs (/Users/hmziq/fo/nsh-firebase/target/debug/deps/demo_rs-9677211ce9a36a6a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/app.rs (/Users/hmziq/fo/nsh-firebase/target/debug/deps/app-bca64f52d8234553)
+
+running 8 tests
+test the_index_lists_every_product_route ... ok
+test the_analytics_queue_sends_a_batch_on_flush ... ok
+test the_database_screen_shows_the_live_value_and_pushes ... ok
+test messaging_fails_clearly_in_the_pure_tier ... ok
+test a_server_auth_error_lands_on_its_field ... ok
+test the_auth_form_validates_then_signs_in_through_the_stub ... ok
+test every_product_route_pushes_and_pops ... ok
+test the_upload_shows_progress_then_download_and_delete_run ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+   Doc-tests demo_rs
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -18,7 +18,7 @@ const RECORDS_CAPACITY = 500;
 // The name of the throwaway trace the first record probes with: it tells
 // "handlers exist" apart from "a host exists but grants nothing", which
 // posts alone cannot (an unhandled post is dropped silently).
-export const PROBE_TRACE_NAME = "__nsh_probe__";
+export const PROBE_TRACE_NAME = "nsh_probe";
 
 // The fixed handler names.
 export const START_TRACE = "firebase.perf.startTrace";

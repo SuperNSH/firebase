@@ -68,7 +68,7 @@ since the demo shell landed — the demo's monitoring screen
   - `firebase.perf.stopTrace({id})`
   - `firebase.perf.recordHttpMetric(<a NetworkEvent, as the args object>)`
   Detection is one probe: the first record calls `startTrace` with the
-  throwaway name `__nsh_probe__` (and stops it when it works). Success routes
+  throwaway name `nsh_probe` (and stops it when it works). Success routes
   every record through the handlers; a refusal (the name not granted) or no
   host routes records to the transport instead — nothing is lost on an
   unhandled post, which the runtime drops silently.

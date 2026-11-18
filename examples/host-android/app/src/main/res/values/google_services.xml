@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- What the google-services Gradle plugin would generate from
+         fixtures/google-services.json (fake values). Firebase Analytics reads
+         the app id from this resource, not from the FirebaseOptions in code. -->
+    <string name="google_app_id" translatable="false">1:123456789012:android:abc123def456</string>
+    <string name="gcm_defaultSenderId" translatable="false">123456789012</string>
+    <string name="project_id" translatable="false">demo-nsh</string>
+    <string name="google_api_key" translatable="false">AIzaSyFAKE-nsh-firebase-demo-0000000000</string>
+    <string name="google_storage_bucket" translatable="false">demo-nsh.appspot.com</string>
+</resources>

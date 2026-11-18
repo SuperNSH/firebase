@@ -1,6 +1,6 @@
 // The Cloud Messaging screen: token and permission status, with the pure
 // tier's refusal rendered honestly — no silent no-op, no fake token.
-import { Scroll, Text, View, signal } from "nsh";
+import { Scroll, Text, View, cleanup, signal } from "nsh";
 import { demoMessaging } from "../firebase";
 import { NEEDS_NATIVE_TIER } from "nsh-firebase/messaging";
 import { Button } from "../../ui/button";
@@ -9,6 +9,29 @@ export function MessagingScreen() {
   const messaging = demoMessaging();
   const permission = signal<string | null>(null);
   const tokenLine = signal<string | null>(null);
+  const lastEvent = signal<string>("No message or tap yet.");
+
+  // In the pure tier `on` throws on purpose; the screen then has nothing to listen to.
+  try {
+    const stops = [
+      messaging.on("message", (m) =>
+        lastEvent.set(`Message: ${m.notification?.title ?? m.messageId ?? "(data only)"}`),
+      ),
+      messaging.on("press", (p) => lastEvent.set(`Tapped: ${p.id}`)),
+    ];
+    cleanup(() => stops.forEach((stop) => stop()));
+  } catch {
+    lastEvent.set("No native tier, so no events.");
+  }
+
+  const askPermission = () => {
+    void messaging
+      .requestPermission()
+      .then((granted) => permission.set(granted))
+      .catch((error: { code?: string; message?: string }) =>
+        permission.set(error.message ?? "unknown error"),
+      );
+  };
 
   const checkPermission = () => {
     void messaging
@@ -44,6 +67,14 @@ export function MessagingScreen() {
           >
             <Text class="text-sm font-medium text-foreground">Check permission</Text>
           </Button>
+          <Button
+            variant="outline"
+            accessibilityLabel="Request permission"
+            testID="messaging-ask"
+            onPress={askPermission}
+          >
+            <Text class="text-sm font-medium text-foreground">Request permission</Text>
+          </Button>
         </View>
         <View class="gap-2 rounded-(--radius) border border-border bg-card p-4">
           <Text class="text-sm font-medium text-foreground">Registration token</Text>
@@ -58,6 +89,12 @@ export function MessagingScreen() {
           >
             <Text class="text-sm font-medium text-foreground">Request token</Text>
           </Button>
+        </View>
+        <View class="gap-2 rounded-(--radius) border border-border bg-card p-4">
+          <Text class="text-sm font-medium text-foreground">Last event</Text>
+          <Text class="text-sm text-muted-foreground" testID="messaging-event">
+            {lastEvent()}
+          </Text>
         </View>
         <Text class="text-xs text-muted-foreground">{NEEDS_NATIVE_TIER}</Text>
         <Text class="text-xs text-muted-foreground">

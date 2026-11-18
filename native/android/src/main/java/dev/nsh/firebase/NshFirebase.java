@@ -85,7 +85,7 @@ public final class NshFirebase {
     private static FirebaseOptions defaultOptions() {
         return new FirebaseOptions.Builder()
                 .setApplicationId("1:123456789012:android:abc123def456")
-                .setApiKey("fake-android-key-abc123")
+                .setApiKey("AIzaSyFAKE-nsh-firebase-demo-0000000000")
                 .setProjectId("demo-nsh")
                 .setGcmSenderId("123456789012")
                 .setStorageBucket("demo-nsh.appspot.com")
@@ -719,7 +719,7 @@ public final class NshFirebase {
         });
     }
 
-    static void onMessageReceived(Context context, com.google.firebase.messaging.RemoteMessage message) {
+    public static void onMessageReceived(Context context, com.google.firebase.messaging.RemoteMessage message) {
         JSONObject payload = new JSONObject();
         try {
             if (message.getMessageId() != null) payload.put("messageId", message.getMessageId());

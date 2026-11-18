@@ -2,7 +2,9 @@
 
 The honest ledger [PROMPT.md](PROMPT.md) asks for: what holds, what does
 not, and the evidence behind each claim. A claim with no evidence path is
-reported as unverified. Everything here was true on 2026-11-07.
+reported as unverified. Sections written 2026-11-07 are marked by their own text; the
+"Plan audit 2026-11-19" section below supersedes any older line it
+contradicts (NSH is 0.6.0 now; the device proofs ran).
 
 ## How this was built
 
@@ -43,6 +45,128 @@ block — runs cancelled while queued with zero steps, observed on run
 [ci-macos.yml](.github/workflows/ci-macos.yml) purely because it sleeps
 for real push/tap timing, not because of any runner block.
 
+## Plan audit 2026-11-19 (NSH 0.6.0)
+
+Done on this Mac against nsh 0.6.0, by reading the code and running it.
+Nothing here is carried from the older sections.
+
+### Gates (all exit 0, run in this session)
+
+| Gate | Result |
+|---|---|
+| `cargo fmt --all -- --check` | exit 0 |
+| `cargo clippy --all-targets -- -D warnings` | exit 0 |
+| `cargo test` | exit 0: 395 passed, 0 failed, 5 ignored (the 5 are the emulator-only tests, run below) |
+| `bash scripts/test-packages.sh` (nsh check, warning-gated nsh build, nsh test per area) | exit 0: 144 tests passed, 0 failed; log `docs/evidence/core/packages-gate-0.6.0.log`. The `monitor` pair prints SKIPPED: its tests live in `perf.test.tsx` |
+| `bash scripts/test-demo.sh` (demo nsh check/build/test + `cargo test -p demo-rs`) | exit 0: 11 TSX tests, 8 Rust tests; log `docs/evidence/demo/demo-gate-0.6.0.log` |
+| `cargo check -p nsh-firebase-perf --target aarch64-apple-ios / aarch64-linux-android` | exit 0 both; wasm32-unknown-unknown also exit 0 |
+| `bash scripts/test-emulator.sh` against the demo-nsh suite + collector | exit 0: 5 Rust sandbox tests (auth, database, storage, firestore, functions), 7 TSX sandbox files; log `docs/evidence/core/test-emulator-0.6.0.log` |
+| `bash scripts/check-evidence.sh` | "evidence manifest complete" |
+
+`nsh test` still prints `warn the status bar is not granted` once per
+test on 0.6.0; `nsh build` has no warnings, which is what the gate checks.
+
+### Defects found by running the hosts, and fixed
+
+- `fixtures/GoogleService-Info.plist` and `google-services.json`: the fake
+  API key was not 39 characters starting with `A`, so the Apple SDK threw
+  `I-FIS008000` at `FirebaseApp.configure` and the host crashed at launch.
+  The key is now `AIzaSyFAKE-nsh-firebase-demo-0000000000` (39 chars) in
+  both fixtures, the Android defaults and the docs.
+- `PROBE_TRACE_NAME` was `__nsh_probe__`. A leading underscore is invalid
+  for Firebase Performance: the Apple SDK asserts (`NSException`, host
+  abort in `FIRTrace initTraceWithName:`), and Android rejects it, which
+  made the native perf path look unavailable. It is `nsh_probe` in Rust and
+  TS; tests assert it is SDK-valid; the Swift handler also validates trace
+  names before the SDK call.
+- Android host crashed at launch: "The Crashlytics build ID is missing".
+  The host now carries `res/values/crashlytics.xml` (fixed fake id) and
+  `res/values/google_services.xml` (what the google-services plugin would
+  generate; without `google_app_id` Firebase Analytics reports "Missing
+  google_app_id. Firebase Analytics disabled").
+- `scripts/test-emulator.sh` installed `emulator/functions/node_modules`
+  after the suite started, so the Functions emulator never loaded the
+  functions on a clean checkout, and it tested the Rust functions file with
+  a wrong relative path (so it printed SKIPPED). Both fixed; the TS
+  functions sandbox regex now matches what the screen prints
+  (`missing(err=functions/not-found)`); it failed before the fix.
+- Demo: Cloud Messaging screen gained Request permission and a Last event
+  line (message / tap); the Analytics screen a Log SDK event button
+  (native handler, plain error without a host); the Performance screen
+  runs a native trace around its calls. Three new demo tests, each seen to
+  fail once.
+
+### Criterion 4: host-ios device proof — PASS (iPhone simulator `nsh-firebase-ios`, iOS 27)
+
+- `xcodebuild` build: `docs/evidence/native-ios/xcodebuild-0.6.0.log`
+  (`** BUILD SUCCEEDED **`), demo bundle built with `nsh build --release`.
+- Launch with `-FIRDebugEnabled -FIRAnalyticsDebugEnabled`: Firebase
+  initializes against the fake plist; screen `native-ios/host-launch.png`.
+- Token request fails clearly with a fake project
+  (`core/host-error ... Too many server requests`): `native-ios/token-failure.png`.
+- Notification permission granted through the system prompt (driven by the
+  demo's Request permission button), then
+  `xcrun simctl push ... push.apns` (`native-ios/simctl-push.log`):
+  foreground banner plus `Message: FCM proof` in the app
+  (`push-foreground.png`); backgrounded push (`push-background.png`);
+  tapping the banner brought the app forward with `Tapped: <id>`
+  (`notification-tap.png`). Every PNG looked at.
+
+### Criterion 5: host-android device proof — PASS (AVD `nsh-firebase`, API 37, port 5586)
+
+- `gradle :app:assembleDebug` BUILD SUCCESSFUL (`native-android/gradle-0.6.0.log`).
+- App launches and shows the demo (`host-launch.png`). Token request fails
+  with the SDK's own message surfaced as `core/host-error`
+  (`token-failure.png`).
+- Push: the sandbox cannot deliver through Play services (a shell cannot
+  hold the c2dm SEND permission, and `FirebaseInstanceIdReceiver` drops the
+  broadcast), so `examples/host-android` has a debug receiver
+  (`DebugPushReceiver`, action `dev.nsh.firebase.host.DEBUG_PUSH`) that
+  builds the `RemoteMessage` from the broadcast extras and calls the
+  module's public `NshFirebase.onMessageReceived`. Foreground:
+  `Message: nsh-proof-5` in the app (`push-foreground.png`). Backgrounded
+  (HOME): the module posts the notification (`push-background.png`);
+  tapping it relaunches the host and the press reaches the app's handler
+  once the screen listens (`Tapped: nsh-proof-8`, `notification-tap-page.png`).
+  The press path is this module's own notification, not Google's.
+- Not shown: a message delivered by the real FCM service while the process
+  is dead (needs Play services and a real project).
+
+### Criterion 6: native debug logs
+
+- Android: with `log.tag.FA VERBOSE`, the app's Log SDK event press
+  produced `Logging event: origin=app,name=demo_sdk_tap` in
+  `native-android/analytics-debug.log`; the host log also shows
+  `handle firebase.perf.startTrace` / `stopTrace` pairs
+  (`monitor-phone.png`).
+- iOS: `native-ios/unified-0.6.0.log` shows Firebase Analytics 13.1.1
+  started with debug logging; the host header shows
+  `firebase.analytics.logEvent` was handled
+  (`analytics-sdk.png`), but no per-event line (`demo_sdk_tap`) appears in
+  the unified log or the console, with `-FIRAnalyticsDebugEnabled` or the
+  verbose flag. UNVERIFIED that the event reached the SDK's log on iOS.
+- The pure tier reaches `tools/collector` (the analytics sandbox test in
+  `core/test-emulator-0.6.0.log`, copied to `analytics/collector-assert.log`).
+- Performance Monitoring native traces: the handlers ran on both hosts;
+  the SDKs' own perf logs were not captured.
+
+### Criterion 7: phone targets — PASS
+
+`native-ios/monitor-phone.png` (1209 ms `/slow` on top, other rows 6-7 ms)
+and `native-android/monitor-phone.png` (1207 ms `/slow` on top; the
+failed rows are from the first load before `adb reverse tcp:18742`).
+Record: `docs/evidence/demo/vision.md`.
+
+### Still blocked or unverified
+
+- A real FCM token and a real delivery: no Firebase account (by design).
+- iOS per-event Analytics debug line (above).
+- Native Performance Monitoring dashboards/logs: no emulator for them.
+- iOS/Android host runs are local-only; CI cannot run them (see criteria
+  4 and 5 history). The device-proof workflows remain dispatch-only.
+- Criteria 1, 2, 3, 8, 9, 10 were re-checked by the gates above; the
+  README's prerequisite text already names nsh 0.6.0.
+
 ## Satisfaction criteria
 
 | # | Criterion | Status |
@@ -50,10 +174,10 @@ for real push/tap timing, not because of any runner block.
 | 1 | research.md with tier table | PASS |
 | 2 | Gates pass for all crates and packages | PASS — run [42403998509](https://github.com/SuperNSH/firebase/actions/runs/42403998509) green across every job including host-ios on macOS |
 | 3 | Emulator tests, one documented command | PASS — `clean-proof` job green (fresh clone, `bun install`, `bun run test:emulator`); suite green locally pre-pause too |
-| 4 | host-ios device proof | UNVERIFIED — the launch crash is fixed (UIScene lifecycle) and the macOS build gate is green; dispatch [ci-macos.yml](https://github.com/SuperNSH/firebase/blob/main/.github/workflows/ci-macos.yml) for the proof |
-| 5 | host-android device proof | UNVERIFIED on CI — three attempts (42366965860, 42368309047, 42383580047) all end with CI's software-mode emulator ANRing the System UI: the captures show dialogs or a black screen, never the app, so their green conclusions are **not** criterion-5 evidence. The proof runs on this Mac's hardware emulator when it is on power (drive commands in `docs/status/native-android.md`); [device-proofs.yml](.github/workflows/device-proofs.yml) remains for a faster runner |
-| 6 | Analytics/perf reach collector; native debug logs | pure tier PASS locally; native debug-log assertion UNVERIFIED (needs a device) |
-| 7 | Monitoring screen with slow route on top | PASS on macOS; phone target UNVERIFIED |
+| 4 | host-ios device proof | PASS on 2026-11-19 — see Plan audit; the older UNVERIFIED text below is history. Was: UNVERIFIED — the launch crash is fixed (UIScene lifecycle) and the macOS build gate is green; dispatch [ci-macos.yml](https://github.com/SuperNSH/firebase/blob/main/.github/workflows/ci-macos.yml) for the proof |
+| 5 | host-android device proof | PASS on 2026-11-19 on this Mac's emulator — see Plan audit. Was: UNVERIFIED on CI — three attempts (42366965860, 42368309047, 42383580047) all end with CI's software-mode emulator ANRing the System UI: the captures show dialogs or a black screen, never the app, so their green conclusions are **not** criterion-5 evidence. The proof runs on this Mac's hardware emulator when it is on power (drive commands in `docs/status/native-android.md`); [device-proofs.yml](.github/workflows/device-proofs.yml) remains for a faster runner |
+| 6 | Analytics/perf reach collector; native debug logs | pure tier PASS; Android native debug log PASS (`demo_sdk_tap` in `native-android/analytics-debug.log`); iOS: SDK debug logging on, per-event line not observed (see Plan audit) |
+| 7 | Monitoring screen with slow route on top | PASS on macOS, iOS simulator and Android emulator (see Plan audit) |
 | 8 | ERR_ACCESS_DENIED with a test | PASS (locally pre-pause; re-run in CI `packages` job, green) |
 | 9 | Migration note vs React Native Firebase | PASS |
 | 10 | README from clean clone to tests and demo | PASS |

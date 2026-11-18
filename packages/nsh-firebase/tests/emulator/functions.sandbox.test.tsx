@@ -21,7 +21,7 @@ describe("functions sandbox", () => {
     // The functions runtime spawns a node process on the first call; the
     // default 5 s wait is not enough for a cold emulator.
     await app.waitFor(
-      "text:/^fn: sandbox ok ping\\(pong=true,from=sandbox\\) add\\(sum=5\\) missing\\(functions\\/not-found\\)$/",
+      "text:/^fn: sandbox ok ping\\(pong=true,from=sandbox\\) add\\(sum=5\\) missing\\(err=functions\\/not-found\\)$/",
       { timeout: 60000 },
     );
     // The wire talked to the local emulator only: one POST per call,

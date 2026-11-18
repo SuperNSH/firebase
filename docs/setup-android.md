@@ -36,7 +36,7 @@ setup visible in one place and works without touching the host's build.
 ### The steps, one by one
 
 1. **Config file.** `fixtures/google-services.json` is the fixture: project id
-   `demo-nsh`, project number `123456789012`, api key `fake-android-key-abc123`,
+   `demo-nsh`, project number `123456789012`, api key `AIzaSyFAKE-nsh-firebase-demo-0000000000`,
    mobilesdk app id `1:123456789012:android:abc123def456`, package name
    `dev.nsh.firebase.host`. **These values are fake.** They initialize the SDK
    locally; anything that calls Google's network fails, and that failure is the
@@ -74,7 +74,7 @@ setup visible in one place and works without touching the host's build.
    product modules RNFB ships for firestore, remote-config and
    crashlytics declare empty or permission-only manifests
    (`packages/{firestore,remote-config}/android/src/main/AndroidManifest.xml`).
-   Crashlytics on a modern BoM needs no manifest entry and no init provider
+   Crashlytics on a modern BoM needs no manifest entry and no init provider, but it does need a build id: without the Crashlytics Gradle plugin the app crashes at launch with "The Crashlytics build ID is missing" (seen on the emulator). The sandbox host carries a fixed fake `com.google.firebase.crashlytics.mapping_file_id` string in `examples/host-android/app/src/main/res/values/crashlytics.xml`; a real app applies the plugin instead
    (RNFB's `ReactNativeFirebaseCrashlyticsInitProvider` exists only to
    toggle collection off before RNFB's own init — we do not turn collection
    off). App Check's debug provider needs nothing at build time either: the

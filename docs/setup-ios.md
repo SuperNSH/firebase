@@ -6,7 +6,7 @@ owns its hosts, so nothing needs to be rewritten behind our backs — the
 plugin's three steps are done once, by hand, in `examples/host-ios`.
 
 **The `fixtures/GoogleService-Info.plist` is fake.** Project `demo-nsh`, API
-key `fake-ios-key-abc123`, app id `1:123456789012:ios:abc123def456`. It
+key `AIzaSyFAKE-nsh-firebase-demo-0000000000`, app id `1:123456789012:ios:abc123def456`. It
 initializes the Apple SDK and makes token requests fail with a clear error;
 never replace it with a real plist.
 

@@ -11,6 +11,8 @@ import {
   sharedMonitor,
   type NetworkEvent,
 } from "nsh-firebase/monitor";
+import { createPerfmon } from "nsh-firebase/perf";
+import { demoApp } from "../firebase";
 import { productEntry } from "../products";
 
 const COLLECTOR = "http://127.0.0.1:18742";
@@ -72,6 +74,12 @@ export function MonitorScreen() {
       }),
     ];
     pending.set(calls.length);
+    // On a native host the trace reaches the SDK's Performance Monitoring.
+    const perfmon = createPerfmon({ tier: demoApp().tier });
+    const trace = perfmon.startTrace("monitor_load").catch(() => null);
+    void Promise.allSettled(calls).then(async () => {
+      await (await trace)?.stop().catch(() => {});
+    });
     for (const call of calls) {
       // A failed call is already an error event in the ring; its
       // rejection has nowhere better to go.

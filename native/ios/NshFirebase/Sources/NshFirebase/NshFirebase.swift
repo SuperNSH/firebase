@@ -235,6 +235,13 @@ public final class NshFirebase: NSObject, UNUserNotificationCenterDelegate, Mess
                 guard let traceName = string(data, "name") else {
                     reply(nil, "firebase.perf.startTrace needs a name"); return
                 }
+                // The SDK asserts (an uncatchable NSException) on these names.
+                guard (1...100).contains(traceName.count),
+                    !traceName.hasPrefix("_"), !traceName.hasSuffix("_"),
+                    traceName == traceName.trimmingCharacters(in: .whitespaces)
+                else {
+                    reply(nil, "firebase.perf.startTrace: invalid trace name \(traceName)"); return
+                }
                 guard let trace = Performance.startTrace(name: traceName) else {
                     reply(nil, "Firebase Performance could not start trace \(traceName)"); return
                 }

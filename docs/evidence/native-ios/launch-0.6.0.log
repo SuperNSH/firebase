@@ -1,0 +1,340 @@
+2026-11-19 00:37:02.119 NshFirebaseHost[29198:12902461] <Warning> [AppCheckCore][I-GAC004001] App Check debug token: '14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4'.
+2026-11-19 00:37:02.122 NshFirebaseHost[29198:12902461] [Firebase/Crashlytics] Version 13.1.1
+2026-11-19 00:37:02.926 NshFirebaseHost[29198:12902764] <Debug> [AppCheckCore][I-GAC003001] Unexpected API response: <NSHTTPURLResponse: 0x10f5b3b80> { URL: https://firebaseappcheck.googleapis.com/v1/projects/demo-nsh/apps/1:123456789012:ios:abc123def456:exchangeDebugToken } { Status Code: 400, Headers {
+    "Alt-Svc" =     (
+        "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+    );
+    "Content-Encoding" =     (
+        gzip
+    );
+    "Content-Length" =     (
+        278
+    );
+    "Content-Type" =     (
+        "application/json; charset=UTF-8"
+    );
+    Date =     (
+        "Wed, 18 Nov 2026 19:37:02 GMT"
+    );
+    Server =     (
+        ESF
+    );
+    Vary =     (
+        Origin,
+        "X-Origin",
+        Referer
+    );
+    "x-content-type-options" =     (
+        nosniff
+    );
+    "x-frame-options" =     (
+        SAMEORIGIN
+    );
+    "x-xss-protection" =     (
+        0
+    );
+} }, body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseappcheck.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+.
+2026-11-19 00:37:02.927 NshFirebaseHost[29198:12902764] <Debug> [AppCheckCore][I-GAC004004] Failed to exchange debug token to app check token: Error Domain=com.google.app_check_core Code=0 "The server responded with an error:
+ - URL: https://firebaseappcheck.googleapis.com/v1/projects/demo-nsh/apps/1:123456789012:ios:abc123def456:exchangeDebugToken
+ - HTTP status code: 400
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseappcheck.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+" UserInfo={NSLocalizedFailureReason=The server responded with an error:
+ - URL: https://firebaseappcheck.googleapis.com/v1/projects/demo-nsh/apps/1:123456789012:ios:abc123def456:exchangeDebugToken
+ - HTTP status code: 400
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseappcheck.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+}
+2026-11-19 00:37:03.178 NshFirebaseHost[29198:12902749] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:03.178 NshFirebaseHost[29198:12902749] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:09.956 NshFirebaseHost[29198:12904048] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:09.956 NshFirebaseHost[29198:12904048] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:15.988 NshFirebaseHost[29198:12902767] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:15.988 NshFirebaseHost[29198:12902767] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:25.613 NshFirebaseHost[29198:12902765] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:25.613 NshFirebaseHost[29198:12902765] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:36.264 NshFirebaseHost[29198:12908426] <Debug> [AppCheckCore][I-GAC003001] Unexpected API response: <NSHTTPURLResponse: 0x10f0e7de0> { URL: https://firebaseappcheck.googleapis.com/v1/projects/demo-nsh/apps/1:123456789012:ios:abc123def456:exchangeDebugToken } { Status Code: 400, Headers {
+    "Alt-Svc" =     (
+        "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+    );
+    "Content-Encoding" =     (
+        gzip
+    );
+    "Content-Length" =     (
+        278
+    );
+    "Content-Type" =     (
+        "application/json; charset=UTF-8"
+    );
+    Date =     (
+        "Wed, 18 Nov 2026 19:37:36 GMT"
+    );
+    Server =     (
+        ESF
+    );
+    Vary =     (
+        Origin,
+        "X-Origin",
+        Referer
+    );
+    "x-content-type-options" =     (
+        nosniff
+    );
+    "x-frame-options" =     (
+        SAMEORIGIN
+    );
+    "x-xss-protection" =     (
+        0
+    );
+} }, body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseappcheck.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+.
+2026-11-19 00:37:36.264 NshFirebaseHost[29198:12908426] <Debug> [AppCheckCore][I-GAC004004] Failed to exchange debug token to app check token: Error Domain=com.google.app_check_core Code=0 "The server responded with an error:
+ - URL: https://firebaseappcheck.googleapis.com/v1/projects/demo-nsh/apps/1:123456789012:ios:abc123def456:exchangeDebugToken
+ - HTTP status code: 400
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseappcheck.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+" UserInfo={NSLocalizedFailureReason=The server responded with an error:
+ - URL: https://firebaseappcheck.googleapis.com/v1/projects/demo-nsh/apps/1:123456789012:ios:abc123def456:exchangeDebugToken
+ - HTTP status code: 400
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseappcheck.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+}
+2026-11-19 00:37:51.139 NshFirebaseHost[29198:12910020] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:51.139 NshFirebaseHost[29198:12910020] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:52.654 NshFirebaseHost[29198:12910024] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:37:52.654 NshFirebaseHost[29198:12910024] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:38:00.274 NshFirebaseHost[29198:12910020] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:38:00.274 NshFirebaseHost[29198:12910020] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:38:03.424 NshFirebaseHost[29198:12910025] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:38:03.424 NshFirebaseHost[29198:12910025] ProtocolBuffer message hasn't been initialized. GetArray can't be performed
+2026-11-19 00:38:36.844 NshFirebaseHost[29198:12910025] <Debug> [AppCheckCore][I-GAC003001] Unexpected API response: <NSHTTPURLResponse: 0x10fb055e0> { URL: https://firebaseappcheck.googleapis.com/v1/projects/demo-nsh/apps/1:123456789012:ios:abc123def456:exchangeDebugToken } { Status Code: 400, Headers {
+    "Alt-Svc" =     (
+        "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+    );
+    "Content-Encoding" =     (
+        gzip
+    );
+    "Content-Length" =     (
+        278
+    );
+    "Content-Type" =     (
+        "application/json; charset=UTF-8"
+    );
+    Date =     (
+        "Wed, 18 Nov 2026 19:38:36 GMT"
+    );
+    Server =     (
+        ESF
+    );
+    Vary =     (
+        Origin,
+        "X-Origin",
+        Referer
+    );
+    "x-content-type-options" =     (
+        nosniff
+    );
+    "x-frame-options" =     (
+        SAMEORIGIN
+    );
+    "x-xss-protection" =     (
+        0
+    );
+} }, body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseappcheck.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+.
+2026-11-19 00:38:36.848 NshFirebaseHost[29198:12910025] <Debug> [AppCheckCore][I-GAC004004] Failed to exchange debug token to app check token: Error Domain=com.google.app_check_core Code=0 "The server responded with an error:
+ - URL: https://firebaseappcheck.googleapis.com/v1/projects/demo-nsh/apps/1:123456789012:ios:abc123def456:exchangeDebugToken
+ - HTTP status code: 400
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseappcheck.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+" UserInfo={NSLocalizedFailureReason=The server responded with an error:
+ - URL: https://firebaseappcheck.googleapis.com/v1/projects/demo-nsh/apps/1:123456789012:ios:abc123def456:exchangeDebugToken
+ - HTTP status code: 400
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseappcheck.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+}
+dev.nsh.firebase.host: 29198

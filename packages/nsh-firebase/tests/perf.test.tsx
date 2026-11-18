@@ -9,6 +9,7 @@
 // sit behind.
 import { describe, expect, open, test } from "nsh/test";
 import type { App } from "nsh/test";
+import { PROBE_TRACE_NAME } from "../src/perf";
 
 const ENTRY = "./perf-app.tsx";
 const TODOS = "http://127.0.0.1:19000/todos.json";
@@ -17,6 +18,12 @@ const SINK = "http://127.0.0.1:18742/collect";
 const TODO_BODY = JSON.stringify([{ id: 1, title: "one" }]);
 
 describe("perf/monitor", () => {
+  test("the probe trace name is one the Firebase SDKs accept", () => {
+    // The Apple SDK asserts on a leading or trailing underscore.
+    expect(PROBE_TRACE_NAME).toMatch(/^[^_\s](.*[^_\s])?$/);
+    expect(PROBE_TRACE_NAME.length).toBeLessThanOrEqual(100);
+  });
+
   test("instrumentFetch records every field of a fetched event", async () => {
     const app: App = await open(ENTRY, {
       clock: {},
@@ -204,7 +211,7 @@ describe("perf/monitor", () => {
       "firebase.perf.startTrace",
       "firebase.perf.stopTrace",
     ]);
-    expect(app.host.calls()[0].data).toEqual({ name: "__nsh_probe__" });
+    expect(app.host.calls()[0].data).toEqual({ name: "nsh_probe" });
 
     // The trace runs natively: its start is the third call, its stop
     // the fourth, carrying the handler's trace id.

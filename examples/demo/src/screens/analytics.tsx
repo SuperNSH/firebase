@@ -4,7 +4,7 @@
 // hands to getAnalytics; the collector transport is what the sandbox
 // run points at the real sink.
 import { Scroll, Text, View, signal } from "nsh";
-import { QueuedAnalytics, RecordingTransport } from "nsh-firebase/analytics";
+import { NativeAnalytics, QueuedAnalytics, RecordingTransport } from "nsh-firebase/analytics";
 import { demoApp } from "../firebase";
 import { Button } from "../../ui/button";
 
@@ -27,6 +27,7 @@ export function AnalyticsScreen() {
   // bumps this version, and the status binding that reads it re-reads
   // them. onSend bumps it too, when a flush settles.
   const version = signal(0);
+  const sdkLine = signal("SDK: not used yet.");
   const touch = () => version.update((n) => n + 1);
   analytics.onSend = touch;
 
@@ -79,6 +80,26 @@ export function AnalyticsScreen() {
             }}
           >
             <Text class="text-sm font-medium text-foreground">Flush now</Text>
+          </Button>
+        </View>
+        <View class="gap-2 rounded-(--radius) border border-border bg-card p-4">
+          <Text class="text-sm text-muted-foreground" testID="analytics-sdk-status">
+            {sdkLine()}
+          </Text>
+          <Button
+            variant="outline"
+            accessibilityLabel="Log SDK event"
+            testID="analytics-sdk"
+            onPress={() => {
+              try {
+                new NativeAnalytics(demoApp().tier).logEvent("demo_sdk_tap", { screen: "analytics" });
+                sdkLine.set("SDK: demo_sdk_tap posted to the host.");
+              } catch (error) {
+                sdkLine.set(`SDK: ${(error as { message?: string }).message ?? "failed"}`);
+              }
+            }}
+          >
+            <Text class="text-sm font-medium text-foreground">Log SDK event</Text>
           </Button>
         </View>
         <Text class="text-xs text-muted-foreground">

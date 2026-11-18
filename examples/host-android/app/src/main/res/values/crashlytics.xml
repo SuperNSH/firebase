@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Crashlytics refuses to initialize without a build id. The Crashlytics
+         Gradle plugin generates this id for a real app; the sandbox host has no
+         project to upload symbols to, so it carries a fixed fake one. -->
+    <string name="com.google.firebase.crashlytics.mapping_file_id" translatable="false">00000000000000000000000000000000</string>
+</resources>

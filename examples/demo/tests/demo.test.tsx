@@ -221,6 +221,7 @@ describe("demo", () => {
       host: {
         handlers: {
           "firebase.messaging.permission": () => ({ permission: "granted" }),
+          "firebase.messaging.requestPermission": () => ({ permission: "granted" }),
           "firebase.messaging.token": () => ({ token: "demo-fcm-token" }),
         },
       },
@@ -231,6 +232,17 @@ describe("demo", () => {
     await app.waitFor("text:granted");
     await app.press("id:messaging-request");
     await app.waitFor("text:Token: demo-fcm-token");
+    await app.press("id:messaging-ask");
+    await app.waitFor("text:granted");
+    // Host events reach the screen: an FCM message, then a notification tap.
+    await app.host.send("firebase.messaging.message", {
+      messageId: "m1",
+      data: {},
+      notification: { title: "FCM proof", body: "tap me" },
+    });
+    await app.waitFor("text:Message: FCM proof");
+    await app.host.send("firebase.messaging.press", { id: "m1" });
+    await app.waitFor("text:Tapped: m1");
   });
 
   test("analytics queues three events and the flush sends the batch", async () => {
@@ -248,6 +260,45 @@ describe("demo", () => {
     // The flush on an empty queue is a no-op.
     await app.press("id:analytics-flush");
     await app.waitFor("text:Events sent: 3");
+  });
+
+  test("the SDK button posts to the host, and says so plainly without one", async () => {
+    const app = await open("../App.tsx", {
+      clock: {},
+      host: { handlers: { "firebase.analytics.logEvent": () => null } },
+    });
+    await app.press("id:row-analytics");
+    await app.waitFor("id:page-analytics");
+    await app.press("id:analytics-sdk");
+    await app.waitFor("text:SDK: demo_sdk_tap posted to the host.");
+    expect(app.host.posts()).toEqual([
+      { name: "firebase.analytics.logEvent", data: { name: "demo_sdk_tap", params: { screen: "analytics" } } },
+    ]);
+    const bare = await open("../App.tsx", { clock: {} });
+    await bare.press("id:row-analytics");
+    await bare.waitFor("id:page-analytics");
+    await bare.press("id:analytics-sdk");
+    await bare.waitFor("text:/^SDK: core/unavailable/");
+  });
+
+  test("the monitor's load runs a native trace around its calls", async () => {
+    const app = await open("../App.tsx", {
+      clock: {},
+      network: monitorRoutes,
+      host: {
+        handlers: {
+          "firebase.perf.startTrace": () => ({ id: "t1" }),
+          "firebase.perf.stopTrace": () => null,
+        },
+      },
+    });
+    await app.press("id:row-monitor");
+    await app.waitFor("id:page-monitor");
+    await app.clock!.runFor(1_300);
+    await app.waitFor("text:/slow");
+    const names = app.host.calls().map((call) => call.name);
+    expect(names).toContain("firebase.perf.startTrace");
+    expect(names).toContain("firebase.perf.stopTrace");
   });
 
   test("the monitor renders the measured calls from the stubbed collector", async () => {

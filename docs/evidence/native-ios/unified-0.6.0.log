@@ -1,0 +1,496 @@
+getpwuid_r did not find a match for uid 501
+Timestamp                       Thread     Type        Activity             PID    TTL  
+2026-11-19 00:35:35.268966+0500 0xc48e9f   Error       0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseCore]] 13.1.1 - [FirebaseCore][I-COR000003] The default Firebase app has not yet been configured. Add `FirebaseApp.configure()` to your application initialization. This can be done in in the App Delegate's application(_:didFinishLaunchingWithOptions:)` (or the `@main` struct's initializer in SwiftUI). Read more: https://firebase.google.com/docs/ios/setup#initialize_firebase_in_your_app
+2026-11-19 00:35:35.297186+0500 0xc48e9f   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023007] Analytics v.13.1.1 started
+2026-11-19 00:35:35.297254+0500 0xc48e9f   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023008] To enable debug logging set the following application argument: -FIRAnalyticsDebugEnabled (see http://goo.gl/RfcP7r)
+2026-11-19 00:35:35.297272+0500 0xc48e9f   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS025036] App Delegate Proxy is disabled
+2026-11-19 00:35:35.297287+0500 0xc48e9f   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS044003] GoogleAppMeasurementIdentitySupport dependency is not currently linked. IDFA will not be accessible.
+2026-11-19 00:35:35.297467+0500 0xc48e9f   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA005001] To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:35:35.298752+0500 0xc48e9f   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS800023] No pending snapshot to activate. SDK name: app_measurement
+2026-11-19 00:35:35.298903+0500 0xc48e9f   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseRemoteConfig]] 13.1.1 - [FirebaseRemoteConfig][I-RCN000072] New config database created. Resetting user defaults.
+2026-11-19 00:35:35.298915+0500 0xc48e9f   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseRemoteConfig]] 13.1.1 - [FirebaseRemoteConfig][I-RCN000072] New config database created. Resetting user defaults.
+2026-11-19 00:35:35.338967+0500 0xc48ea4   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023012] Analytics collection enabled
+2026-11-19 00:35:35.339001+0500 0xc48ea4   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023220] Analytics screen reporting is enabled. Call Analytics.logEvent(AnalyticsEventScreenView, parameters: [...]) to log a screen view event. To disable automatic screen reporting, set the flag FirebaseAutomaticScreenReportingEnabled to NO (boolean) in the Info.plist
+2026-11-19 00:35:36.058273+0500 0xc48ecf   Error       0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseInstallations]] 13.1.1 - [FirebaseInstallations][I-FIS002003] Firebase Installation registration failed for app with name: __FIRAPP_DEFAULT, error:
+The server responded with an error: 
+ - URL: https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/ 
+ - HTTP status code: 400 
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseinstallations.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+
+Please make sure you use valid GoogleService-Info.plist
+2026-11-19 00:35:36.164110+0500 0xc48ecf   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA004002] Failed to exchange debug token. To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:35:37.156547+0500 0xc48e9f   Error       0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseCrashlytics]] 13.1.1 - [FirebaseCrashlytics][I-CLS000000] Failed to download settings. If this is your first time launching the app, make sure you have enabled Crashlytics in the Firebase Console. Error Domain=FIRCLSNetworkError Code=-5 "(null)" UserInfo={status_code=404, type=2, request_id=, content_type=text/html; charset=utf-8}
+2026-11-19 00:35:37.684257+0500 0xc48e9f   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023130] Configuration not found. Using default configuration
+2026-11-19 00:35:37.684275+0500 0xc48e9f   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023308] Failed to initiate on-device conversion measurement for retrieving aggregate first-party data. Ads account not linked to Google Analytics.
+2026-11-19 00:35:38.051150+0500 0xc48ea4   Error       0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseSessions]] 13.1.1 - [FirebaseSessions][I-SES000000] [Settings] Fetching newest settings failed with error: JSONParseError("Failed to parse JSON to dictionary")
+2026-11-19 00:36:07.184251+0500 0xc4b2a5   Default     0x0                  25410  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA004002] Failed to exchange debug token. To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:37:02.108086+0500 0xc4e15c   Error       0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseCore]] 13.1.1 - [FirebaseCore][I-COR000003] The default Firebase app has not yet been configured. Add `FirebaseApp.configure()` to your application initialization. This can be done in in the App Delegate's application(_:didFinishLaunchingWithOptions:)` (or the `@main` struct's initializer in SwiftUI). Read more: https://firebase.google.com/docs/ios/setup#initialize_firebase_in_your_app
+2026-11-19 00:37:02.114147+0500 0xc4e16c   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023007] Analytics v.13.1.1 started
+2026-11-19 00:37:02.114189+0500 0xc4e16c   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023008] To disable debug logging set the following application argument: -noFIRAnalyticsDebugEnabled (see http://goo.gl/RfcP7r)
+2026-11-19 00:37:02.114213+0500 0xc4e16c   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS025036] App Delegate Proxy is disabled
+2026-11-19 00:37:02.114231+0500 0xc4e16c   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS044003] GoogleAppMeasurementIdentitySupport dependency is not currently linked. IDFA will not be accessible.
+2026-11-19 00:37:02.116380+0500 0xc4e158   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS800023] No pending snapshot to activate. SDK name: app_measurement
+2026-11-19 00:37:02.117723+0500 0xc4e16d   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseMessaging]] 13.1.1 - [FirebaseMessaging][I-FCM002000] FIRMessaging library version 13.1.1
+2026-11-19 00:37:02.118806+0500 0xc4e15c   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA005001] To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:37:02.120371+0500 0xc4e159   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023308] Failed to initiate on-device conversion measurement for retrieving aggregate first-party data. Ads account not linked to Google Analytics.
+2026-11-19 00:37:02.120424+0500 0xc4e159   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023012] Analytics collection enabled
+2026-11-19 00:37:02.120443+0500 0xc4e159   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023220] Analytics screen reporting is enabled. Call Analytics.logEvent(AnalyticsEventScreenView, parameters: [...]) to log a screen view event. To disable automatic screen reporting, set the flag FirebaseAutomaticScreenReportingEnabled to NO (boolean) in the Info.plist
+2026-11-19 00:37:02.122128+0500 0xc4e159   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100001] Firebase Performance Monitoring is successfully initialized! In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/trends?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:02.130351+0500 0xc4e15d   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF300005] URL length exceeds limits, truncating recorded URL - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings.
+2026-11-19 00:37:02.131364+0500 0xc4e159   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseRemoteConfig]] 13.1.1 - [FirebaseRemoteConfig][I-RCN000062] Loading database at path /Users/hmziq/Library/Developer/CoreSimulator/Devices/6F51F912-DD58-44F1-AE2D-D849084C45E2/data/Containers/Data/Application/1CD3019A-693D-4437-8FE8-A1CCE6D32E42/Library/Application Support/Google/RemoteConfig/RemoteConfig.sqlite3
+2026-11-19 00:37:02.764086+0500 0xc4e178   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/, Response code: 400, 540.4670ms
+2026-11-19 00:37:02.764251+0500 0xc4e178   Error       0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseInstallations]] 13.1.1 - [FirebaseInstallations][I-FIS002003] Firebase Installation registration failed for app with name: __FIRAPP_DEFAULT, error:
+The server responded with an error: 
+ - URL: https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/ 
+ - HTTP status code: 400 
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseinstallations.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+
+Please make sure you use valid GoogleService-Info.plist
+2026-11-19 00:37:02.764976+0500 0xc4e178   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF300005] URL length exceeds limits, truncating recorded URL - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings.
+2026-11-19 00:37:02.768184+0500 0xc4e170   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseSessions]] 13.1.1 - [FirebaseSessions][I-SES000000] Successfully logged Session Start event
+2026-11-19 00:37:02.927259+0500 0xc4e15d   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA004002] Failed to exchange debug token. To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:37:03.936619+0500 0xc4e178   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings, Response code: 404, 1805.9120ms
+2026-11-19 00:37:03.936708+0500 0xc4e178   Error       0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseCrashlytics]] 13.1.1 - [FirebaseCrashlytics][I-CLS000000] Failed to download settings. If this is your first time launching the app, make sure you have enabled Crashlytics in the Firebase Console. Error Domain=FIRCLSNetworkError Code=-5 "(null)" UserInfo={status_code=404, type=2, request_id=, content_type=text/html; charset=utf-8}
+2026-11-19 00:37:04.534894+0500 0xc4e170   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings, Response code: 404, 1769.6500ms
+2026-11-19 00:37:04.542101+0500 0xc4e170   Error       0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseSessions]] 13.1.1 - [FirebaseSessions][I-SES000000] [Settings] Fetching newest settings failed with error: JSONParseError("Failed to parse JSON to dictionary")
+2026-11-19 00:37:04.691686+0500 0xc4e16d   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1510.3030ms
+2026-11-19 00:37:08.952168+0500 0xc4e178   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 6736.6000ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:11.459147+0500 0xc4e170   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1499.2790ms
+2026-11-19 00:37:15.984911+0500 0xc4e158   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _fs 13805.6190ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/DURATION_TRACE/_fs?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:15.985452+0500 0xc4e158   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 13769.7550ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:15.985476+0500 0xc4e158   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 7032.8370ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:15.985538+0500 0xc4e158   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_HostController 13810.8090ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_HostController?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:15.988219+0500 0xc4e670   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _bs 3.0540ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/DURATION_TRACE/_bs?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:15.990904+0500 0xc4e670   Error       0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseRemoteConfig]] 13.1.1 - [FirebaseRemoteConfig][I-RCN000073] Failed to get installations token. Error : Error Domain=com.firebase.installations Code=2 "Too many server requests." UserInfo={NSLocalizedFailureReason=Too many server requests.}.
+2026-11-19 00:37:15.990965+0500 0xc4e670   Error       0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF710001] Unable to fetch configurations.
+2026-11-19 00:37:17.507576+0500 0xc4e671   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1516.2800ms
+2026-11-19 00:37:25.604346+0500 0xc4ef36   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _fs 9616.0470ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/DURATION_TRACE/_fs?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:25.614421+0500 0xc4ef36   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 9616.2580ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:25.614506+0500 0xc4ef36   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_HostController 9616.0960ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_HostController?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:25.614538+0500 0xc4ef36   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 9616.2680ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:27.182911+0500 0xc4ef3b   Info        0xf35404             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1566.6270ms
+2026-11-19 00:37:36.079938+0500 0xc4ef37   Info        0xf5d7da             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _bs 10475.3690ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/DURATION_TRACE/_bs?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:36.082843+0500 0xc4f785   Error       0xf5d7da             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseRemoteConfig]] 13.1.1 - [FirebaseRemoteConfig][I-RCN000073] Failed to get installations token. Error : Error Domain=com.firebase.installations Code=2 "Too many server requests." UserInfo={NSLocalizedFailureReason=Too many server requests.}.
+2026-11-19 00:37:36.082904+0500 0xc4f785   Error       0xf5d7da             29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF710001] Unable to fetch configurations.
+2026-11-19 00:37:36.264432+0500 0xc4f78a   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA004002] Failed to exchange debug token. To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:37:50.136548+0500 0xc4fdc4   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 14056.1600ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:51.385367+0500 0xc4fdc4   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 1248.6490ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:37:52.648876+0500 0xc4fdc4   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1503.5850ms
+2026-11-19 00:37:54.151392+0500 0xc4fdc9   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1494.8160ms
+2026-11-19 00:37:59.287741+0500 0xc4fdc2   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 7884.4740ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:38:01.811854+0500 0xc4fdc6   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1532.0010ms
+2026-11-19 00:38:02.418726+0500 0xc4fdc9   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 3148.4010ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:38:04.999280+0500 0xc4fdc6   Info        0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1562.6390ms
+2026-11-19 00:38:36.847476+0500 0xc4fdc9   Default     0x0                  29198  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA004002] Failed to exchange debug token. To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:39:03.114425+0500 0xc546c2   Error       0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseCore]] 13.1.1 - [FirebaseCore][I-COR000003] The default Firebase app has not yet been configured. Add `FirebaseApp.configure()` to your application initialization. This can be done in in the App Delegate's application(_:didFinishLaunchingWithOptions:)` (or the `@main` struct's initializer in SwiftUI). Read more: https://firebase.google.com/docs/ios/setup#initialize_firebase_in_your_app
+2026-11-19 00:39:03.121380+0500 0xc546d1   Default     0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023007] Analytics v.13.1.1 started
+2026-11-19 00:39:03.121427+0500 0xc546d1   Default     0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023008] To disable debug logging set the following application argument: -noFIRAnalyticsDebugEnabled (see http://goo.gl/RfcP7r)
+2026-11-19 00:39:03.121450+0500 0xc546d1   Default     0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS025036] App Delegate Proxy is disabled
+2026-11-19 00:39:03.121709+0500 0xc546d1   Default     0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA005001] To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:39:03.121763+0500 0xc546d1   Default     0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS044003] GoogleAppMeasurementIdentitySupport dependency is not currently linked. IDFA will not be accessible.
+2026-11-19 00:39:03.123036+0500 0xc546c1   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseMessaging]] 13.1.1 - [FirebaseMessaging][I-FCM002000] FIRMessaging library version 13.1.1
+2026-11-19 00:39:03.124040+0500 0xc546d3   Default     0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS800023] No pending snapshot to activate. SDK name: app_measurement
+2026-11-19 00:39:03.128049+0500 0xc546d3   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100001] Firebase Performance Monitoring is successfully initialized! In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/trends?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:39:03.128061+0500 0xc546d3   Default     0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023308] Failed to initiate on-device conversion measurement for retrieving aggregate first-party data. Ads account not linked to Google Analytics.
+2026-11-19 00:39:03.129045+0500 0xc546d3   Default     0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023012] Analytics collection enabled
+2026-11-19 00:39:03.129096+0500 0xc546d3   Default     0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023220] Analytics screen reporting is enabled. Call Analytics.logEvent(AnalyticsEventScreenView, parameters: [...]) to log a screen view event. To disable automatic screen reporting, set the flag FirebaseAutomaticScreenReportingEnabled to NO (boolean) in the Info.plist
+2026-11-19 00:39:03.135709+0500 0xc546d4   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF300005] URL length exceeds limits, truncating recorded URL - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings.
+2026-11-19 00:39:03.136232+0500 0xc546d1   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseRemoteConfig]] 13.1.1 - [FirebaseRemoteConfig][I-RCN000062] Loading database at path /Users/hmziq/Library/Developer/CoreSimulator/Devices/6F51F912-DD58-44F1-AE2D-D849084C45E2/data/Containers/Data/Application/4A927F9A-F86A-4B4E-97EA-31D0498EACA4/Library/Application Support/Google/RemoteConfig/RemoteConfig.sqlite3
+2026-11-19 00:39:03.942232+0500 0xc546c2   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/, Response code: 400, 710.4040ms
+2026-11-19 00:39:03.942668+0500 0xc546c2   Error       0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseInstallations]] 13.1.1 - [FirebaseInstallations][I-FIS002003] Firebase Installation registration failed for app with name: __FIRAPP_DEFAULT, error:
+The server responded with an error: 
+ - URL: https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/ 
+ - HTTP status code: 400 
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseinstallations.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+
+Please make sure you use valid GoogleService-Info.plist
+2026-11-19 00:39:03.954824+0500 0xc546c2   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF300005] URL length exceeds limits, truncating recorded URL - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings.
+2026-11-19 00:39:03.963612+0500 0xc546c2   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseSessions]] 13.1.1 - [FirebaseSessions][I-SES000000] Successfully logged Session Start event
+2026-11-19 00:39:04.136160+0500 0xc546d3   Default     0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA004002] Failed to exchange debug token. To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:39:04.933728+0500 0xc546d3   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings, Response code: 404, 1797.9360ms
+2026-11-19 00:39:04.933772+0500 0xc546d3   Error       0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseCrashlytics]] 13.1.1 - [FirebaseCrashlytics][I-CLS000000] Failed to download settings. If this is your first time launching the app, make sure you have enabled Crashlytics in the Firebase Console. Error Domain=FIRCLSNetworkError Code=-5 "(null)" UserInfo={status_code=404, type=2, request_id=, content_type=text/html; charset=utf-8}
+2026-11-19 00:39:05.152222+0500 0xc546eb   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 1931.7920ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:39:05.742974+0500 0xc546eb   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings, Response code: 404, 1788.0360ms
+2026-11-19 00:39:05.751965+0500 0xc546d3   Error       0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseSessions]] 13.1.1 - [FirebaseSessions][I-SES000000] [Settings] Fetching newest settings failed with error: JSONParseError("Failed to parse JSON to dictionary")
+2026-11-19 00:39:05.925751+0500 0xc54709   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1742.1620ms
+2026-11-19 00:39:07.698920+0500 0xc546eb   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1761.5760ms
+2026-11-19 00:39:10.273143+0500 0xc5470a   Info        0x0                  33755  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1505.3080ms
+2026-11-19 00:39:32.019011+0500 0xc5689e   Error       0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseCore]] 13.1.1 - [FirebaseCore][I-COR000003] The default Firebase app has not yet been configured. Add `FirebaseApp.configure()` to your application initialization. This can be done in in the App Delegate's application(_:didFinishLaunchingWithOptions:)` (or the `@main` struct's initializer in SwiftUI). Read more: https://firebase.google.com/docs/ios/setup#initialize_firebase_in_your_app
+2026-11-19 00:39:32.023728+0500 0xc5689d   Default     0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023007] Analytics v.13.1.1 started
+2026-11-19 00:39:32.023769+0500 0xc5689d   Default     0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023008] To disable debug logging set the following application argument: -noFIRAnalyticsDebugEnabled (see http://goo.gl/RfcP7r)
+2026-11-19 00:39:32.023790+0500 0xc5689d   Default     0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS025036] App Delegate Proxy is disabled
+2026-11-19 00:39:32.025052+0500 0xc568a1   Default     0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS044003] GoogleAppMeasurementIdentitySupport dependency is not currently linked. IDFA will not be accessible.
+2026-11-19 00:39:32.027053+0500 0xc568a1   Default     0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS800023] No pending snapshot to activate. SDK name: app_measurement
+2026-11-19 00:39:32.027431+0500 0xc5689d   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseMessaging]] 13.1.1 - [FirebaseMessaging][I-FCM002000] FIRMessaging library version 13.1.1
+2026-11-19 00:39:32.028924+0500 0xc5689d   Default     0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA005001] To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:39:32.031356+0500 0xc5689d   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100001] Firebase Performance Monitoring is successfully initialized! In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/trends?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:39:32.032262+0500 0xc568a1   Default     0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023308] Failed to initiate on-device conversion measurement for retrieving aggregate first-party data. Ads account not linked to Google Analytics.
+2026-11-19 00:39:32.032556+0500 0xc568c0   Default     0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023012] Analytics collection enabled
+2026-11-19 00:39:32.032597+0500 0xc568c0   Default     0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023220] Analytics screen reporting is enabled. Call Analytics.logEvent(AnalyticsEventScreenView, parameters: [...]) to log a screen view event. To disable automatic screen reporting, set the flag FirebaseAutomaticScreenReportingEnabled to NO (boolean) in the Info.plist
+2026-11-19 00:39:32.039555+0500 0xc568c9   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF300005] URL length exceeds limits, truncating recorded URL - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings.
+2026-11-19 00:39:32.041354+0500 0xc5689d   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseRemoteConfig]] 13.1.1 - [FirebaseRemoteConfig][I-RCN000062] Loading database at path /Users/hmziq/Library/Developer/CoreSimulator/Devices/6F51F912-DD58-44F1-AE2D-D849084C45E2/data/Containers/Data/Application/4A927F9A-F86A-4B4E-97EA-31D0498EACA4/Library/Application Support/Google/RemoteConfig/RemoteConfig.sqlite3
+2026-11-19 00:39:32.702490+0500 0xc568c0   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/, Response code: 400, 581.4000ms
+2026-11-19 00:39:32.702622+0500 0xc568c0   Error       0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseInstallations]] 13.1.1 - [FirebaseInstallations][I-FIS002003] Firebase Installation registration failed for app with name: __FIRAPP_DEFAULT, error:
+The server responded with an error: 
+ - URL: https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/ 
+ - HTTP status code: 400 
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseinstallations.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+
+Please make sure you use valid GoogleService-Info.plist
+2026-11-19 00:39:32.703449+0500 0xc568a0   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF300005] URL length exceeds limits, truncating recorded URL - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings.
+2026-11-19 00:39:32.707117+0500 0xc568a0   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseSessions]] 13.1.1 - [FirebaseSessions][I-SES000000] Successfully logged Session Start event
+2026-11-19 00:39:32.843266+0500 0xc568a0   Default     0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA004002] Failed to exchange debug token. To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:39:33.839283+0500 0xc568a0   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings, Response code: 404, 1796.1810ms
+2026-11-19 00:39:33.839493+0500 0xc568a0   Error       0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseCrashlytics]] 13.1.1 - [FirebaseCrashlytics][I-CLS000000] Failed to download settings. If this is your first time launching the app, make sure you have enabled Crashlytics in the Firebase Console. Error Domain=FIRCLSNetworkError Code=-5 "(null)" UserInfo={status_code=404, type=2, request_id=, content_type=text/html; charset=utf-8}
+2026-11-19 00:39:34.690852+0500 0xc568f1   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings, Response code: 404, 1987.2310ms
+2026-11-19 00:39:34.701386+0500 0xc568f1   Error       0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseSessions]] 13.1.1 - [FirebaseSessions][I-SES000000] [Settings] Fetching newest settings failed with error: JSONParseError("Failed to parse JSON to dictionary")
+2026-11-19 00:39:34.771429+0500 0xc568c0   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1657.6990ms
+2026-11-19 00:39:38.826536+0500 0xc56f50   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 6718.8400ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:39:39.319466+0500 0xc568a1   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 496.7610ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:39:41.375862+0500 0xc56f52   Info        0x0                  35086  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1540.8830ms
+2026-11-19 00:39:58.696114+0500 0xc58432   Error       0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseCore]] 13.1.1 - [FirebaseCore][I-COR000003] The default Firebase app has not yet been configured. Add `FirebaseApp.configure()` to your application initialization. This can be done in in the App Delegate's application(_:didFinishLaunchingWithOptions:)` (or the `@main` struct's initializer in SwiftUI). Read more: https://firebase.google.com/docs/ios/setup#initialize_firebase_in_your_app
+2026-11-19 00:39:58.700184+0500 0xc58434   Default     0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023007] Analytics v.13.1.1 started
+2026-11-19 00:39:58.700248+0500 0xc58434   Default     0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023008] To disable debug logging set the following application argument: -noFIRAnalyticsDebugEnabled (see http://goo.gl/RfcP7r)
+2026-11-19 00:39:58.700289+0500 0xc58434   Default     0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS025036] App Delegate Proxy is disabled
+2026-11-19 00:39:58.701685+0500 0xc58434   Default     0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS044003] GoogleAppMeasurementIdentitySupport dependency is not currently linked. IDFA will not be accessible.
+2026-11-19 00:39:58.703659+0500 0xc58440   Default     0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS800023] No pending snapshot to activate. SDK name: app_measurement
+2026-11-19 00:39:58.704221+0500 0xc58431   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseMessaging]] 13.1.1 - [FirebaseMessaging][I-FCM002000] FIRMessaging library version 13.1.1
+2026-11-19 00:39:58.705046+0500 0xc58433   Default     0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA005001] To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:39:58.707886+0500 0xc58432   Default     0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023308] Failed to initiate on-device conversion measurement for retrieving aggregate first-party data. Ads account not linked to Google Analytics.
+2026-11-19 00:39:58.708268+0500 0xc58432   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100001] Firebase Performance Monitoring is successfully initialized! In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/trends?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:39:58.708308+0500 0xc58432   Default     0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023012] Analytics collection enabled
+2026-11-19 00:39:58.708324+0500 0xc58432   Default     0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase.analytics:[FirebaseAnalytics]] 13.1.1 - [FirebaseAnalytics][I-ACS023220] Analytics screen reporting is enabled. Call Analytics.logEvent(AnalyticsEventScreenView, parameters: [...]) to log a screen view event. To disable automatic screen reporting, set the flag FirebaseAutomaticScreenReportingEnabled to NO (boolean) in the Info.plist
+2026-11-19 00:39:58.716026+0500 0xc58443   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF300005] URL length exceeds limits, truncating recorded URL - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings.
+2026-11-19 00:39:58.716824+0500 0xc58430   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseRemoteConfig]] 13.1.1 - [FirebaseRemoteConfig][I-RCN000062] Loading database at path /Users/hmziq/Library/Developer/CoreSimulator/Devices/6F51F912-DD58-44F1-AE2D-D849084C45E2/data/Containers/Data/Application/4A927F9A-F86A-4B4E-97EA-31D0498EACA4/Library/Application Support/Google/RemoteConfig/RemoteConfig.sqlite3
+2026-11-19 00:39:59.352292+0500 0xc58431   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/, Response code: 400, 562.3790ms
+2026-11-19 00:39:59.352403+0500 0xc58442   Error       0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseInstallations]] 13.1.1 - [FirebaseInstallations][I-FIS002003] Firebase Installation registration failed for app with name: __FIRAPP_DEFAULT, error:
+The server responded with an error: 
+ - URL: https://firebaseinstallations.googleapis.com/v1/projects/demo-nsh/installations/ 
+ - HTTP status code: 400 
+ - Response body: {
+  "error": {
+    "code": 400,
+    "message": "API key not valid. Please pass a valid API key.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_INVALID",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firebaseinstallations.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "API key not valid. Please pass a valid API key."
+      }
+    ]
+  }
+}
+
+Please make sure you use valid GoogleService-Info.plist
+2026-11-19 00:39:59.353128+0500 0xc58442   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF300005] URL length exceeds limits, truncating recorded URL - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings.
+2026-11-19 00:39:59.356120+0500 0xc5843f   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseSessions]] 13.1.1 - [FirebaseSessions][I-SES000000] Successfully logged Session Start event
+2026-11-19 00:39:59.638021+0500 0xc58442   Default     0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseAppCheck]] 13.1.1 - [FirebaseAppCheck][I-FAA004002] Failed to exchange debug token. To use this token for app debugging, register it with your project.
+
+Firebase App Check debug token: 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4
+
+You can do so in the Firebase Console: 
+https://console.firebase.google.com/project/demo-nsh/appcheck/apps?selectedAppId=1:123456789012:ios:abc123def456 
+
+Or using the Firebase CLI: 
+firebase appcheck:debugtokens:create 14E3D17F-BAB8-48B3-B65D-C6AEEA51AEB4 --project demo-nsh --app 1:123456789012:ios:abc123def456
+
+Note: To keep your project secure, please revoke and delete this token using the 
+Firebase Console or the CLI (`firebase appcheck:debugtokens:delete`) when you finish debugging.
+
+Warning: This debug token is a secret and should not be shared or uploaded to source code.
+
+Debug Token Guide: https://firebase.google.com/docs/app-check/ios/debug-provider
+Firebase CLI install instructions: https://firebase.google.com/docs/cli
+2026-11-19 00:40:00.579708+0500 0xc58431   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings, Response code: 404, 1863.4630ms
+2026-11-19 00:40:00.591057+0500 0xc58431   Error       0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseCrashlytics]] 13.1.1 - [FirebaseCrashlytics][I-CLS000000] Failed to download settings. If this is your first time launching the app, make sure you have enabled Crashlytics in the Firebase Console. Error Domain=FIRCLSNetworkError Code=-5 "(null)" UserInfo={status_code=404, type=2, request_id=, content_type=text/html; charset=utf-8}
+2026-11-19 00:40:01.235086+0500 0xc58431   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://firebase-settings.crashlytics.com/spi/v2/platforms/ios/gmp/1:123456789012:ios:abc123def456/settings, Response code: 404, 1881.6300ms
+2026-11-19 00:40:01.250894+0500 0xc5843f   Error       0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebaseSessions]] 13.1.1 - [FirebaseSessions][I-SES000000] [Settings] Fetching newest settings failed with error: JSONParseError("Failed to parse JSON to dictionary")
+2026-11-19 00:40:01.385576+0500 0xc58431   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1605.1860ms
+2026-11-19 00:40:05.538485+0500 0xc58433   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 6762.8920ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:40:06.037917+0500 0xc58456   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging trace metric - _st_0 498.6530ms. In a minute, visit the Firebase console to view your data: https://console.firebase.google.com/project/demo-nsh/performance/app/ios:dev.nsh.firebase.host/troubleshooting/trace/SCREEN_TRACE/_st_0?utm_source=perf-ios-sdk&utm_medium=ios-ide
+2026-11-19 00:40:08.383460+0500 0xc58458   Info        0x0                  36285  0    NshFirebaseHost: (NshFirebaseHost.debug.dylib) [com.google.firebase:[FirebasePerformance]] 13.1.1 - [FirebasePerformance][I-PRF100009] Logging network request trace - https://app-analytics-services.com/a, Response code: 204, 1833.4840ms

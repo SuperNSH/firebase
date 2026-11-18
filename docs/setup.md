@@ -14,10 +14,10 @@ entitlements added. An embedding host we compile ourselves can do all of
 that directly, visibly, in its own sources.
 
 **The fixtures are fake.** `fixtures/GoogleService-Info.plist` (project
-`demo-nsh`, API key `fake-ios-key-abc123`, app id
+`demo-nsh`, API key `AIzaSyFAKE-nsh-firebase-demo-0000000000`, app id
 `1:123456789012:ios:abc123def456`) and `fixtures/google-services.json`
 (project `demo-nsh`, project number `123456789012`, API key
-`fake-android-key-abc123`, app id `1:123456789012:android:abc123def456`,
+`AIzaSyFAKE-nsh-firebase-demo-0000000000`, app id `1:123456789012:android:abc123def456`,
 package name `dev.nsh.firebase.host`) initialize the SDKs locally.
 Anything that calls Google's network fails, and that failure is the
 point: a token request that fails loudly is the sandbox's proof that the

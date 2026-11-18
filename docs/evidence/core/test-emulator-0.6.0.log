@@ -1,0 +1,80 @@
+emulator suite is up (auth 19099, database 19000, storage 19199, firestore 18080, hub 14400)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.22s
+     Running tests/emulator_auth.rs (target/debug/deps/emulator_auth-b33f6a678e7243d9)
+
+running 1 test
+test signs_up_signs_in_refreshes_and_restores_on_the_emulator ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.64s
+
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running tests/emulator_database.rs (target/debug/deps/emulator_database-35417b37d0cf8775)
+
+running 1 test
+test writes_reads_and_receives_a_live_update_against_the_emulator ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.21s
+     Running tests/emulator_storage.rs (target/debug/deps/emulator_storage-2374ffeee5d8a841)
+
+running 1 test
+test upload_download_url_round_trip_and_delete ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running tests/emulator_firestore.rs (target/debug/deps/emulator_firestore-0deb0ee0532e77dc)
+
+running 1 test
+test writes_reads_queries_and_deletes_against_the_emulator ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/auth-app.tsx (26134 B in 6.0 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/emulator/auth.sandbox.test.tsx › auth sandbox (emulator suite) › signs up, signs in, refreshes and reads the user back (667ms)
+✓ 1 test: 1 passed, 0 failed (672ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/database-app.tsx (32224 B in 6.5 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/emulator/database.sandbox.test.tsx › writes, reads back and receives a live update against the emulator (672ms)
+✓ 1 test: 1 passed, 0 failed (678ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/storage-app.tsx (26554 B in 5.0 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/emulator/storage.sandbox.test.tsx › storage sandbox › uploads the fixture with progress, reads its URL, downloads and deletes it (276ms)
+✓ 1 test: 1 passed, 0 failed (283ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/firestore-sandbox-app.tsx (28908 B in 6.0 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/emulator/firestore.sandbox.test.tsx › writes, reads, queries and deletes against the emulator (792ms)
+✓ 1 test: 1 passed, 0 failed (799ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/analytics-app.tsx (37131 B in 6.3 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/emulator/analytics.sandbox.test.tsx › analytics sandbox: three events reach the collector and its assertion says ok (650ms)
+✓ 1 test: 1 passed, 0 failed (659ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/perf-app.tsx (24843 B in 6.2 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/emulator/monitor.sandbox.test.tsx › monitor sandbox (collector on 127.0.0.1:18742) › a queued HTTP metric reaches the collector and is asserted there (451ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/emulator/monitor.sandbox.test.tsx › monitor sandbox (collector on 127.0.0.1:18742) › the collector's slow route records a real duration (1.0s)
+✓ 2 tests: 2 passed, 0 failed (1.5s)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.21s
+     Running tests/emulator_functions.rs (target/debug/deps/emulator_functions-d0b2ee75ba6feb40)
+
+running 1 test
+test ping_add_and_missing_function_over_the_live_emulator ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ bundled tests/functions-app.tsx (14841 B in 4.7 ms)
+warn the status bar is not granted: add `"statusBar": true` to capabilities in nsh.json
+✓ tests/emulator/functions.sandbox.test.tsx › functions sandbox › pings, adds and misses over the live emulator (231ms)
+✓ 1 test: 1 passed, 0 failed (237ms)
+exit=0

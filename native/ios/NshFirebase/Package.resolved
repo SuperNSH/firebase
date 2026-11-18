@@ -1,6 +1,15 @@
 {
-  "originHash" : "60b370a481204d4d0e51af82f32a7c60b83adeced6994242621ec3a5d133d741",
+  "originHash" : "b332810f0fae9e033f414d0dec527478fb755aa4442dfa3287efba4cfff4999e",
   "pins" : [
+    {
+      "identity" : "abseil-cpp-binary",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/google/abseil-cpp-binary.git",
+      "state" : {
+        "revision" : "26509120768c4add61cc1a63059f15f4fb49edb4",
+        "version" : "1.2025051202.0"
+      }
+    },
     {
       "identity" : "app-check",
       "kind" : "remoteSourceControl",
@@ -53,6 +62,15 @@
       "state" : {
         "revision" : "5459ee5603def3db0fe14ca522185f42c48d978e",
         "version" : "8.1.5"
+      }
+    },
+    {
+      "identity" : "grpc-binary",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/google/grpc-binary.git",
+      "state" : {
+        "revision" : "9d5e9f05670c9eab8d8c22731ddd5d4d9cf867a8",
+        "version" : "1.83.1"
       }
     },
     {

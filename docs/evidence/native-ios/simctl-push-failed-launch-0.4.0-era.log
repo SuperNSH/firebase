@@ -1,0 +1,113 @@
+===================================================================
+native-ios device verification — satisfaction criterion 4 (messaging)
+host: Sat Nov  7 14:14:36 PKT 2026 on hmz-m3-max.local
+UDID: 6F51F912-DD58-44F1-AE2D-D849084C45E2  (sim 'nsh-firebase-ios', type iPhone 17, runtime iOS 27.0)
+===================================================================
+
+$ xcrun simctl list devicetypes | grep -i "iPhone 17"
+iPhone 17 Pro (com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro)
+iPhone 17 Pro Max (com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro-Max)
+iPhone 17e (com.apple.CoreSimulator.SimDeviceType.iPhone-17e)
+iPhone 17 (com.apple.CoreSimulator.SimDeviceType.iPhone-17)
+
+$ xcrun simctl create nsh-firebase-ios "iPhone 17"
+6F51F912-DD58-44F1-AE2D-D849084C45E2 (No runtime specified, using iOS 27.0)
+
+$ xcrun simctl boot 6F51F912-DD58-44F1-AE2D-D849084C45E2
+    nsh-firebase-ios (6F51F912-DD58-44F1-AE2D-D849084C45E2) (Booted) 
+
+$ stat -f "%z" <app>/nsh/bundle.nshc
+76131 bytes
+
+$ /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" <app>/Info.plist
+dev.nsh.firebase.host
+
+$ xcrun simctl install $UDID <app>  && xcrun simctl launch $UDID dev.nsh.firebase.host
+INSTALL OK ; first launch pid 40389 ; relaunch pid 40847
+
+### APP CRASHES AT LAUNCH — unified log excerpt:
+2026-11-07 14:12:21.389 E  NshFirebaseHost[40389:c1a952] (UIKitCore) failure in void _UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption(void)_block_invoke (UIApplication_RuntimeIssues.m:106) : Application failed to launch: UIScene life cycle is required for apps built with this SDK. See "Transitioning to the UIKit scene-based life cycle" in the UIKit documentation for more information on migration.
+2026-11-07 14:12:48.965 E  NshFirebaseHost[40847:c1b55a] (UIKitCore) failure in void _UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption(void)_block_invoke (UIApplication_RuntimeIssues.m:106) : Application failed to launch: UIScene life cycle is required for apps built with this SDK. See "Transitioning to the UIKit scene-based life cycle" in the UIKit documentation for more information on migration.
+
+### crash reports on sim host:
+NshFirebaseHost-2026-11-07-141250.ips
+NshFirebaseHost-2026-11-07-141226.ips
+termination: SIGNAL code 5 Trace/BPT trap; UIKit runtime issue: 'Application failed to launch: UIScene life cycle is required for apps built with this SDK.' (Info.plist has no UIApplicationSceneManifest; Sources/main.swift uses legacy UIApplicationMain)
+
+log-stream pid: 41865
+$ xcrun simctl launch $UDID dev.nsh.firebase.host
+dev.nsh.firebase.host: 41890
+$ xcrun simctl push $UDID dev.nsh.firebase.host push.apns  (payload: docs/evidence/native-ios/push.apns)
+An error was encountered processing the command (domain=UNErrorDomain, code=2003):
+Simulator device failed to complete the requested operation.
+Underlying error (domain=UNErrorDomain, code=2003):
+	Repository could not save notification. Source is not authorized.
+push exit code: 211
+log stream (pid 41865) stopped
+### unified.log lines mentioning the app bundle / FCM / push (grep):
+2026-11-07 14:14:41.094 Df CoreSimulatorBridge[39678:c1b554] Requesting launch of dev.nsh.firebase.host with options: {
+2026-11-07 14:14:41.095 Df CoreSimulatorBridge[39678:c1b554] Beginning launch sequence for bundle 'dev.nsh.firebase.host'
+2026-11-07 14:14:41.095 Df CoreSimulatorBridge[39678:c1b554] Launch attempt #0 for bundle 'dev.nsh.firebase.host', have been trying to launch for 0 seconds.
+2026-11-07 14:14:41.096 Df CoreSimulatorBridge[39678:c1b554] Got LSBundleProxy for 'dev.nsh.firebase.host', sequenceNumber 728, cacheGUID 21D72136-6F8C-4971-98BA-12E2B43E1DDF
+2026-11-07 14:14:41.096 Df CoreSimulatorBridge[39678:c1b554] [com.apple.FrontBoard:Common] [FBSSystemService][0x4dbd] Sending request to open "dev.nsh.firebase.host"
+2026-11-07 14:14:41.097 Df SpringBoard[39648:c1b569] [com.apple.FrontBoard:Common] [FBSystemService][0x4dbd] Received request to open "dev.nsh.firebase.host" from CoreSimulatorBr:39678.
+2026-11-07 14:14:41.097 Df SpringBoard[39648:c1b569] [com.apple.FrontBoard:Common] [FBSystemService][0x4dbd] Activation request for dev.nsh.firebase.host contained LSCacheGUID 21D72136-6F8C-4971-98BA-12E2B43E1DDF and LSSequenceNumber 728.
+2026-11-07 14:14:41.097 Df SpringBoard[39648:c19601] [com.apple.FrontBoard:Common] [FBSystemService][0x4dbd] Activation request for dev.nsh.firebase.host will wait 10.00s for app availability, with retry every 2.00s.
+2026-11-07 14:14:41.097 Df SpringBoard[39648:c19601] [com.apple.FrontBoard:Common] [FBSystemService][0x4dbd] Attempting activation of dev.nsh.firebase.host with {UUID: 21D72136-6F8C-4971-98BA-12E2B43E1DDF, Sequence: 728} vs {UUID: 21D72136-6F8C-4971-98BA-12E2B43E1DDF, Sequence: 728}
+2026-11-07 14:14:41.097 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:Workspace] Received trusted open application request for "dev.nsh.firebase.host" from <FBProcess: 0x10be74780; osservice<com.apple.CoreSimulator.bridge>:39678(v42A1DA)>.
+2026-11-07 14:14:41.098 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:Common] Executing request: <SBMainWorkspaceTransitionRequest: 0x120925cc0; eventLabel: OpenApplication(sceneID:dev.nsh.firebase.host-default)ForRequester(CoreSimulatorBr.39678); display: Main; source: FBSystemService>
+2026-11-07 14:14:41.099 Df SpringBoard[39648:c19601] [com.apple.FrontBoard:Common] [FBWorkspaceEvent] Executing: <FBWorkspaceEvent: 0x10ece4a40; OpenApplication(sceneID:dev.nsh.firebase.host-default)ForRequester(CoreSimulatorBr.39678)>
+    "sceneID:dev.nsh.firebase.host-default" = 1;
+<SBMainWorkspaceTransitionRequest: 0x120925cc0; eventLabel: OpenApplication(sceneID:dev.nsh.firebase.host-default)ForRequester(CoreSimulatorBr.39678); display: Main; source: FBSystemService> {
+        SBLayoutRolePrimary = <SBDeviceApplicationSceneEntity: 0x120876580; ID: sceneID:dev.nsh.firebase.host-default; layoutRole: primary>;
+2026-11-07 14:14:41.101 Df SpringBoard[39648:c19601] [preflight:SceneHostedPreflight] [Source: TCCs] dev.nsh.firebase.host requires preflight: false
+2026-11-07 14:14:41.101 Df SpringBoard[39648:c19601] [preflight:SceneHostedPreflight] [Source: ScreenTime] dev.nsh.firebase.host requires preflight: false
+2026-11-07 14:14:41.101 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:Common] Generating initialization context on main thread for: dev.nsh.firebase.host
+2026-11-07 14:14:41.102 Df SpringBoard[39648:c1a97f] [com.apple.FrontBoard:Process] Asked to bootstrap a new process with identity: app<dev.nsh.firebase.host((null))>
+2026-11-07 14:14:41.102 Df SpringBoard[39648:c1a97f] [com.apple.FrontBoard:Process] Creating process (sync=true) with identity: app<dev.nsh.firebase.host((null))>
+2026-11-07 14:14:41.102 Df SpringBoard[39648:c1a97f] [com.apple.FrontBoard:ProcessWorkspace] Created <FBWorkspace: 0x120927700; <FBApplicationProcess: 0x11b9cd380; app<dev.nsh.firebase.host>:<invalid>>>
+2026-11-07 14:14:41.102 Df SpringBoard[39648:c1a97f] [com.apple.FrontBoard:Process] Bootstrapping app<dev.nsh.firebase.host> with intent foreground-interactive
+2026-11-07 14:14:41.103 Df runningboardd[39651:c1d66f] [com.apple.DynamicPrefetching:default] start_scenario: recording pageins for bundleid "dev.nsh.firebase.host" scenario "Launch"
+2026-11-07 14:14:41.103 Df runningboardd[39651:c1ce79] [com.apple.runningboard:ttl] Acquiring assertion targeting app<dev.nsh.firebase.host((null))> from originator [osservice<com.apple.SpringBoard>:39648] with description <RBSAssertionDescriptor| "FBApplicationProcess" ID:39651-39648-5003 target:app<dev.nsh.firebase.host((null))> attributes:[
+2026-11-07 14:14:41.103 Df runningboardd[39651:c1d66f] [com.apple.DynamicPrefetching:default] start_scenario: Prefetching clean profile for bundleid "dev.nsh.firebase.host" scenario "Launch"
+2026-11-07 14:14:41.103 E  runningboardd[39651:c1ce79] [com.apple.runningboard:assertion] Multiple RBSRunningReasonAttribute provided: 10000 vs 20838. First one wins, but client should be fixed for assertion 39651-39648-5003 (target:app<dev.nsh.firebase.host((null))>)
+2026-11-07 14:14:41.103 Df runningboardd[39651:c1ce79] [com.apple.runningboard:ttl] Assertion 39651-39648-5003 (target:app<dev.nsh.firebase.host((null))>) will be created as active
+2026-11-07 14:14:41.103 Df runningboardd[39651:c1d6d0] [com.apple.runningboard:job] Creating and launching job for: app<dev.nsh.firebase.host((null))>
+2026-11-07 14:14:41.103 Df runningboardd[39651:c1d6d0] [com.apple.runningboard:general] _mutateContextIfNeeded called for dev.nsh.firebase.host
+2026-11-07 14:14:41.104 Df runningboardd[39651:c1d6d0] [com.apple.runningboard:job] app<dev.nsh.firebase.host((null))> Looking up container path with persona (null) using container identifier 'dev.nsh.firebase.host'
+2026-11-07 14:14:41.104 Df runningboardd[39651:c1d66f] [com.apple.runningboard:job_oversize] 'app<dev.nsh.firebase.host((null))>' Constructed job description:
+	"CFBundleIdentifier" => <string: 0x1082f9020> { string cache = 0x0, length = 21, contents = "dev.nsh.firebase.host" }
+	"_ResourceCoalition" => <string: 0x1082f90e0> { string cache = 0x0, length = 34, contents = "app<dev.nsh.firebase.host((null))>" }
+				"EAI" => <string: 0x1082f91a0> { string cache = 0x0, length = 21, contents = "dev.nsh.firebase.host" }
+	"Label" => <string: 0x1082faac0> { string cache = 0x0, length = 55, contents = "UIKitApplication:dev.nsh.firebase.host[5d3e][rb-legacy]" }
+		0: <string: 0x1082f97a0> { string cache = 0x0, length = 197, contents = "/Users/hmziq/Library/Developer/CoreSimulator/Devices/6F51F912-DD58-44F1-AE2D-D849084C45E2/data/Containers/Bundle/Application/7B6D3ACE-6A85-4428-95E3-CE3905E54772/NshFirebaseHost.app/NshFirebaseHost" }
+	"Program" => <string: 0x1082f8e70> { string cache = 0x0, length = 197, contents = "/Users/hmziq/Library/Developer/CoreSimulator/Devices/6F51F912-DD58-44F1-AE2D-D849084C45E2/data/Containers/Bundle/Application/7B6D3ACE-6A85-4428-95E3-CE3905E54772/NshFirebaseHost.app/NshFirebaseHost" }
+2026-11-07 14:14:41.109 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:KeyboardFocus] _updateDeferringRules(didMoveToParentViewController) sceneID:dev.nsh.firebase.host-default hasParent:YES contentState:notReady hasRule:NO wantsRule:NO
+2026-11-07 14:14:41.109 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:KeyboardFocus] _updateDeferringRules(didMoveToParentViewController) outcome:(no change) sceneID:dev.nsh.firebase.host-default
+2026-11-07 14:14:41.110 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:AppRestrictionsOverlay] [sceneID:dev.nsh.firebase.host-default] init without scene; waiting for scene creation
+2026-11-07 14:14:41.110 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:AppRestrictionsOverlay] [sceneID:dev.nsh.firebase.host-default] tearing down vc for overlay: 0x0
+2026-11-07 14:14:41.110 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:KeyboardFocus] _updateDeferringRules(didMoveToParentViewController) sceneID:dev.nsh.firebase.host-default hasParent:YES contentState:notReady hasRule:NO wantsRule:NO
+2026-11-07 14:14:41.110 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:KeyboardFocus] _updateDeferringRules(didMoveToParentViewController) outcome:(no change) sceneID:dev.nsh.firebase.host-default
+2026-11-07 14:14:41.110 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:AppSwitcher] <SBFullScreenSwitcherLiveContentOverlayCoordinator: 0x11613d300> Adding SwitcherScene overlay for: <SBAppLayout: 0x118547bf0; primary: dev.nsh.firebase.host:default; environment: main>, animated: NO
+        sceneID:dev.nsh.firebase.host-default
+        dev.nsh.firebase.host
+    "dev.nsh.firebase.host"
+    "sceneID:dev.nsh.firebase.host-default"
+    Switcher: ownsHomeGesture; FGActive; homeAffordanceDrawingSuppressed: Y->N; suppressedBundles: (none)->dev.nsh.firebase.host; suppressedScenes: 0->1,
+2026-11-07 14:14:41.112 Df InputUI[40152:c1a462] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputRehostingScene: 0x103b14280> (com.apple.UIKit.remote-keyboard)
+2026-11-07 14:14:41.112 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:Common] [DeviceSceneHandle] sceneID:dev.nsh.firebase.host-default display=Main bounds={{0, 0}, {402, 874}} sceneFrame={{0, 0}, {402, 874}} capability=.None
+2026-11-07 14:14:41.112 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:TraitsArbiter] [DeviceSceneHandle] Did set interfaceOrientation[1] on scene with identifier[sceneID:dev.nsh.firebase.host-default]
+2026-11-07 14:14:41.113 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:ContinuitySession] modifying scene setting userInterfaceStyle to Light displayIdentity: Main forSceneManagers: Main <SBDeviceApplicationSceneHandle: 0x12083a080; sceneID: sceneID:dev.nsh.firebase.host-default; scenePointer: 0x0>
+2026-11-07 14:14:41.113 Df SpringBoard[39648:c19601] [preflight:SceneHostedPreflight] [Source: TCCs] dev.nsh.firebase.host requires preflight: false
+2026-11-07 14:14:41.113 Df SpringBoard[39648:c19601] [preflight:SceneHostedPreflight] [Source: ScreenTime] dev.nsh.firebase.host requires preflight: false
+2026-11-07 14:14:41.113 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:Common] [SBApplicationSceneUpdateTransaction] dev.nsh.firebase.host requiresPreflight: false false (null)
+2026-11-07 14:14:41.114 Df SpringBoard[39648:c19601] [com.apple.SpringBoard:Common] [SBApplicationSceneUpdateTransaction] dev.nsh.firebase.host not running preflight as not restricted
+<SBSceneReadySwitcherModifierEvent: 0x120968d80; type: SceneReady; appLayout: <SBAppLayout: 0x118547bf0; primary: dev.nsh.firebase.host:default; environment: main> {
+    continuousExposeIdentifier = dev.nsh.firebase.host;
+        primary = <SBDisplayItem: 0x120935f80; type: App; bundleIdentifier: dev.nsh.firebase.host; uniqueIdentifier: sceneID:dev.nsh.firebase.host-default>;
+grep match count: 333
+Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 9964EFDC-813C-467A-A864-7593E5CA2E44 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/hmziq/fo/nsh-firebase/docs/evidence/native-ios/host-sim-2.png
+host-sim-2.png captured
+DONE

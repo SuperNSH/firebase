@@ -6,7 +6,7 @@ Area: native/android (library module) + examples/host-android (embedding host)
 ## Done
 
 - `fixtures/google-services.json`: fake fixture (project `demo-nsh`, number
-  `123456789012`, key `fake-android-key-abc123`, app id
+  `123456789012`, key `AIzaSyFAKE-nsh-firebase-demo-0000000000`, app id
   `1:123456789012:android:abc123def456`, package `dev.nsh.firebase.host`).
   Marked fake here and in docs/setup-android.md. The host app packs a copy in
   `app/src/main/assets/google-services.json` (verified byte-identical with

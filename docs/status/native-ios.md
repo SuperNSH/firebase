@@ -10,7 +10,7 @@ stretch handlers need it enabled, which pulls gRPC/abseil into the build).
 ## Done
 
 - `fixtures/GoogleService-Info.plist` — obviously fake values (project
-  `demo-nsh`, key `fake-ios-key-abc123`), bundle id matching the host app
+  `demo-nsh`, key `AIzaSyFAKE-nsh-firebase-demo-0000000000`), bundle id matching the host app
   (`dev.nsh.firebase.host`). The fake-file note also lives in
   docs/setup-ios.md.
 - `native/ios/NshFirebase` — SwiftPM package: `configure(from:)` over
