@@ -40,7 +40,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -58,8 +57,8 @@ import java.util.UUID;
  * as {@code host.on} events.
  *
  * <p>Permission, show, close, setBadge and press buffering follow the
- * semantics of nsh's unreleased {@code Notifications} module (nsh-main
- * {@code Notifications.java}): one channel, showing again with the same id
+ * semantics of nsh 0.6.0's {@code Notifications} module ({@code
+ * Notifications.java}): one channel, showing again with the same id
  * replaces, a press opens the launcher activity with the id in an extra and
  * presses wait in a queue until the app listens.
  */
@@ -755,23 +754,13 @@ public final class NshFirebase {
 
     /**
      * Called by the host activity from {@code onCreate} and {@code
-     * onNewIntent}, per the unreleased module's contract. First forwards to
-     * {@code NshView.handleNotificationIntent} when this build of the AAR has
-     * it (0.4.0 does not yet), then reports the press this module's own
-     * notifications carry.
+     * onNewIntent}, per the Notifications module's contract. First forwards to
+     * {@code NshView.handleNotificationIntent} (in the 0.6.0 AAR), then
+     * reports the press this module's own notifications carry.
      */
     public static void handleNotificationIntent(Intent intent) {
         com.longbridge.nsh.NshView nsh = viewRef != null ? viewRef.get() : null;
-        if (nsh != null) {
-            try {
-                Method m = nsh.getClass().getMethod("handleNotificationIntent", Intent.class);
-                m.invoke(nsh, intent);
-            } catch (NoSuchMethodException expected) {
-                // 0.4.0's NshView has no notification handling yet.
-            } catch (Exception e) {
-                Log.w(TAG, "NshView.handleNotificationIntent failed", e);
-            }
-        }
+        if (nsh != null) nsh.handleNotificationIntent(intent);
         if (intent == null) return;
         String id = intent.getStringExtra(PRESS_EXTRA);
         // FCM's auto-posted background notifications never reach the service;
@@ -866,7 +855,7 @@ public final class NshFirebase {
         return out;
     }
 
-    // --- Permission, show and badge: the unreleased Notifications module's semantics ---
+    // --- Permission, show and badge: NSH 0.6.0 Notifications module's semantics ---
 
     /** `default` until the user was asked on Android 13; otherwise the system's answer. */
     private static String permission(Context context) {

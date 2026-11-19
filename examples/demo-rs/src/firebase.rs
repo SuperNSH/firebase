@@ -52,7 +52,7 @@ pub fn messaging_needs_native() -> &'static str {
     NEEDS_NATIVE_TIER
 }
 
-// nsh 0.4.0 gives a Rust app no incremental fetch (the whole body
+// nsh 0.6.0 gives a Rust app no incremental fetch (the whole body
 // arrives at once), so the demo's stream transport reads the body whole
 // and delivers it as one chunk: a stubbed or ended stream resolves, a
 // live one that never ends would not. An embedding host replaces this

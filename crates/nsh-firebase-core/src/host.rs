@@ -2,7 +2,7 @@
 //! the channel the embedding host injects, and the pure tier's stub.
 //! `packages/nsh-firebase/src/core/tier.ts` wraps the same channel from
 //! TypeScript with `host.call` / `host.on`; this side cannot reach
-//! `nsh-core`'s host bridge on 0.4.0 (its `host_call` is `pub(crate)`),
+//! `nsh-core`'s host bridge on 0.6.0 (its `host_call` is `pub(crate)`),
 //! so the embedding app injects its own [`HostChannel`].
 
 use std::{future::Future, pin::Pin, sync::Arc};

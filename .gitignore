@@ -18,3 +18,6 @@ emulator/emulator.pid
 
 # SwiftPM build artifacts (they contain embedded git checkouts)
 .build/
+
+# NSH embedding SDKs fetched by tools/fetch-nsh-embed.sh
+.nsh-embed/

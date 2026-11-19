@@ -1,6 +1,6 @@
 # The nsh-firebase embedding host. Generated with `xcodegen generate` in this
-# directory. NativeShell comes from the nsh Homebrew install; override
-# NSH_EMBED_IOS when brew's prefix is not /opt/homebrew.
+# directory. NativeShell is the 0.6.0 SDK that tools/fetch-nsh-embed.sh unpacks into
+# .nsh-embed/; override NSH_EMBED_IOS to use another copy.
 name: NshFirebaseHost
 options:
   bundleIdPrefix: dev.nsh
@@ -15,7 +15,7 @@ settings:
     SWIFT_VERSION: "5.10"
     # NativeShell.xcframework ships an arm64 simulator slice only.
     ARCHS: arm64
-    NSH_EMBED_IOS: /opt/homebrew/opt/nsh/libexec/embed/ios
+    NSH_EMBED_IOS: $(SRCROOT)/../../.nsh-embed/0.6.0/ios
 targets:
   NshFirebaseHost:
     type: application

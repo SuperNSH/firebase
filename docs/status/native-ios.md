@@ -25,7 +25,7 @@ stretch handlers need it enabled, which pulls gRPC/abseil into the build).
   `packages/messaging/ios/RNFBMessaging/RNFBMessaging+{FIRMessagingDelegate,UNUserNotificationCenter}.m`),
   host→app events `firebase.messaging.message` / `.tokenRefreshed` / `.press`
   via the injected `sendEvent` closure (the host's `app.send`, which queues
-  events until the app listens), local shows with the unreleased NSH
+  events until the app listens), local shows with NSH 0.6.0's
   Notifications semantics (`{id,title,body,silent}`, replace-on-same-id,
   `default|granted|denied|unavailable` permissions).
 - **Stretch handlers** (19 new names, same reply/reject shape as the

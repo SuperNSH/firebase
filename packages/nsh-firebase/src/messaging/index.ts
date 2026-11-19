@@ -7,8 +7,8 @@
 import { CODES, FirebaseError, getApp, toFirebaseError } from "../core";
 import type { FirebaseTier } from "../core";
 
-// The permission strings are the unreleased NSH Notifications module's,
-// so the released module later drops in behind the same names.
+// The permission strings are NSH 0.6.0's Notifications module's, so the
+// module can drop in behind the same names.
 export type MessagingPermission = "default" | "granted" | "denied" | "unavailable";
 
 export interface NotificationContent {

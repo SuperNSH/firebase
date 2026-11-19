@@ -1,9 +1,11 @@
 # Research: how nsh-firebase gets built
 
 Studied the two references by file path, the Firebase REST surfaces from the
-official docs (cited), and the unreleased NSH `Notifications` module. Read-only
+official docs (cited), and NSH's `Notifications` module (unreleased when this
+was written, in 0.6.0 now). Read-only
 references: `~/fo/.refs/react-native-firebase`, `~/fo/.refs/flutterfire`,
-`~/fo/.refs/nsh-v0.4.0`, `~/fo/.refs/nsh-main`. Everything below names the file
+`~/fo/.refs/nsh-v0.4.0`, `~/fo/.refs/nsh-main`; rechecked against the
+NSH 0.6.0 source. Everything below names the file
 it came from. Companion file: `docs/upstream-issues.md` (nsh-query / nsh-form).
 
 ## 1. React Native Firebase — what each file teaches
@@ -366,10 +368,10 @@ emulator's own banner).
 PROMPT.md's two-tier shape is right, and the evidence above does not change
 it. The reasons, in order of weight:
 
-1. `nsh package` cannot carry extra native SDKs (a 0.4.0 fact, not a
+1. `nsh package` cannot carry extra native SDKs (a fact still true on 0.6.0, not a
    choice), and a TSX app has no Rust crate, so *everything* that must work
    everywhere has to exist over NSH `fetch`/WebSocket — exactly tier 1. NSH
-   0.4.0's fetch streams response bodies incrementally
+   0.6.0's fetch streams response bodies incrementally
    (`crates/nsh-core/src/platform.rs`: `FetchEvent::{BodyWanted, Head, Data,
    End, Failed}`, with `Pause` and `Cancel` ops), which is what SSE listeners
    and upload progress need; verified in source, this is not an assumption.
@@ -440,11 +442,13 @@ Adjustments the evidence did require, none structural:
   path. Android emulator: `adb shell` broadcast / direct service starts play
   the FCM role the same way.
 
-## 5. The unreleased `Notifications` module the facade must match
+## 5. The `Notifications` module the facade matches
 
-NSH 0.4.0 has no notifications API (checked against
-`~/fo/.refs/nsh-v0.4.0`; the nsh skill and nsh.dev docs follow main and are
-ahead). `~/fo/.refs/nsh-main` carries it unreleased:
+NSH 0.4.0 had no notifications API; `~/fo/.refs/nsh-main` carried it
+unreleased, and NSH 0.6.0 ships it (`crates/nsh-core/src/notifications.rs`,
+website/modules/nsh.md § Notifications, `notifications` capability).
+The shapes below were read from `nsh-main` and rechecked against 0.6.0, which
+adds `Notification.sound` (not mirrored here):
 
 - `crates/nsh-core/src/notifications.rs`: `NotificationPermission` =
   `default | granted | denied | unavailable` (`as_str`/`from_name`);
@@ -469,8 +473,12 @@ ahead). `~/fo/.refs/nsh-main` carries it unreleased:
   presses there.
 
 The messaging facade uses exactly these names and shapes for the
-notification-facing half of its API, so the 0.4.0-native implementation and
-the later released-module implementation differ by one adapter. Do not
+notification-facing half of its API. The native tier still shows through the
+host's own `UNUserNotificationCenter` and `NotificationManager`, on purpose:
+an FCM message arrives in the SDK's delegate or service, which already owns
+the notification center and the press intent, and the module's presses would
+have to be re-routed into those. Swapping to the 0.6.0 module is one adapter
+when an app wants that. Do not
 build a general local-notifications library, and do not extend the shape
 (`title`/`body`/`id`/`silent` only; FCM data payloads ride the message
 handler, not the notification API).

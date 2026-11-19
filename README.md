@@ -31,7 +31,7 @@ Status and the per-criterion evidence live in
   tests are cargo builds. iOS/Android cross-compilation targets are only
   needed for the native hosts.
 - `nsh` 0.6.0, exactly, with the upstream installer (the Homebrew tap
-  still ships 0.4.0):
+  still ships 0.4.0, and its embedding SDKs are 0.4.0 too):
   ```sh
   curl -fsSL https://nsh.dev/install.sh | NSH_VERSION=v0.6.0 sh
   ```
@@ -122,28 +122,24 @@ xcodebuild -project NshFirebaseHost.xcodeproj -scheme NshFirebaseHost \
   -derivedDataPath build build
 ```
 
-`project.yml` points `NSH_EMBED_IOS` at the Homebrew nsh embedding
-framework (`/opt/homebrew/opt/nsh/libexec/embed/ios`); override it if your
-prefix differs. SwiftPM fetches the pinned firebase-ios-sdk 13.1.1 on
-first resolve — several hundred MB. Known issue: the host currently
-crashes at launch on the iOS 27 simulator (scene-lifecycle requirement);
-see criterion 4 in [docs/STATUS.md](docs/STATUS.md) before investing time
-in a run.
+Run `tools/fetch-nsh-embed.sh` first: it unpacks the 0.6.0 embedding SDKs
+into `.nsh-embed/0.6.0/`, where `project.yml` points `NSH_EMBED_IOS`. SwiftPM fetches the pinned firebase-ios-sdk 13.1.1 on
+first resolve — several hundred MB.
 
 ### Android (examples/host-android)
 
 ```sh
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export ANDROID_HOME="$HOME/Library/Android/sdk"   # else "SDK location not found"
-cd examples/demo && nsh build App.tsx --release --out ../host-android/app/src/master/assets/nsh
+cd examples/demo && nsh build App.tsx --release --out ../host-android/app/src/main/assets/nsh
 cd ../host-android
 gradle :app:assembleDebug        # Gradle 9.3.1; these projects carry no wrapper
 adb install app/build/outputs/apk/debug/app-debug.apk
 adb shell am start -n dev.nsh.firebase.host/.MainActivity
 ```
 
-The module (`native/android`) compiles against `libs/nsh.aar` copied from
-`$(brew --prefix nsh)/libexec/embed/android/nsh.aar`; `native/android/libs/nsh.aar`
+The module (`native/android`) compiles against `libs/nsh.aar`, the 0.6.0
+file from `.nsh-embed/0.6.0/android/nsh.aar` (`tools/fetch-nsh-embed.sh`); `native/android/libs/nsh.aar`
 and `app/libs/nsh.aar` are the same file and must be replaced together on
 an nsh upgrade.
 

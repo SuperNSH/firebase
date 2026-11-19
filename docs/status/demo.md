@@ -18,7 +18,7 @@ pass) replaced the placeholders with real screens and tests.
   `src/nav.rs` (Route enum, global routes signal), `src/ui.rs` (`app_button`, `index_row`,
   `app_progress`; tokens only), `src/firebase.rs` (demo clients over `FirebaseOptions::demo`;
   the database's `WholeBodyStream` stands in for an embedding host's stream transport, as
-  nsh 0.4.0 gives a Rust app no incremental fetch), `src/screens.rs` (one screen per product,
+  nsh 0.6.0 gives a Rust app no incremental fetch), `src/screens.rs` (one screen per product,
   each taking its product client, so tests pass stubs). Path dependencies on
   `nsh-firebase-{core,auth,database,storage,messaging,analytics,perf}` and on the sibling
   `nsh-query`/`nsh-form` crates.

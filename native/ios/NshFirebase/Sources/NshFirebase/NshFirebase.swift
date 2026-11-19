@@ -8,9 +8,8 @@
 //  take the delegates over and forward.
 //
 //  The handler and event names are this repo's native-tier messaging
-//  contract; the notification-facing half keeps the shape of the unreleased
-//  NSH `Notifications` module (documented in docs/research.md §5, from
-//  `~/fo/.refs/nsh-main`): `default | granted | denied | unavailable`
+//  contract; the notification-facing half keeps the shape of NSH 0.6.0's
+//  `Notifications` module (documented in docs/research.md §5): `default | granted | denied | unavailable`
 //  permissions and `{ id, title, body, silent }` shows.
 //
 
@@ -317,7 +316,7 @@ public final class NshFirebase: NSObject, UNUserNotificationCenterDelegate, Mess
 
     // MARK: Messaging handlers
 
-    /// The permission names are the unreleased NSH Notifications module's:
+    /// The permission names are NSH 0.6.0's Notifications module's:
     /// not determined → `default`, denied → `denied`, any authorization
     /// (including provisional and ephemeral) → `granted`.
     private func permission(ask: Bool, _ reply: @escaping (Any?, String?) -> Void) {

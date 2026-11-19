@@ -35,7 +35,7 @@
 //!
 //! ## The stream transport
 //!
-//! nsh 0.4.0 gives a Rust app no incremental fetch — the engine's
+//! nsh 0.6.0 still gives a Rust app no incremental fetch (`element/services.rs`: the body is a `Vec<u8>`) — the engine's
 //! `fetch` resolves with the whole body, and a live SSE stream never
 //! completes — so the app supplies the stream:
 //! [`listener::StreamTransport`], injected at

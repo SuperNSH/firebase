@@ -79,9 +79,9 @@ xcodebuild -project NshFirebaseHost.xcodeproj \
   -derivedDataPath build build
 ```
 
-`NSH_EMBED_IOS` in `project.yml` points at the Homebrew nsh embedding
-framework (`$(brew --prefix nsh)/libexec/embed/ios`); override it there if
-your prefix differs. SwiftPM fetches the Firebase SDK on first resolve —
+`NSH_EMBED_IOS` in `project.yml` points at the 0.6.0 nsh embedding
+framework (`.nsh-embed/0.6.0/ios`, unpacked by `tools/fetch-nsh-embed.sh`);
+override it there to use another copy. SwiftPM fetches the Firebase SDK on first resolve —
 several hundred MB of binary frameworks, be patient.
 
 ## The six stretch handlers and what they initialize

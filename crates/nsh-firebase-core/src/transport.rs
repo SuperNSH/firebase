@@ -28,7 +28,7 @@ pub async fn send(request: HttpRequest) -> Result<HttpResponse, FirebaseError> {
 }
 
 /// The handshake a product hands the platform's WebSocket transport
-/// (`nsh-core` has no app-facing connect on 0.4.0; the engine's transport
+/// (`nsh-core` has no app-facing connect on 0.6.0 (`websocket.rs`); the engine's transport
 /// takes this request). `url` is absolute, `ws://` or `wss://`.
 pub fn socket_request(
     url: &str,

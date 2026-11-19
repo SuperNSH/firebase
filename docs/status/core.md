@@ -167,8 +167,8 @@ replace wholesale.
 - `connectSocket` (TS) and `socket_request` (Rust) have no live WebSocket
   test: the test harness refuses sockets unless `network: "live"`, and no
   product uses them yet. Type-checked only.
-- The Rust `NativeHost` over a real embedding host: nsh-core 0.4.0 keeps
-  its host bridge (`host_call`) `pub(crate)`, so Rust apps cannot dial
+- The Rust `NativeHost` over a real embedding host: nsh-core 0.6.0 keeps
+  its host bridge (`host_call` in `element/services.rs`, `element/ambient.rs`) `pub(crate)`, so Rust apps cannot dial
   `host.call` themselves. `NativeHost` takes the `HostChannel` the
   embedding app injects (native/ios, native/android supply it). Verified
   only against a test channel.

@@ -75,9 +75,9 @@ for name (`r#ref`/`ref`, `on_value`/`onValue`).
   `set_auth_token` / `setAuthToken` is where the auth area's refreshed
   tokens land. No token is set anywhere in this repo (no credentials).
 
-## The 0.4.0 constraint that shaped the Rust transport
+## The 0.6.0 constraint that shaped the Rust transport
 
-nsh 0.4.0 gives a Rust app no incremental fetch: the engine's `fetch`
+nsh 0.6.0 gives a Rust app no incremental fetch (checked in `nsh-core/src/element/services.rs`): the engine's `fetch`
 resolves with the whole body (`element::services::HttpResponse`), and a
 live SSE stream never completes, so `prelude::fetch` cannot carry one.
 The TSX side reads `response.body.getReader()` directly and needs no

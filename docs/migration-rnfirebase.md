@@ -136,9 +136,9 @@ tier: iOS/Android host with firebase.messaging.* handlers"
 fires is the silent no-op the contract forbids. There is no web push
 (NSH's web target has no service-worker registration).
 
-The notification-facing half deliberately mirrors nsh's unreleased
+The notification-facing half deliberately mirrors NSH 0.6.0's
 `Notifications` module (`permission`, `show`, `close`, `setBadge`,
-`on("press")`), so moving to the released module later is one adapter.
+`on("press")`), so moving to the module is one adapter.
 
 | RNFB | nsh-firebase TSX | Rust | Notes |
 |---|---|---|---|

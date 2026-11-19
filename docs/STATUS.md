@@ -181,6 +181,35 @@ and `native-android/monitor-phone.png` (1207 ms `/slow` on top; the
 failed rows are from the first load before `adb reverse tcp:18742`).
 Record: `docs/evidence/demo/vision.md`.
 
+### NSH 0.6.0 finish pass (embedding SDKs)
+
+- The hosts were still linking NSH **0.4.0** embedding SDKs (the Homebrew
+  `nsh.aar` and `NativeShell.xcframework`) under a 0.6.0 CLI and crates.
+  Both now use the 0.6.0 SDKs: `tools/fetch-nsh-embed.sh` (sha256-pinned,
+  unpacks into git-ignored `.nsh-embed/0.6.0/`; this Mac's copy came from
+  a sibling checkout that fetched it with the same script), the Android
+  AARs under `app/libs` and `native/android/libs` replaced, and the iOS
+  project's `NSH_EMBED_IOS` default pointed at `.nsh-embed/0.6.0/ios`.
+- `NshFirebase.handleNotificationIntent` now calls
+  `NshView.handleNotificationIntent` directly (it exists in the 0.6.0 AAR;
+  the reflection for 0.4.0 is gone).
+- Evidence: `gradle :app:assembleDebug` BUILD SUCCESSFUL on the 0.6.0 AAR;
+  the host on AVD `nsh-firebase` shows the demo without a crash:
+  `native-android/host-launch-0.6.0-aar.png` (looked at).
+  `native-ios/xcodebuild-0.6.0-sdk.log`: BUILD SUCCEEDED linking the 0.6.0
+  xcframework. Not re-run on the 0.6.0 SDKs: push, tap and perf proofs on
+  both platforms (the earlier proofs may have run on the 0.4.0 SDKs). An
+  attempted Android background push this session showed no notification and
+  was discarded as inconclusive.
+- Notifications: NSH 0.6.0 ships a `Notifications` module. The facade keeps
+  its host path on purpose (FCM messages arrive in the SDK's own delegate
+  and service, which own the notification center and press intent); see
+  `docs/research.md` section 5.
+- Still true on 0.6.0, rechecked in source: Rust `fetch` returns the whole
+  body (`element/services.rs`), `host_call` is `pub(crate)`, `HostInbox`
+  keeps 256 events, `nsh check` rejects a nested entry path, `nsh package`
+  has no flag for extra native SDKs.
+
 ### Still blocked or unverified
 
 - A real FCM token and a real delivery: no Firebase account (by design).
@@ -274,7 +303,7 @@ never run locally under the battery constraint — it ran as CI job
 the emulator suite and collector, with the sibling libraries cloned at
 their pinned commits (see `.github/actions/setup-siblings`).
 
-### 4. host-ios device — UNVERIFIED (device phase cancelled; launch crash recorded)
+### 4. host-ios device — history (2026-11-07 text; superseded, PASS in the Plan audit above)
 
 What is verified: the host compiles (`docs/evidence/native-ios/xcodebuild.log`,
 BUILD SUCCEEDED, the real demo bundle embedded in `App/nsh`, fake
@@ -300,7 +329,7 @@ a plugged-in local run: launch, screenshot, `simctl push` of
 `docs/evidence/native-ios/push.apns`, tap reaching the app's handler,
 screenshots saved and looked at. None of that has happened.
 
-### 5. host-android device — UNVERIFIED (device phase cancelled)
+### 5. host-android device — history (2026-11-07 text; superseded, PASS in the Plan audit above)
 
 What is verified: the module and host assemble
 (`docs/evidence/native-android/gradle.log`, `:app:assembleDebug` BUILD
@@ -318,7 +347,7 @@ screenshot of the running app, no token-failure observation, no
 notification show/press flow. The proof moves to `device-proofs.yml`'s
 `android-proofs` job or a plugged-in local run.
 
-### 6. Analytics and Performance reach the collector — pure tier PASS; native UNVERIFIED
+### 6. Analytics and Performance reach the collector — PASS (native logs captured in the Plan audit above)
 
 Pure tier (local, before the pause):
 
@@ -342,11 +371,11 @@ Pure tier (local, before the pause):
 
 Native debug-log assertion (criterion 6's second half — `-FIRDebugEnabled`
 / `-FIRAnalyticsDebugEnabled` on iOS, `adb shell setprop
-debug.firebase.analytics.app` on Android): **UNVERIFIED**. It belongs to
-the cancelled device phases, and the one iOS attempt crashed at launch
-before Firebase could log anything.
+debug.firebase.analytics.app` on Android): was unverified on 2026-11-07,
+when the one iOS attempt crashed at launch. The 2026-11-19 runs captured
+both logs (criterion 6 above).
 
-### 7. Monitoring screen — PASS on macOS; phone target UNVERIFIED
+### 7. Monitoring screen — PASS on macOS and both phone targets
 
 `nsh test examples/demo/tests/perfmon-shots.test.tsx --target macos`
 passed (`docs/evidence/perfmon/demo-shots.log`) and saved
@@ -363,7 +392,8 @@ against the real collector on 127.0.0.1:18742.
 
 The criterion also names a phone target. That shot (`--target ios` /
 `--target android` run of the same test) was cancelled under the battery
-constraint — **UNVERIFIED**, pending CI or a plugged-in run.
+constraint. It was run on 2026-11-19: `native-ios/monitor-phone.png` and
+`native-android/monitor-phone.png` (criterion 7 above).
 
 ### 8. ERR_ACCESS_DENIED — PASS
 
@@ -423,7 +453,7 @@ honestly ship), and Crashlytics/App Check device attestor paths
 ### 10. README — PASS
 
 `README.md` gets a person from a clean clone through prerequisites (bun
-1.4+, Rust stable, nsh 0.4.0 from `longbridge/tap`, JDK 17 for the
+1.4+, Rust stable, nsh 0.6.0 from the upstream installer, JDK 17 for the
 emulator suite), `bun install`, the one emulator-test command
 `bun run test:emulator`, the demo (including the `node_modules` symlinks,
 which are **not** committed — `.gitignore` excludes `node_modules/`),
@@ -445,7 +475,7 @@ gates re-run green, not that findings were dropped):
 | messaging | auditor fixes + round 3 | **cap-3-reached**; final-round findings fixed, both gates re-run green |
 | analytics | round 1 + round 2 | converged |
 | perfmon | audit fix round + round 2 | converged |
-| native-ios | none recorded | converged; open device-phase defect (criterion 4) is not an audit finding |
+| native-ios | none recorded | converged; the launch defect is fixed and the device run passed (criterion 4) |
 | native-android | round 1 + round 2 | converged |
 | demo | none recorded | converged; gates green (`docs/status/demo.md`) |
 

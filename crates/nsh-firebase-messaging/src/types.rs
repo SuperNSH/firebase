@@ -22,8 +22,8 @@ pub mod wire {
 }
 
 /// Whether the user lets the app show notifications. The strings are the
-/// unreleased NSH Notifications module's, so the released module later
-/// drops in behind the same names.
+/// NSH 0.6.0 Notifications module's (`nsh-core/src/notifications.rs`), so
+/// the module can drop in behind the same names.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Permission {
     /// The user was not asked yet.
@@ -62,8 +62,8 @@ impl Permission {
 }
 
 /// What [`Messaging::show`](crate::Messaging::show) shows. The same shape
-/// as the unreleased Notifications module's `Notification`, so moving to
-/// the released module later is one small change.
+/// as the 0.6.0 Notifications module's `Notification` (minus its `sound`),
+/// so moving to the module is one small change.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MessageNotification {
     /// The app's name for it: showing another with the same id replaces

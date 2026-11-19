@@ -40,9 +40,9 @@ crates/nsh-firebase-messaging/src/lib.rs (crate docs).
   `request_permission()`, `show()`, `close()`, `set_badge()`,
   `subscribe()`, `unsubscribe()`, `on/off` over a core `EventBus`, and
   `dispatch(event, payload)` — the seam a Rust embedding host forwards
-  host→app events through (0.4.0 has no public `host.on` for Rust; TSX
+  host→app events through (0.6.0 has no public `host.on` for Rust, `host_call` still `pub(crate)`; TSX
   reaches `host.on` directly, so it needs no seam). `Permission` uses the
-  unreleased Notifications module's strings; `MessageNotification` mirrors
+  0.6.0 Notifications module's strings; `MessageNotification` mirrors
   its `Notification::new/.silent`. A pure-tier refusal
   (`ERR_FEATURE_UNAVAILABLE_ON_PLATFORM`) is rewritten into
   `NEEDS_NATIVE_TIER` ("Firebase Messaging needs the native tier:

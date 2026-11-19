@@ -55,7 +55,7 @@ pub trait StreamTask: Send {
     fn cancel(self: Box<Self>);
 }
 
-/// The streaming GET a live listener holds. nsh 0.4.0 hands a Rust app
+/// The streaming GET a live listener holds. nsh 0.6.0 hands a Rust app
 /// no incremental fetch (`element::fetch` returns the whole body, and a
 /// live SSE stream never completes), so an app supplies this itself —
 /// from its embedding host's stream, or a stub in tests. The TypeScript

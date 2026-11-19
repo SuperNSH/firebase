@@ -40,8 +40,8 @@ Area: native/android (library module) + examples/host-android (embedding host)
   matches iOS exactly (`where` = `{field, op, value}`, ten ops; `orderBy` =
   `{field, direction?}`; `limit` number) — table in docs/status/native-ios.md.
   `NshFirebaseMessagingService` handles
-  `MESSAGING_EVENT`. show/close/setBadge/permission mirror nsh-main's
-  unreleased `Notifications.java` semantics (one channel, same id replaces,
+  `MESSAGING_EVENT`. show/close/setBadge/permission mirror NSH's
+  `Notifications.java` semantics (0.6.0) (one channel, same id replaces,
   badge via `setNumber`, presses open the launcher with the id in an extra,
   Android 13 asked/denied/default logic).
 - init approach: **no google-services Gradle plugin, no credentials**.
@@ -57,12 +57,12 @@ Area: native/android (library module) + examples/host-android (embedding host)
 - `examples/host-android`: Gradle app (applicationId `dev.nsh.firebase.host`,
   minSdk 28, targetSdk 36) modelled on nsh 0.4.0's `examples/embed-android`;
   `NshView`, grant `{ "host": ["firebase.*"], "network": {"hosts": ["127.0.0.1"]} }`
-  (trailing-`*` prefix match verified in nsh-core 0.4.0 `access.rs`
+  (trailing-`*` prefix match verified in nsh-core 0.6.0 `access.rs`
   `allows_host`), `NshFirebase.init` + `register` before `loadAssetBundle`,
   `appLoaded()` after it, status TextView fed by a host-side listener,
   `handleNotificationIntent` in `onCreate` / `onNewIntent`.
   `app/libs/nsh.aar` copied from
-  `$(brew --prefix nsh)/libexec/embed/android/nsh.aar`.
+  the Homebrew 0.4.0 SDK then; replaced by the 0.6.0 AAR (`tools/fetch-nsh-embed.sh`) in the finish pass.
 - `examples/host-android/mini-app`: fallback TSX bundle calling every handler
   class and listening for the three events; its sources stay for rebuilds.
   The packaged `app/src/main/assets/nsh` is now the real demo bundle copied
@@ -165,10 +165,10 @@ Area: native/android (library module) + examples/host-android (embedding host)
   only an emulator run can show it. Firestore handlers have no wired
   emulator route (`useEmulator` is not called), so under the fake project
   they reject against the real backend — the honest sandbox behavior.
-- `NshView.handleNotificationIntent` does not exist on 0.4.0 (verified by
-  javap; it is in nsh-main only). `NshFirebase.handleNotificationIntent`
-  reflectively calls it when present and otherwise delivers the press itself;
-  the reflection path is untested until a newer AAR exists.
+- `NshView.handleNotificationIntent` did not exist on 0.4.0; it is in the
+  0.6.0 AAR and `NshFirebase.handleNotificationIntent` calls it directly,
+  then delivers this module's own press. Compiles; no device run of the
+  forward yet.
 - FCM behavior against a real project (token success, actual delivery) — out
   of sandbox scope on purpose; the fake project must surface token failure
   as a rejection, which only an emulator run can show.
@@ -215,7 +215,7 @@ Area: native/android (library module) + examples/host-android (embedding host)
 
 - The nsh event-buffer description is corrected everywhere (docs, status,
   mini-app comment, appLoaded javadoc): one shared VecDeque per channel,
-  256 events in all, oldest evicted — nsh-core 0.4.0's `HostInbox` — not per
+  256 events in all, oldest evicted — nsh-core 0.6.0's `HostInbox` (`MAX_QUEUED_EVENTS`) — not per
   name.
 - `MainActivity.onDestroy` clears `NshFirebase.setListener(null)` before
   `nsh.destroy()`: the static listener held a lambda capturing the activity.
@@ -224,7 +224,7 @@ Area: native/android (library module) + examples/host-android (embedding host)
   host call can arrive while the activity is stopped, where `commitNow`
   throws and would turn a legitimate call into a confusing rejection.
 - docs/setup-android.md step 6 now states `native/android/libs/nsh.aar` and
-  `app/libs/nsh.aar` are the same `$(brew --prefix nsh)` file and must be
+  `app/libs/nsh.aar` are the same file (0.6.0 now) and must be
   replaced together.
 - Mini-app assets rebuilt after the comment change (`nsh check` +
   `nsh build --release`, pass). Standalone module build and

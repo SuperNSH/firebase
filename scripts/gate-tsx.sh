@@ -2,7 +2,7 @@
 # The TSX gate for one entry/test pair: check, a warning-gated build, test.
 # usage: gate-tsx.sh <entry> <testfile>
 #
-# On nsh 0.4.0 a nested entry path is treated as an app directory of its
+# On nsh 0.6.0 `nsh check` still treats a nested entry path as an app directory of its
 # own, so check and build run at the package root, whose App.tsx mounts the
 # same UI the tests drive.
 set -euo pipefail
