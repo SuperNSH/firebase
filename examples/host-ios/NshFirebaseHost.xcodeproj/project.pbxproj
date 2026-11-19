@@ -13,6 +13,7 @@
 		5AFA6F00EC60F84907328411 /* nsh in Resources */ = {isa = PBXBuildFile; fileRef = 1FCAA3A7BE80D20BFAF159DF /* nsh */; };
 		80EBC024F81CC15D83F3C8C4 /* HostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D25448C9B3E439181C6FD0 /* HostController.swift */; };
 		9995EE1422AAE58AAC1211D8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2B6845C45F1BE94E284003 /* main.swift */; };
+		B12E4343E3BA43F5E7368BFA /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B3DAA551EBBC9381188C7D /* AuthenticationServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		72CFED3B5E577625B25DD5BC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8975A42AC12BEB39CD495F22 /* NshFirebaseHost.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NshFirebaseHost.entitlements; sourceTree = "<group>"; };
 		92884C19F341F5C1A3776B10 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E5B3DAA551EBBC9381188C7D /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +36,7 @@
 			files = (
 				095ACDCCF980550A66BE58BC /* NshFirebase in Frameworks */,
 				290BCDA98ADA6F15FF1144D6 /* NativeShell.xcframework in Frameworks */,
+				B12E4343E3BA43F5E7368BFA /* AuthenticationServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +71,7 @@
 		A63E03DFC1B961BB7CD1CB15 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E5B3DAA551EBBC9381188C7D /* AuthenticationServices.framework */,
 				54EB3E6915E71C13957946C4 /* NativeShell.xcframework */,
 			);
 			name = Frameworks;
@@ -143,9 +147,10 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
 			};
 			buildConfigurationList = F998F943885B5447E46F8510 /* Build configuration list for PBXProject "NshFirebaseHost" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -158,6 +163,7 @@
 				85FA2FE102831CD096E70023 /* XCLocalSwiftPackageReference "../../native/ios/NshFirebase" */,
 			);
 			preferredProjectObjectVersion = 77;
+			productRefGroup = C8B4BB368EA84995FCC2174F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

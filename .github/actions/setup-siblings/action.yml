@@ -20,8 +20,8 @@ runs:
         # Pinned to the commits this repo was built against; a drifted
         # sibling HEAD would silently change the APIs the demo compiles
         # against.
-        git -C nsh-query checkout -q 470e10a49f0e4e44148a6a08e229a55867eb9688
-        git -C nsh-form checkout -q 682844a08bb5de5b5a0d196d8ea383cce7dcba2b
+        git -C nsh-query checkout -q 6afe01fccbb15ddd76a5523e338ea4b0582c435c
+        git -C nsh-form checkout -q 06053c367618e0feeec8cd3765636d552f987b9d
         ls -d nsh-query/crates/nsh-query nsh-form/crates/nsh-form
     - shell: bash
       if: inputs.with-demo-links == 'true'

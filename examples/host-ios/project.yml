@@ -30,6 +30,9 @@ targets:
       - package: NshFirebase
       - framework: ${NSH_EMBED_IOS}/NativeShell.xcframework
         embed: false
+      # NativeShell's runtime references ASWebAuthenticationSession; older Xcode
+      # SDKs do not autolink it, so link the framework explicitly.
+      - sdk: AuthenticationServices.framework
     info:
       path: Sources/Info.plist
       properties:

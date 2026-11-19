@@ -219,8 +219,8 @@ jobs:
           # .github/actions/setup-siblings).
           git clone -q https://github.com/SuperNSH/nsh-query.git /tmp/nsh-query
           git clone -q https://github.com/SuperNSH/nsh-form.git /tmp/nsh-form
-          git -C /tmp/nsh-query checkout -q 470e10a49f0e4e44148a6a08e229a55867eb9688
-          git -C /tmp/nsh-form checkout -q 682844a08bb5de5b5a0d196d8ea383cce7dcba2b
+          git -C /tmp/nsh-query checkout -q 6afe01fccbb15ddd76a5523e338ea4b0582c435c
+          git -C /tmp/nsh-form checkout -q 06053c367618e0feeec8cd3765636d552f987b9d
           cd /tmp/nsh-firebase-clean
           bun install --frozen-lockfile
           bun run test:emulator
