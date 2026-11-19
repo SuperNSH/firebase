@@ -25,6 +25,11 @@ runs:
         ls -d nsh-query/crates/nsh-query nsh-form/crates/nsh-form
     - shell: bash
       if: inputs.with-demo-links == 'true'
+      env:
+        # Git Bash on Windows copies instead of linking unless told to make
+        # real symlinks; a copy cannot resolve the sibling's own node_modules
+        # (@tanstack/form-core), and strict makes a failed link loud.
+        MSYS: winsymlinks:nativestrict
       run: |
         cd examples/demo
         mkdir -p node_modules
