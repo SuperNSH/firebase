@@ -16,6 +16,17 @@ two tiers that share one API shape:
   tokens and messages, the native Analytics pipeline and automatic
   Performance capture.
 
+## Install
+
+For Rust apps, add the products you use:
+
+```sh
+cargo add nsh-firebase-core nsh-firebase-auth nsh-firebase-database
+```
+
+The TSX package (`packages/nsh-firebase`) is not on npm yet. The demo uses it
+through a `node_modules` symlink to this checkout (see [Demo](#demo)).
+
 Everything runs in a sandbox: the Firebase Local Emulator Suite with a
 `demo-` project and fake config fixtures. No Firebase account, no real
 credentials, no billing.

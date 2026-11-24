@@ -64,6 +64,19 @@ jobs:
       - run: cargo clippy --all-targets -- -D warnings
       - run: cargo test --no-fail-fast
 
+  # What publish.yml uploads: packaged, then built from the package.
+  crates-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
+        with:
+          toolchain: stable
+      # cargo metadata loads every member, and demo-rs path-depends on the siblings.
+      - uses: ./.github/actions/setup-siblings
+      - run: scripts/publish-crates.sh verify
+
   cross-check:
     name: check (${{ matrix.target }})
     runs-on: ${{ matrix.os }}

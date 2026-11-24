@@ -21,7 +21,7 @@ resolver = "3"
 version = "0.1.0"
 edition = "2024"
 license = "MIT"
-repository = "https://github.com/hmziqrs/nsh-firebase"
+repository = "https://github.com/SuperNSH/firebase"
 authors = ["hmziqrs"]
 
 [workspace.dependencies]
@@ -30,19 +30,19 @@ nsh-core = "0.6.0"
 nsh-engine = "0.6.0"
 nsh-testing = "0.6.0"
 serde_json = "1"
-nsh-firebase-core = { path = "crates/nsh-firebase-core" }
-nsh-firebase-auth = { path = "crates/nsh-firebase-auth" }
-nsh-firebase-database = { path = "crates/nsh-firebase-database" }
-nsh-firebase-storage = { path = "crates/nsh-firebase-storage" }
-nsh-firebase-messaging = { path = "crates/nsh-firebase-messaging" }
-nsh-firebase-analytics = { path = "crates/nsh-firebase-analytics" }
-nsh-firebase-perf = { path = "crates/nsh-firebase-perf" }
-nsh-firebase-firestore = { path = "crates/nsh-firebase-firestore" }
-nsh-firebase-remote-config = { path = "crates/nsh-firebase-remote-config" }
-nsh-firebase-crashlytics = { path = "crates/nsh-firebase-crashlytics" }
-nsh-firebase-installations = { path = "crates/nsh-firebase-installations" }
-nsh-firebase-app-check = { path = "crates/nsh-firebase-app-check" }
-nsh-firebase-functions = { path = "crates/nsh-firebase-functions" }
+nsh-firebase-core = { path = "crates/nsh-firebase-core", version = "0.1.0" }
+nsh-firebase-auth = { path = "crates/nsh-firebase-auth", version = "0.1.0" }
+nsh-firebase-database = { path = "crates/nsh-firebase-database", version = "0.1.0" }
+nsh-firebase-storage = { path = "crates/nsh-firebase-storage", version = "0.1.0" }
+nsh-firebase-messaging = { path = "crates/nsh-firebase-messaging", version = "0.1.0" }
+nsh-firebase-analytics = { path = "crates/nsh-firebase-analytics", version = "0.1.0" }
+nsh-firebase-perf = { path = "crates/nsh-firebase-perf", version = "0.1.0" }
+nsh-firebase-firestore = { path = "crates/nsh-firebase-firestore", version = "0.1.0" }
+nsh-firebase-remote-config = { path = "crates/nsh-firebase-remote-config", version = "0.1.0" }
+nsh-firebase-crashlytics = { path = "crates/nsh-firebase-crashlytics", version = "0.1.0" }
+nsh-firebase-installations = { path = "crates/nsh-firebase-installations", version = "0.1.0" }
+nsh-firebase-app-check = { path = "crates/nsh-firebase-app-check", version = "0.1.0" }
+nsh-firebase-functions = { path = "crates/nsh-firebase-functions", version = "0.1.0" }
 
 [profile.release]
 lto = "thin"
