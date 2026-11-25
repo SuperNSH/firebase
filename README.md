@@ -41,10 +41,10 @@ Status and the per-criterion evidence live in
 - Rust stable (`rustup`) — the crates and the Rust half of the emulator
   tests are cargo builds. iOS/Android cross-compilation targets are only
   needed for the native hosts.
-- `nsh` 0.6.0, exactly, with the upstream installer (the Homebrew tap
+- `nsh` 0.7.1, exactly, with the upstream installer (the Homebrew tap
   still ships 0.4.0, and its embedding SDKs are 0.4.0 too):
   ```sh
-  curl -fsSL https://nsh.dev/install.sh | NSH_VERSION=v0.6.0 sh
+  curl -fsSL https://nsh.dev/install.sh | NSH_VERSION=v0.7.1 sh
   ```
 - A JDK 17 for the emulator suite (the Storage emulator's rules runtime
   needs it). `/usr/bin/java` is a stub on macOS; if you have Android
@@ -133,8 +133,8 @@ xcodebuild -project NshFirebaseHost.xcodeproj -scheme NshFirebaseHost \
   -derivedDataPath build build
 ```
 
-Run `tools/fetch-nsh-embed.sh` first: it unpacks the 0.6.0 embedding SDKs
-into `.nsh-embed/0.6.0/`, where `project.yml` points `NSH_EMBED_IOS`. SwiftPM fetches the pinned firebase-ios-sdk 13.1.1 on
+Run `tools/fetch-nsh-embed.sh` first: it unpacks the 0.7.1 embedding SDKs
+into `.nsh-embed/0.7.1/`, where `project.yml` points `NSH_EMBED_IOS`. SwiftPM fetches the pinned firebase-ios-sdk 13.1.1 on
 first resolve — several hundred MB.
 
 ### Android (examples/host-android)
@@ -149,8 +149,8 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 adb shell am start -n dev.nsh.firebase.host/.MainActivity
 ```
 
-The module (`native/android`) compiles against `libs/nsh.aar`, the 0.6.0
-file from `.nsh-embed/0.6.0/android/nsh.aar` (`tools/fetch-nsh-embed.sh`); `native/android/libs/nsh.aar`
+The module (`native/android`) compiles against `libs/nsh.aar`, the 0.7.1
+file from `.nsh-embed/0.7.1/android/nsh.aar` (`tools/fetch-nsh-embed.sh`); `native/android/libs/nsh.aar`
 and `app/libs/nsh.aar` are the same file and must be replaced together on
 an nsh upgrade.
 

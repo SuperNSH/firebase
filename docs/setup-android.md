@@ -93,8 +93,8 @@ setup visible in one place and works without touching the host's build.
    Android 13+ device reads permission `denied` and `requestPermission` never
    prompts — the rule nsh's `Notifications.java` documents. RNFB gets this
    from the app's own manifest too; the plugin does not add it.
-6. **Embedding.** `app/libs/nsh.aar` (the 0.6.0 file,
-   `.nsh-embed/0.6.0/android/nsh.aar` from `tools/fetch-nsh-embed.sh`) and
+6. **Embedding.** `app/libs/nsh.aar` (the 0.7.1 file,
+   `.nsh-embed/0.7.1/android/nsh.aar` from `tools/fetch-nsh-embed.sh`) and
    `implementation files('libs/nsh.aar')`. `native/android/libs/nsh.aar` is
    the same file — the module compiles against it `compileOnly` — and the two
    copies must be replaced together on an nsh upgrade, then in `MainActivity`:

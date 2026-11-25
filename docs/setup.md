@@ -90,8 +90,8 @@ xcodebuild -project NshFirebaseHost.xcodeproj \
   -derivedDataPath build build
 ```
 
-`NSH_EMBED_IOS` in `project.yml` points at the 0.6.0 nsh embedding
-framework (`.nsh-embed/0.6.0/ios`, unpacked by `tools/fetch-nsh-embed.sh`);
+`NSH_EMBED_IOS` in `project.yml` points at the 0.7.1 nsh embedding
+framework (`.nsh-embed/0.7.1/ios`, unpacked by `tools/fetch-nsh-embed.sh`);
 override it there to use another copy. SwiftPM fetches the Firebase SDK on first resolve
 — several hundred MB of binary frameworks, be patient. `ARCHS=arm64`
 exists because `NativeShell.xcframework` ships an arm64 simulator slice
@@ -178,8 +178,8 @@ The steps, one by one:
    `requestPermission` never prompts — the rule nsh's `Notifications.java`
    documents. RNFB gets this from the app's own manifest too; the plugin
    does not add it.
-6. **Embedding.** `app/libs/nsh.aar` (the 0.6.0 file,
-   `.nsh-embed/0.6.0/android/nsh.aar` from `tools/fetch-nsh-embed.sh`) and
+6. **Embedding.** `app/libs/nsh.aar` (the 0.7.1 file,
+   `.nsh-embed/0.7.1/android/nsh.aar` from `tools/fetch-nsh-embed.sh`) and
    `implementation files('libs/nsh.aar')`. `native/android/libs/nsh.aar`
    is the same file — the module compiles against it `compileOnly` — and
    the **two copies must be replaced together** on an nsh upgrade. Then in
