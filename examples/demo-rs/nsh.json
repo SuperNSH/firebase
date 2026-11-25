@@ -8,6 +8,7 @@
   "rust": ".",
   "root": "App",
   "capabilities": {
+    "windows": true,
     "network": {
       "hosts": ["127.0.0.1"]
     },

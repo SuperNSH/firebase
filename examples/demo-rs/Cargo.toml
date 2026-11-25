@@ -10,7 +10,7 @@ publish = false
 
 [dependencies]
 # Not in the workspace's table; kept at the CLI's version like the rest.
-nsh-base = "0.7.0"
+nsh-base = "0.7.1"
 nsh-core = { workspace = true }
 serde_json = { workspace = true }
 # The products the demo shows; the screens consume them in the second pass.
