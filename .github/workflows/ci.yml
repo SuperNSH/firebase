@@ -295,14 +295,13 @@ jobs:
       matrix:
         include:
           # Desktop builds come out for the runner's own processor, so each architecture gets its own runner.
-          # The three non-default architectures (builds: true) install NSH from SuperNSH/nsh-builds, which
-          # has builds where NSH's own release has none.
+          # NSH's v0.7.1 release ships a prebuilt CLI for every one of them, so all install it the same way.
           - { os: macos-latest, target: macos, name: macos-arm64 }
-          - { os: macos-15-intel, target: macos, name: macos-x86_64, builds: true }
+          - { os: macos-15-intel, target: macos, name: macos-x86_64 }
           - { os: ubuntu-latest, target: linux, name: linux-x86_64 }
-          - { os: ubuntu-24.04-arm, target: linux, name: linux-arm64, builds: true }
+          - { os: ubuntu-24.04-arm, target: linux, name: linux-arm64 }
           - { os: windows-latest, target: windows, name: windows-x86_64 }
-          - { os: windows-11-arm, target: windows, name: windows-arm64, builds: true }
+          - { os: windows-11-arm, target: windows, name: windows-arm64 }
           - { os: macos-latest, target: ios-simulator, name: ios-simulator }
           - { os: ubuntu-latest, target: android, name: android }
           - { os: ubuntu-latest, target: web, name: web }
@@ -332,23 +331,6 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y $LINUX_PACKAGES
       - uses: ./.github/actions/install-nsh
-        if: ${{ !matrix.builds }}
-      - name: Install NSH from nsh-builds
-        if: matrix.builds && runner.os != 'Windows'
-        env:
-          NSH_VERSION: v0.7.1
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/SuperNSH/nsh-builds/master/install.sh | sh
-          echo "$HOME/.nsh/bin" >> "$GITHUB_PATH"
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-      - name: Install NSH from nsh-builds
-        if: matrix.builds && runner.os == 'Windows'
-        shell: pwsh
-        env:
-          NSH_VERSION: v0.7.1
-        run: |
-          irm https://raw.githubusercontent.com/SuperNSH/nsh-builds/master/install.ps1 | iex
-          "$env:LOCALAPPDATA\nsh\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
       - uses: ./.github/actions/setup-siblings
         with:
           with-demo-links: "true"
